@@ -1,5 +1,6 @@
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { BrowserRouter } from "react-router-dom";
+import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { ComponentShowcasePage } from "../pages/ComponentShowcase/ComponentShowcasePage";
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -14,9 +15,9 @@ export function App() {
   return (
     <QueryClientProvider client={queryClient}>
       <BrowserRouter>
-        <div>
-          <h1>AI Workflow</h1>
-        </div>
+        <Routes>
+          <Route path="/" element={<ComponentShowcasePage />} />
+        </Routes>
       </BrowserRouter>
     </QueryClientProvider>
   );
