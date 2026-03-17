@@ -1,0 +1,83 @@
+{
+  "hooks": {
+    "SessionStart": [
+      {
+        "matcher": "",
+        "hooks": [
+          {
+            "type": "command",
+            "command": ".claude/hooks/pre-dev/env-check.sh",
+            "timeout": 30000
+          }
+        ]
+      }
+    ],
+    "PreToolUse": [
+      {
+        "matcher": "Bash",
+        "hooks": [
+          {
+            "type": "command",
+            "command": ".claude/hooks/dev/security-guard.sh"
+          }
+        ]
+      },
+      {
+        "matcher": "Write|Edit|MultiEdit",
+        "hooks": [
+          {
+            "type": "command",
+            "command": ".claude/hooks/dev/file-guard.sh"
+          }
+        ]
+      }
+    ],
+    "PostToolUse": [
+      {
+        "matcher": "Write|Edit|MultiEdit",
+        "hooks": [
+          {
+            "type": "command",
+            "command": ".claude/hooks/dev/auto-format.sh"
+          },
+          {
+            "type": "command",
+            "command": ".claude/hooks/dev/post-edit-lint.sh"
+          },
+          {
+            "type": "command",
+            "command": ".claude/hooks/dev/post-edit-typecheck.sh"
+          },
+          {
+            "type": "command",
+            "command": ".claude/hooks/dev/design-sync-check.sh"
+          }
+        ]
+      }
+    ],
+    "Stop": [
+      {
+        "matcher": "",
+        "hooks": [
+          {
+            "type": "prompt",
+            "prompt": "작업 완료 전 다음을 검증하세요:\n1. 모든 수정된 파일에 대응하는 테스트가 있는가\n2. npm test가 통과하는가 (테스트가 있는 경우)\n3. TypeScript 에러가 없는가\n4. docs/spec.md에 수락 기준이 있다면 모두 충족되었는가\n\n미충족 항목이 있으면 해당 항목을 수정하세요. 모든 항목이 충족되었으면 완료를 보고하세요."
+          },
+          {
+            "type": "command",
+            "command": ".claude/hooks/post-dev/final-quality-gate.sh",
+            "timeout": 120000
+          },
+          {
+            "type": "command",
+            "command": ".claude/hooks/post-dev/changelog-gen.sh"
+          },
+          {
+            "type": "command",
+            "command": ".claude/hooks/post-dev/auto-commit.sh"
+          }
+        ]
+      }
+    ]
+  }
+}

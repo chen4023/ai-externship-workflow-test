@@ -1,0 +1,22 @@
+{
+  "permissions": {
+    "allow": [
+      "mcp__claude_ai_Figma__*",
+      "Bash(which pnpm:*)",
+      "Bash(pnpm add:*)",
+      "Bash(pnpm tsc:*)",
+      "Bash(pnpm test:*)",
+      "Bash(pnpm build:*)",
+      "mcp__figma__get_metadata",
+      "mcp__figma__get_design_context",
+      "Bash(npx tsc:*)",
+      "Bash(pnpm lint:*)",
+      "Bash(git init:*)",
+      "Bash(git remote:*)",
+      "Bash(git add:*)",
+      "Bash(git commit:*)",
+      "Bash(git reset:*)",
+      "Bash(git update-ref:*)"
+    ]
+  }
+}
