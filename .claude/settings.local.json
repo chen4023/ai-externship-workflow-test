@@ -25,7 +25,9 @@
       "Bash(do git:*)",
       "Bash(done)",
       "Bash(git reflog:*)",
-      "Bash(git gc:*)"
+      "Bash(git gc:*)",
+      "Bash(git push:*)",
+      "Bash(brew list:*)"
     ]
   }
 }
