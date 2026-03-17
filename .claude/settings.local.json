@@ -16,7 +16,9 @@
       "Bash(git add:*)",
       "Bash(git commit:*)",
       "Bash(git reset:*)",
-      "Bash(git update-ref:*)"
+      "Bash(git update-ref:*)",
+      "Bash(FILTER_BRANCH_SQUELCH_WARNING=1 git filter-branch -f --msg-filter '\ncase \"$GIT_COMMIT\" in\n  61ece1423545aaf3a4569732b8716378ed8835f3\\)\n    cat <<EOF\nchore: 프로젝트 초기 설정\n\nReact 19 + TypeScript + Vite 기반 빌드 도구, ESLint, Vitest,\npnpm 패키지 의존성 설정\n\nCo-Authored-By: Claude Opus 4.6 \\(1M context\\) <noreply@anthropic.com>\nEOF\n    ;;\n  1df1361326f2417047495fbcdde50bbfa72d5c9e\\)\n    cat <<EOF\nfeat: 앱 엔트리포인트 및 FSD 구조 설정\n\n메인 엔트리, 루트 App 컴포넌트, Vite 환경 타입, 테스트 셋업을\nFeature-Sliced Design 디렉토리 구조에 맞게 구성\n\nCo-Authored-By: Claude Opus 4.6 \\(1M context\\) <noreply@anthropic.com>\nEOF\n    ;;\n  c934e889d1a86982e2f53591e08db157c218fda0\\)\n    cat <<EOF\nfeat: 디자인 토큰 및 글로벌 스타일 추가\n\n컬러, 간격, 타이포그래피, 그림자 CSS 커스텀 프로퍼티 정의 및\nTailwind CSS v4 통합, 토큰 유효성 테스트 포함\n\nCo-Authored-By: Claude Opus 4.6 \\(1M context\\) <noreply@anthropic.com>\nEOF\n    ;;\n  c89692482abf7cdefe9011e55c9e51331a002fbd\\)\n    cat <<EOF\ndocs: 프로젝트 문서 추가\n\nCLAUDE.md 코딩 규칙, 워크플로우 오케스트레이션 가이드,\n스펙/플랜 템플릿 포함\n\nCo-Authored-By: Claude Opus 4.6 \\(1M context\\) <noreply@anthropic.com>\nEOF\n    ;;\n  14b8a6f8aba956fbe149abd23210a54df55f90e9\\)\n    cat <<EOF\nfeat: 공용 UI 컴포넌트 라이브러리 추가\n\nButton, Input, Modal, Header, Footer, Dropdown, Pagination,\nToast, Loading 등 재사용 가능한 UI 프리미티브 구현\n\nCo-Authored-By: Claude Opus 4.6 \\(1M context\\) <noreply@anthropic.com>\nEOF\n    ;;\n  39ab0a5375fae931f88ee7391efc51f56e8f77c6\\)\n    cat <<EOF\nchore: Claude 에이전트 정의, 훅, 설정 추가\n\n오케스트레이터, 서브에이전트 프롬프트\\(code-reviewer, spec-reviewer,\ntest-writer 등\\), 린트/포매팅 개발 훅, Claude 설정 구성\n\nCo-Authored-By: Claude Opus 4.6 \\(1M context\\) <noreply@anthropic.com>\nEOF\n    ;;\n  d55ac5212a98a5156b4ed93f4885149d1ccf0332\\)\n    cat <<EOF\nchore: Claude 세션 로그 추가\n\n개발 세션 로그를 워크플로우 히스토리 추적용으로 포함\n\nCo-Authored-By: Claude Opus 4.6 \\(1M context\\) <noreply@anthropic.com>\nEOF\n    ;;\n  *\\)\n    cat\n    ;;\nesac\n' -- --all)",
+      "Bash(git stash:*)"
     ]
   }
 }
