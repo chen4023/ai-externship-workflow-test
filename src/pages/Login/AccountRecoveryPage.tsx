@@ -1,6 +1,6 @@
 // Figma: https://www.figma.com/design/4rJmEFUU2HMWVy3qUcYZRs/%EC%A0%9C%EB%AA%A9-%EC%97%86%EC%9D%8C?node-id=1-1518&m=dev
 // Figma-states: login
-import { useState } from "react";
+import { type FormEvent, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { Header } from "../../shared/ui/Header/Header";
 import { Footer } from "../../shared/ui/Footer/Footer";
@@ -15,13 +15,15 @@ export function AccountRecoveryPage() {
   const [email, setEmail] = useState("");
   const [verificationCode, setVerificationCode] = useState("");
 
-  const handleRequestVerification = () => {
+  const handleRequestVerification = (e: FormEvent) => {
+    e.preventDefault();
     if (email.trim().length === 0) return;
     setStep("verify");
     // TODO: API 연동 - 인증 메일 발송
   };
 
-  const handleVerify = () => {
+  const handleVerify = (e: FormEvent) => {
+    e.preventDefault();
     if (verificationCode.trim().length === 0) return;
     setStep("complete");
     // TODO: API 연동 - 인증 코드 확인
@@ -31,21 +33,21 @@ export function AccountRecoveryPage() {
     <div className="min-h-screen flex flex-col">
       <Header variant="guest" />
       <main className="flex-1 flex items-center justify-center">
-        <div className="flex flex-col items-center gap-[40px] w-[348px]">
-          <h1 className="text-[24px] font-bold leading-[1.4] tracking-[-0.72px] text-[var(--color-gray-primary)]">
+        <div className="flex flex-col items-center gap-10 w-87">
+          <h1 className="text-2xl font-bold leading-snug tracking-tight text-gray-primary">
             계정 복구
           </h1>
 
           {step === "check" && (
             <>
-              <div className="flex flex-col items-center gap-[16px] w-full">
-                <p className="text-[16px] leading-[1.6] tracking-[-0.48px] text-[var(--color-gray-600)] text-center">
+              <div className="flex flex-col items-center gap-4 w-full">
+                <p className="text-base leading-relaxed tracking-tight text-gray-600 text-center">
                   탈퇴한 계정입니다.
                   <br />
                   계정을 복구하시겠습니까?
                 </p>
               </div>
-              <div className="flex flex-col gap-[12px] w-full">
+              <div className="flex flex-col gap-3 w-full">
                 <Button
                   onClick={() => setStep("email")}
                   className="w-full"
@@ -64,17 +66,18 @@ export function AccountRecoveryPage() {
           )}
 
           {step === "email" && (
-            <>
-              <div className="flex flex-col gap-[8px] w-full">
-                <p className="text-[14px] leading-[1.4] tracking-[-0.42px] text-[var(--color-gray-600)]">
+            <form onSubmit={handleRequestVerification} className="flex flex-col gap-10 w-full">
+              <div className="flex flex-col gap-2 w-full">
+                <p className="text-sm leading-snug tracking-tight text-gray-600">
                   가입 시 등록한 이메일을 입력하시면 인증 메일을
                   보내드립니다.
                 </p>
-                <div className="flex flex-col gap-[8px]">
-                  <label className="text-[14px] font-semibold leading-[1.4] tracking-[-0.42px] text-[var(--color-gray-700)]">
+                <div className="flex flex-col gap-2">
+                  <label htmlFor="recovery-email" className="text-sm font-semibold leading-snug tracking-tight text-gray-700">
                     이메일
                   </label>
                   <Input
+                    id="recovery-email"
                     placeholder="이메일을 입력해 주세요."
                     value={email}
                     onChange={setEmail}
@@ -82,26 +85,27 @@ export function AccountRecoveryPage() {
                 </div>
               </div>
               <Button
+                type="submit"
                 disabled={email.trim().length === 0}
-                onClick={handleRequestVerification}
                 className="w-full"
               >
                 인증 메일 발송
               </Button>
-            </>
+            </form>
           )}
 
           {step === "verify" && (
-            <>
-              <div className="flex flex-col gap-[16px] w-full">
-                <p className="text-[14px] leading-[1.4] tracking-[-0.42px] text-[var(--color-gray-600)]">
+            <form onSubmit={handleVerify} className="flex flex-col gap-10 w-full">
+              <div className="flex flex-col gap-4 w-full">
+                <p className="text-sm leading-snug tracking-tight text-gray-600">
                   이메일로 발송된 인증 코드를 입력해 주세요.
                 </p>
-                <div className="flex flex-col gap-[8px]">
-                  <label className="text-[14px] font-semibold leading-[1.4] tracking-[-0.42px] text-[var(--color-gray-700)]">
+                <div className="flex flex-col gap-2">
+                  <label htmlFor="recovery-code" className="text-sm font-semibold leading-snug tracking-tight text-gray-700">
                     인증 코드
                   </label>
                   <Input
+                    id="recovery-code"
                     placeholder="인증 코드를 입력해 주세요."
                     value={verificationCode}
                     onChange={setVerificationCode}
@@ -109,18 +113,18 @@ export function AccountRecoveryPage() {
                 </div>
               </div>
               <Button
+                type="submit"
                 disabled={verificationCode.trim().length === 0}
-                onClick={handleVerify}
                 className="w-full"
               >
                 인증 확인
               </Button>
-            </>
+            </form>
           )}
 
           {step === "complete" && (
-            <div className="flex flex-col items-center gap-[40px] w-full">
-              <p className="text-[16px] leading-[1.6] tracking-[-0.48px] text-[var(--color-gray-600)] text-center">
+            <div className="flex flex-col items-center gap-10 w-full">
+              <p className="text-base leading-relaxed tracking-tight text-gray-600 text-center">
                 계정이 복구되었습니다.
                 <br />
                 로그인해 주세요.

@@ -1,18 +1,15 @@
 // Figma: https://www.figma.com/design/4rJmEFUU2HMWVy3qUcYZRs/%EC%A0%9C%EB%AA%A9-%EC%97%86%EC%9D%8C?node-id=1-5063&m=dev
 // Figma-states: mypage
 import { useState } from "react";
-import { useNavigate } from "react-router-dom";
 import { Header } from "../../shared/ui/Header/Header";
 import { Footer } from "../../shared/ui/Footer/Footer";
-import { SidebarButton } from "../../shared/ui/SidebarButton/SidebarButton";
+import { MypageSidebar } from "../../shared/ui/MypageSidebar/MypageSidebar";
 import { Input } from "../../shared/ui/Input/Input";
 import { Button } from "../../shared/ui/Button/Button";
 import { ProfileImage } from "../../shared/ui/ProfileImage/ProfileImage";
 import { ConfirmModal } from "../../shared/ui/Modal/Modal";
 
 export function MypagePage() {
-  const navigate = useNavigate();
-  const [activeMenu, setActiveMenu] = useState("profile");
   const [isEditing, setIsEditing] = useState(false);
   const [name, setName] = useState("홍길동");
   const [email] = useState("user@example.com");
@@ -21,39 +18,19 @@ export function MypagePage() {
   return (
     <div className="min-h-screen flex flex-col">
       <Header variant="registered" />
-      <main className="flex-1 flex justify-center py-[60px]">
-        <div className="flex gap-[40px] w-[1200px]">
-          {/* Sidebar */}
-          <aside className="flex flex-col gap-[8px] w-[200px] shrink-0">
-            <SidebarButton
-              active={activeMenu === "profile"}
-              onClick={() => setActiveMenu("profile")}
-            >
-              프로필
-            </SidebarButton>
-            <SidebarButton
-              active={activeMenu === "password"}
-              onClick={() => navigate("/mypage/password")}
-            >
-              비밀번호 변경
-            </SidebarButton>
-            <SidebarButton
-              active={activeMenu === "quiz"}
-              onClick={() => navigate("/mypage/quiz")}
-            >
-              쪽지시험
-            </SidebarButton>
-          </aside>
+      <main className="flex-1 flex justify-center py-15">
+        <div className="flex gap-10 w-300">
+          <MypageSidebar />
 
           {/* Content */}
-          <section className="flex-1 flex flex-col gap-[40px]">
-            <h2 className="text-[24px] font-bold leading-[1.4] tracking-[-0.72px] text-[var(--color-gray-primary)]">
+          <section className="flex-1 flex flex-col gap-10">
+            <h2 className="text-2xl font-bold leading-snug tracking-tight text-gray-primary">
               프로필
             </h2>
 
-            <div className="flex flex-col gap-[32px]">
+            <div className="flex flex-col gap-8">
               {/* Profile Image */}
-              <div className="flex items-center gap-[24px]">
+              <div className="flex items-center gap-6">
                 <ProfileImage size="lg" />
                 {isEditing && (
                   <Button variant="ghost" size="sm">
@@ -63,32 +40,32 @@ export function MypagePage() {
               </div>
 
               {/* Profile Fields */}
-              <div className="flex flex-col gap-[20px]">
-                <div className="flex flex-col gap-[8px]">
-                  <label className="text-[14px] font-semibold leading-[1.4] tracking-[-0.42px] text-[var(--color-gray-700)]">
+              <div className="flex flex-col gap-5">
+                <div className="flex flex-col gap-2">
+                  <label htmlFor="mypage-name" className="text-sm font-semibold leading-snug tracking-tight text-gray-700">
                     이름
                   </label>
                   {isEditing ? (
-                    <Input value={name} onChange={setName} />
+                    <Input id="mypage-name" value={name} onChange={setName} />
                   ) : (
-                    <p className="text-[16px] leading-[1.4] tracking-[-0.48px] text-[var(--color-gray-primary)] py-[10px]">
+                    <p className="text-base leading-snug tracking-tight text-gray-primary py-2.5">
                       {name}
                     </p>
                   )}
                 </div>
 
-                <div className="flex flex-col gap-[8px]">
-                  <label className="text-[14px] font-semibold leading-[1.4] tracking-[-0.42px] text-[var(--color-gray-700)]">
+                <div className="flex flex-col gap-2">
+                  <label htmlFor="mypage-email" className="text-sm font-semibold leading-snug tracking-tight text-gray-700">
                     이메일
                   </label>
-                  <p className="text-[16px] leading-[1.4] tracking-[-0.48px] text-[var(--color-gray-500)] py-[10px]">
+                  <p className="text-base leading-snug tracking-tight text-gray-500 py-2.5">
                     {email}
                   </p>
                 </div>
               </div>
 
               {/* Actions */}
-              <div className="flex items-center gap-[12px]">
+              <div className="flex items-center gap-3">
                 {isEditing ? (
                   <>
                     <Button onClick={() => setIsEditing(false)}>
@@ -113,11 +90,11 @@ export function MypagePage() {
             </div>
 
             {/* Withdrawal */}
-            <div className="border-t border-[var(--color-gray-200)] pt-[32px]">
+            <div className="border-t border-gray-200 pt-8">
               <button
                 type="button"
                 onClick={() => setShowWithdrawModal(true)}
-                className="text-[14px] tracking-[-0.42px] text-[var(--color-gray-400)] cursor-pointer hover:text-[var(--color-danger)] transition-colors"
+                className="text-sm tracking-tight text-gray-400 cursor-pointer hover:text-danger transition-colors"
               >
                 회원 탈퇴
               </button>

@@ -1,9 +1,11 @@
 // Figma: https://www.figma.com/design/4rJmEFUU2HMWVy3qUcYZRs/%EC%A0%9C%EB%AA%A9-%EC%97%86%EC%9D%8C?node-id=1-4815&m=dev
 // Figma-states: quiz
-import { useNavigate, useParams } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { Header } from "../../shared/ui/Header/Header";
 import { Footer } from "../../shared/ui/Footer/Footer";
 import { Button } from "../../shared/ui/Button/Button";
+import { CorrectIcon } from "../../shared/ui/Icons/CorrectIcon";
+import { WrongIcon } from "../../shared/ui/Icons/WrongIcon";
 
 interface ResultQuestion {
   id: number;
@@ -38,45 +40,7 @@ const MOCK_RESULTS: ResultQuestion[] = [
   },
 ];
 
-const CorrectIcon = () => (
-  <svg
-    width="20"
-    height="20"
-    viewBox="0 0 20 20"
-    fill="none"
-    xmlns="http://www.w3.org/2000/svg"
-  >
-    <circle cx="10" cy="10" r="10" fill="var(--color-success)" />
-    <path
-      d="M6 10L9 13L14 7"
-      stroke="white"
-      strokeWidth="2"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-    />
-  </svg>
-);
-
-const WrongIcon = () => (
-  <svg
-    width="20"
-    height="20"
-    viewBox="0 0 20 20"
-    fill="none"
-    xmlns="http://www.w3.org/2000/svg"
-  >
-    <circle cx="10" cy="10" r="10" fill="var(--color-danger)" />
-    <path
-      d="M7 7L13 13M13 7L7 13"
-      stroke="white"
-      strokeWidth="2"
-      strokeLinecap="round"
-    />
-  </svg>
-);
-
 export function QuizResultPage() {
-  useParams<{ quizId: string }>();
   const navigate = useNavigate();
 
   const correctCount = MOCK_RESULTS.filter(
@@ -88,24 +52,24 @@ export function QuizResultPage() {
   return (
     <div className="min-h-screen flex flex-col">
       <Header variant="registered" />
-      <main className="flex-1 flex justify-center py-[40px]">
-        <div className="flex flex-col gap-[40px] w-[800px]">
+      <main className="flex-1 flex justify-center py-10">
+        <div className="flex flex-col gap-10 w-200">
           {/* Score summary */}
-          <div className="flex flex-col items-center gap-[16px] py-[40px] rounded-[12px] border border-[var(--color-gray-200)] bg-[var(--color-gray-100)]">
-            <p className="text-[16px] leading-[1.4] tracking-[-0.48px] text-[var(--color-gray-600)]">
+          <div className="flex flex-col items-center gap-4 py-10 rounded-xl border border-gray-200 bg-gray-100">
+            <p className="text-base leading-snug tracking-tight text-gray-600">
               시험 결과
             </p>
-            <p className="text-[48px] font-bold leading-[1.2] tracking-[-1.44px] text-[var(--color-primary)]">
+            <p className="text-5xl font-bold leading-tight tracking-tight text-primary">
               {score}점
             </p>
-            <p className="text-[14px] leading-[1.4] tracking-[-0.42px] text-[var(--color-gray-500)]">
+            <p className="text-sm leading-snug tracking-tight text-gray-500">
               {totalCount}문제 중 {correctCount}문제 정답
             </p>
           </div>
 
           {/* Results detail */}
-          <div className="flex flex-col gap-[24px]">
-            <h2 className="text-[20px] font-bold leading-[1.4] tracking-[-0.6px] text-[var(--color-gray-primary)]">
+          <div className="flex flex-col gap-6">
+            <h2 className="text-xl font-bold leading-snug tracking-tight text-gray-primary">
               문제별 결과
             </h2>
 
@@ -114,55 +78,53 @@ export function QuizResultPage() {
               return (
                 <div
                   key={q.id}
-                  className="flex flex-col gap-[16px] p-[24px] rounded-[8px] border border-[var(--color-gray-200)]"
+                  className="flex flex-col gap-4 p-6 rounded-lg border border-gray-200"
                 >
-                  <div className="flex items-center gap-[8px]">
+                  <div className="flex items-center gap-2">
                     {isCorrect ? <CorrectIcon /> : <WrongIcon />}
-                    <span className="text-[14px] font-semibold leading-[1.4] tracking-[-0.42px] text-[var(--color-gray-600)]">
+                    <span className="text-sm font-semibold leading-snug tracking-tight text-gray-600">
                       문제 {qIdx + 1}
                     </span>
                   </div>
-                  <p className="text-[16px] font-semibold leading-[1.6] tracking-[-0.48px] text-[var(--color-gray-primary)]">
+                  <p className="text-base font-semibold leading-relaxed tracking-tight text-gray-primary">
                     {q.question}
                   </p>
-                  <div className="flex flex-col gap-[8px]">
+                  <div className="flex flex-col gap-2">
                     {q.options.map((option, idx) => {
                       const isSelected = idx === q.selectedIndex;
                       const isAnswer = idx === q.correctIndex;
-                      let borderClass =
-                        "border-[var(--color-gray-200)]";
+                      let borderClass = "border-gray-200";
                       let bgClass = "bg-white";
                       if (isAnswer) {
-                        borderClass =
-                          "border-[var(--color-success)]";
-                        bgClass = "bg-[var(--color-success)]/5";
+                        borderClass = "border-success";
+                        bgClass = "bg-success/5";
                       } else if (isSelected && !isCorrect) {
-                        borderClass = "border-[var(--color-danger)]";
-                        bgClass = "bg-[var(--color-danger)]/5";
+                        borderClass = "border-danger";
+                        bgClass = "bg-danger/5";
                       }
                       return (
                         <div
-                          key={idx}
-                          className={`flex items-center gap-[12px] p-[12px] rounded-[8px] border ${borderClass} ${bgClass}`}
+                          key={`${q.id}-${idx}`}
+                          className={`flex items-center gap-3 p-3 rounded-lg border ${borderClass} ${bgClass}`}
                         >
                           <span
-                            className={`flex items-center justify-center w-[24px] h-[24px] rounded-full text-[12px] font-semibold shrink-0 ${
+                            className={`flex items-center justify-center w-6 h-6 rounded-full text-xs font-semibold shrink-0 ${
                               isAnswer
-                                ? "bg-[var(--color-success)] text-white"
+                                ? "bg-success text-white"
                                 : isSelected && !isCorrect
-                                  ? "bg-[var(--color-danger)] text-white"
-                                  : "bg-[var(--color-gray-200)] text-[var(--color-gray-600)]"
+                                  ? "bg-danger text-white"
+                                  : "bg-gray-200 text-gray-600"
                             }`}
                           >
                             {idx + 1}
                           </span>
                           <span
-                            className={`text-[14px] leading-[1.4] tracking-[-0.42px] ${
+                            className={`text-sm leading-snug tracking-tight ${
                               isAnswer
-                                ? "text-[var(--color-success)] font-semibold"
+                                ? "text-success font-semibold"
                                 : isSelected && !isCorrect
-                                  ? "text-[var(--color-danger)]"
-                                  : "text-[var(--color-gray-primary)]"
+                                  ? "text-danger"
+                                  : "text-gray-primary"
                             }`}
                           >
                             {option}

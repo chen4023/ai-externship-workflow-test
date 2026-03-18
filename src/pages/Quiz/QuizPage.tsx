@@ -54,22 +54,22 @@ export function QuizPage() {
   return (
     <div className="min-h-screen flex flex-col">
       <Header variant="registered" />
-      <main className="flex-1 flex justify-center py-[40px]">
-        <div className="flex flex-col gap-[32px] w-[800px]">
+      <main className="flex-1 flex justify-center py-10">
+        <div className="flex flex-col gap-8 w-200">
           {/* Quiz header */}
-          <div className="flex flex-col gap-[8px]">
+          <div className="flex flex-col gap-2">
             <div className="flex items-center justify-between">
-              <h1 className="text-[24px] font-bold leading-[1.4] tracking-[-0.72px] text-[var(--color-gray-primary)]">
+              <h1 className="text-2xl font-bold leading-snug tracking-tight text-gray-primary">
                 쪽지시험
               </h1>
-              <span className="text-[14px] leading-[1.4] tracking-[-0.42px] text-[var(--color-gray-500)]">
+              <span className="text-sm leading-snug tracking-tight text-gray-500">
                 {answeredCount} / {totalCount}
               </span>
             </div>
             {/* Progress bar */}
-            <div className="w-full h-[4px] rounded-full bg-[var(--color-gray-200)]">
+            <div className="w-full h-1 rounded-full bg-gray-200">
               <div
-                className="h-full rounded-full bg-[var(--color-primary)] transition-all"
+                className="h-full rounded-full bg-primary transition-all"
                 style={{
                   width: `${(answeredCount / totalCount) * 100}%`,
                 }}
@@ -78,45 +78,45 @@ export function QuizPage() {
           </div>
 
           {/* Question */}
-          <div className="flex flex-col gap-[24px]">
-            <div className="flex flex-col gap-[12px]">
-              <span className="text-[14px] font-semibold leading-[1.4] tracking-[-0.42px] text-[var(--color-primary)]">
+          <div className="flex flex-col gap-6">
+            <div className="flex flex-col gap-3">
+              <span className="text-sm font-semibold leading-snug tracking-tight text-primary">
                 문제 {currentIndex + 1}
               </span>
-              <p className="text-[18px] font-semibold leading-[1.6] tracking-[-0.54px] text-[var(--color-gray-primary)]">
+              <p className="text-lg font-semibold leading-relaxed tracking-tight text-gray-primary">
                 {current.question}
               </p>
             </div>
 
             {/* Options */}
-            <div className="flex flex-col gap-[12px]">
+            <div className="flex flex-col gap-3">
               {current.options.map((option, idx) => {
                 const isSelected = answers[current.id] === idx;
                 return (
                   <button
-                    key={idx}
+                    key={`${current.id}-${idx}`}
                     type="button"
                     onClick={() => handleSelectOption(idx)}
-                    className={`flex items-center gap-[12px] w-full p-[16px] rounded-[8px] border text-left cursor-pointer transition-colors ${
+                    className={`flex items-center gap-3 w-full p-4 rounded-lg border text-left cursor-pointer transition-colors ${
                       isSelected
-                        ? "border-[var(--color-primary)] bg-[var(--color-primary-50)]"
-                        : "border-[var(--color-gray-200)] bg-white hover:bg-[var(--color-gray-100)]"
+                        ? "border-primary bg-primary-50"
+                        : "border-gray-200 bg-white hover:bg-gray-100"
                     }`}
                   >
                     <span
-                      className={`flex items-center justify-center w-[28px] h-[28px] rounded-full text-[14px] font-semibold shrink-0 ${
+                      className={`flex items-center justify-center w-7 h-7 rounded-full text-sm font-semibold shrink-0 ${
                         isSelected
-                          ? "bg-[var(--color-primary)] text-white"
-                          : "bg-[var(--color-gray-200)] text-[var(--color-gray-600)]"
+                          ? "bg-primary text-white"
+                          : "bg-gray-200 text-gray-600"
                       }`}
                     >
                       {idx + 1}
                     </span>
                     <span
-                      className={`text-[16px] leading-[1.4] tracking-[-0.48px] ${
+                      className={`text-base leading-snug tracking-tight ${
                         isSelected
-                          ? "text-[var(--color-primary)] font-semibold"
-                          : "text-[var(--color-gray-primary)]"
+                          ? "text-primary font-semibold"
+                          : "text-gray-primary"
                       }`}
                     >
                       {option}
@@ -128,7 +128,7 @@ export function QuizPage() {
           </div>
 
           {/* Navigation */}
-          <div className="flex items-center justify-between pt-[16px]">
+          <div className="flex items-center justify-between pt-4">
             <Button
               variant="ghost"
               disabled={currentIndex === 0}

@@ -49,6 +49,8 @@ const MOCK_QUESTIONS = [
   },
 ];
 
+const ITEMS_PER_PAGE = 10;
+
 export function QnaListPage() {
   const navigate = useNavigate();
   const [activeCategory, setActiveCategory] = useState("전체보기");
@@ -57,11 +59,18 @@ export function QnaListPage() {
   const [currentPage, setCurrentPage] = useState(1);
 
   const filteredQuestions = MOCK_QUESTIONS.filter((q) => {
+    // 카테고리 필터링
+    if (activeCategory === "답변완료" && q.answerCount === 0) return false;
+    if (activeCategory === "답변 대기중" && q.answerCount > 0) return false;
+
+    // 검색 필터링
     if (searchQuery.trim().length === 0) return true;
     return (
       q.title.includes(searchQuery) || q.content.includes(searchQuery)
     );
   });
+
+  const totalPages = Math.max(1, Math.ceil(filteredQuestions.length / ITEMS_PER_PAGE));
 
   return (
     <div className="min-h-screen flex flex-col">
@@ -69,7 +78,7 @@ export function QnaListPage() {
       <main className="flex-1 flex justify-center py-10">
         <div className="flex flex-col gap-6 w-300">
           {/* Title row */}
-          <h1 className="text-2xl font-bold leading-[1.4] tracking-tight text-gray-primary">
+          <h1 className="text-2xl font-bold leading-snug tracking-tight text-gray-primary">
             질의응답
           </h1>
 
@@ -135,7 +144,7 @@ export function QnaListPage() {
             <div className="flex justify-center pt-4">
               <Pagination
                 currentPage={currentPage}
-                totalPages={5}
+                totalPages={totalPages}
                 onPageChange={setCurrentPage}
               />
             </div>

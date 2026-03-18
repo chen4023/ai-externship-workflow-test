@@ -1,6 +1,6 @@
 // Figma: https://www.figma.com/design/4rJmEFUU2HMWVy3qUcYZRs/%EC%A0%9C%EB%AA%A9-%EC%97%86%EC%9D%8C?node-id=1-10472&m=dev
 // Figma-states: communityDetail
-import { useState } from "react";
+import { type FormEvent, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { Header } from "../../shared/ui/Header/Header";
 import { Footer } from "../../shared/ui/Footer/Footer";
@@ -52,7 +52,8 @@ export function CommunityDetailPage() {
     navigate("/community");
   };
 
-  const handleCommentSubmit = () => {
+  const handleCommentSubmit = (e: FormEvent) => {
+    e.preventDefault();
     if (comment.trim().length === 0) return;
     setComment("");
   };
@@ -60,27 +61,27 @@ export function CommunityDetailPage() {
   return (
     <div className="min-h-screen flex flex-col">
       <Header variant="registered" />
-      <main className="flex-1 flex justify-center py-[40px]">
-        <div className="flex flex-col gap-[32px] w-[1200px]">
+      <main className="flex-1 flex justify-center py-10">
+        <div className="flex flex-col gap-8 w-300">
           {/* Post header */}
-          <div className="flex flex-col gap-[16px]">
-            <h1 className="text-[24px] font-bold leading-[1.4] tracking-[-0.72px] text-[var(--color-gray-primary)]">
+          <div className="flex flex-col gap-4">
+            <h1 className="text-2xl font-bold leading-snug tracking-tight text-gray-primary">
               프론트엔드 개발자 취업 준비 팁 공유합니다
             </h1>
             <div className="flex items-center justify-between">
-              <div className="flex items-center gap-[12px]">
-                <div className="w-[40px] h-[40px] rounded-full bg-[var(--color-gray-200)]" />
+              <div className="flex items-center gap-3">
+                <div className="w-10 h-10 rounded-full bg-gray-200" />
                 <div className="flex flex-col">
-                  <span className="text-[14px] font-semibold leading-[1.4] tracking-[-0.42px] text-[var(--color-gray-primary)]">
+                  <span className="text-sm font-semibold leading-snug tracking-tight text-gray-primary">
                     김개발
                   </span>
-                  <span className="text-[12px] leading-[1.4] tracking-[-0.36px] text-[var(--color-gray-400)]">
+                  <span className="text-xs leading-snug tracking-tight text-gray-400">
                     2025-03-15
                   </span>
                 </div>
               </div>
               {isAuthor && (
-                <div className="flex items-center gap-[8px]">
+                <div className="flex items-center gap-2">
                   <Button
                     variant="ghost"
                     size="sm"
@@ -103,31 +104,31 @@ export function CommunityDetailPage() {
           </div>
 
           {/* Divider */}
-          <div className="w-full h-[1px] bg-[var(--color-gray-200)]" />
+          <div className="w-full h-px bg-gray-200" />
 
           {/* Post content */}
-          <div className="text-[16px] leading-[1.8] tracking-[-0.48px] text-[var(--color-gray-700)] min-h-[200px]">
+          <div className="text-base leading-relaxed tracking-tight text-gray-700 min-h-50">
             <p>
               안녕하세요, 최근 프론트엔드 개발자로 취업에 성공한 김개발입니다.
             </p>
-            <p className="mt-[16px]">
+            <p className="mt-4">
               제가 준비하면서 도움이 되었던 내용들을 정리해봤습니다.
               포트폴리오는 2~3개 프로젝트를 깊이 있게 만드는 것이 중요하고,
               기술 면접에서는 JavaScript 기초와 React 동작 원리를
               많이 물어봤습니다.
             </p>
-            <p className="mt-[16px]">
+            <p className="mt-4">
               도움이 되셨으면 좋겠습니다. 궁금한 점 있으면 댓글로 남겨주세요!
             </p>
           </div>
 
           {/* Divider */}
-          <div className="w-full h-[1px] bg-[var(--color-gray-200)]" />
+          <div className="w-full h-px bg-gray-200" />
 
           {/* Comments section */}
-          <div className="flex flex-col gap-[20px]">
+          <div className="flex flex-col gap-5">
             <div className="flex items-center justify-between">
-              <p className="text-[16px] font-semibold leading-[1.4] tracking-[-0.48px] text-[var(--color-gray-primary)]">
+              <p className="text-base font-semibold leading-snug tracking-tight text-gray-primary">
                 댓글 {MOCK_COMMENTS.length}
               </p>
               <SortModal
@@ -139,35 +140,35 @@ export function CommunityDetailPage() {
 
             {/* Comment input */}
             {isLoggedIn && (
-              <div className="flex flex-col gap-[8px] items-end">
+              <form onSubmit={handleCommentSubmit} className="flex flex-col gap-2 items-end">
                 <CommentInput
                   value={comment}
                   onChange={setComment}
                 />
                 <CommentSubmitButton
+                  type="submit"
                   disabled={comment.trim().length === 0}
-                  onClick={handleCommentSubmit}
                 />
-              </div>
+              </form>
             )}
 
             {/* Comment list */}
-            <div className="flex flex-col gap-[16px]">
+            <div className="flex flex-col gap-4">
               {MOCK_COMMENTS.map((c) => (
                 <div
                   key={c.id}
-                  className="flex flex-col gap-[8px] p-[16px] rounded-[4px] border border-[var(--color-gray-200)]"
+                  className="flex flex-col gap-2 p-4 rounded-sm border border-gray-200"
                 >
-                  <div className="flex items-center gap-[8px]">
-                    <div className="w-[32px] h-[32px] rounded-full bg-[var(--color-gray-200)]" />
-                    <span className="text-[14px] font-semibold leading-[1.4] tracking-[-0.42px] text-[var(--color-gray-primary)]">
+                  <div className="flex items-center gap-2">
+                    <div className="w-8 h-8 rounded-full bg-gray-200" />
+                    <span className="text-sm font-semibold leading-snug tracking-tight text-gray-primary">
                       {c.author}
                     </span>
-                    <span className="text-[12px] leading-[1.4] tracking-[-0.36px] text-[var(--color-gray-400)]">
+                    <span className="text-xs leading-snug tracking-tight text-gray-400">
                       {c.date}
                     </span>
                   </div>
-                  <p className="text-[14px] leading-[1.6] tracking-[-0.42px] text-[var(--color-gray-700)]">
+                  <p className="text-sm leading-relaxed tracking-tight text-gray-700">
                     {c.content}
                   </p>
                 </div>
