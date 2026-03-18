@@ -1,4 +1,5 @@
 import type { ReactNode } from 'react';
+import { useNavigate } from 'react-router-dom';
 
 type HeaderVariant = 'guest' | 'unregistered' | 'registered';
 
@@ -25,6 +26,14 @@ export function Header({
   profileMenu,
   className = '',
 }: HeaderProps) {
+  const navigate = useNavigate();
+  const go = (path: string) => {
+    if (onNavigate) {
+      onNavigate(path);
+    } else {
+      navigate(path);
+    }
+  };
   return (
     <header className={`flex flex-col items-start w-full ${className}`}>
       {/* Top banner */}
@@ -40,13 +49,13 @@ export function Header({
           {/* Logo + Nav links */}
           <div className="flex items-center gap-[60px]">
             {logoSrc ? (
-              <button type="button" onClick={() => onNavigate?.('/')} className="cursor-pointer">
+              <button type="button" onClick={() => go('/')} className="cursor-pointer">
                 <img src={logoSrc} alt="오즈코딩스쿨" className="h-[20px] w-auto" />
               </button>
             ) : (
               <button
                 type="button"
-                onClick={() => onNavigate?.('/')}
+                onClick={() => go('/')}
                 className="font-bold text-[20px] text-[var(--color-gray-primary)] cursor-pointer"
               >
                 OZ 오즈코딩스쿨
@@ -55,14 +64,14 @@ export function Header({
             <nav className="flex items-center gap-[60px]">
               <button
                 type="button"
-                onClick={() => onNavigate?.('/community')}
+                onClick={() => go('/community')}
                 className="text-[18px] leading-[1.4] tracking-[-0.54px] text-[var(--color-gray-primary)] p-[10px] cursor-pointer"
               >
                 커뮤니티
               </button>
               <button
                 type="button"
-                onClick={() => onNavigate?.('/qna')}
+                onClick={() => go('/qna')}
                 className="text-[18px] leading-[1.4] tracking-[-0.54px] text-[var(--color-gray-primary)] p-[10px] cursor-pointer"
               >
                 질의응답
@@ -74,11 +83,11 @@ export function Header({
           <div className="flex items-center">
             {variant === 'guest' ? (
               <div className="flex items-center gap-[12px] text-[16px] tracking-[-0.32px] text-[var(--color-gray-600)] p-[8px]">
-                <button type="button" onClick={onLogin} className="cursor-pointer">
+                <button type="button" onClick={onLogin ?? (() => go('/login'))} className="cursor-pointer">
                   로그인
                 </button>
                 <span>|</span>
-                <button type="button" onClick={onSignup} className="cursor-pointer">
+                <button type="button" onClick={onSignup ?? (() => go('/signup'))} className="cursor-pointer">
                   회원가입
                 </button>
               </div>
