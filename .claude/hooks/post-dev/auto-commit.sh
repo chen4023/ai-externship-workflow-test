@@ -17,36 +17,81 @@ fi
 CHANGED_FILES=$(git status --porcelain 2>/dev/null | awk '{print $2}' | head -20)
 FILE_COUNT=$(git status --porcelain 2>/dev/null | wc -l | tr -d ' ')
 
-# 변경 유형 분석
+# ── prefix 결정 ──
 HAS_TEST=$(echo "$CHANGED_FILES" | grep -c "test\|spec\|__tests__" || echo "0")
-HAS_COMPONENT=$(echo "$CHANGED_FILES" | grep -c "components\|ui\|widgets\|features" || echo "0")
-HAS_CONFIG=$(echo "$CHANGED_FILES" | grep -c "config\|\.json$\|\.yaml$" || echo "0")
+HAS_SRC=$(echo "$CHANGED_FILES" | grep -c "^src/" || echo "0")
+HAS_COMPONENT=$(echo "$CHANGED_FILES" | grep -c "components\|ui\|widgets\|features\|pages" || echo "0")
+HAS_HOOK=$(echo "$CHANGED_FILES" | grep -c "hooks/" || echo "0")
+HAS_CONFIG=$(echo "$CHANGED_FILES" | grep -c "config\|settings\|\.json$\|\.yaml$" || echo "0")
+HAS_DOCS=$(echo "$CHANGED_FILES" | grep -c "\.md$\|docs/" || echo "0")
+HAS_STYLE=$(echo "$CHANGED_FILES" | grep -c "\.css$\|tokens\|styles" || echo "0")
 
-# 커밋 메시지 생성
 if [ "$HAS_TEST" -gt 0 ] && [ "$HAS_COMPONENT" -gt 0 ]; then
   PREFIX="feat"
 elif [ "$HAS_TEST" -gt 0 ]; then
   PREFIX="test"
-elif [ "$HAS_CONFIG" -gt 0 ]; then
+elif [ "$HAS_DOCS" -gt 0 ] && [ "$HAS_SRC" -eq 0 ]; then
+  PREFIX="docs"
+elif [ "$HAS_STYLE" -gt 0 ] && [ "$HAS_COMPONENT" -eq 0 ]; then
+  PREFIX="style"
+elif [ "$HAS_COMPONENT" -gt 0 ]; then
+  PREFIX="feat"
+elif [ "$HAS_HOOK" -gt 0 ] || [ "$HAS_CONFIG" -gt 0 ]; then
   PREFIX="chore"
 else
   PREFIX="feat"
 fi
 
-# 현재 브랜치 이름에서 태스크 정보 추출
-BRANCH=$(git branch --show-current 2>/dev/null || echo "unknown")
-TIMESTAMP=$(date +"%Y-%m-%d %H:%M")
+# ── 변경 내용 기반 커밋 제목 생성 ──
+generate_subject() {
+  local files="$1"
 
-COMMIT_MSG="${PREFIX}: auto-commit from Claude session
+  # 변경된 컴포넌트/페이지 이름 추출 (src/ 하위)
+  local src_dirs=$(echo "$files" | grep "^src/" | sed 's|src/||' | cut -d'/' -f1-3 | sort -u)
+  local component_names=$(echo "$files" | grep -oE '(ui|pages|features|widgets|entities)/[^/]+' | cut -d'/' -f2 | sort -u | paste -sd', ' -)
 
-Branch: ${BRANCH}
-Files changed: ${FILE_COUNT}
-Timestamp: ${TIMESTAMP}
+  # 훅/설정 파일만 변경된 경우
+  if [ -z "$component_names" ]; then
+    if echo "$files" | grep -q "hooks/"; then
+      local hook_names=$(echo "$files" | grep "hooks/" | xargs -I{} basename {} .sh | sort -u | paste -sd', ' -)
+      echo "${hook_names} 훅 업데이트"
+      return
+    fi
+    if echo "$files" | grep -q "settings\|config"; then
+      echo "프로젝트 설정 업데이트"
+      return
+    fi
+    if echo "$files" | grep -q "\.md$"; then
+      echo "문서 업데이트"
+      return
+    fi
+    # 그 외 파일명 기반
+    local basenames=$(echo "$files" | xargs -I{} basename {} | sort -u | head -3 | paste -sd', ' -)
+    echo "${basenames} 수정"
+    return
+  fi
 
-Changed files:
-${CHANGED_FILES}
+  # diff에서 주요 변경 패턴 감지
+  local diff_summary=$(git diff --cached --stat 2>/dev/null || git diff --stat 2>/dev/null)
+  local added=$(git diff --cached --numstat 2>/dev/null | awk '{a+=$1}END{print a+0}')
+  local deleted=$(git diff --cached --numstat 2>/dev/null | awk '{d+=$2}END{print d+0}')
 
-Co-Authored-By: Claude <noreply@anthropic.com>"
+  # 신규 파일인지 확인
+  local new_files=$(git status --porcelain 2>/dev/null | grep "^?" | wc -l | tr -d ' ')
+
+  if [ "$new_files" -gt 0 ] && [ "$deleted" -eq 0 ]; then
+    echo "${component_names} 컴포넌트 추가"
+  elif [ "$deleted" -gt "$added" ]; then
+    echo "${component_names} 코드 정리"
+  elif [ "$added" -gt 50 ]; then
+    echo "${component_names} 기능 구현"
+  else
+    echo "${component_names} 수정"
+  fi
+}
+
+SUBJECT=$(generate_subject "$CHANGED_FILES")
+COMMIT_MSG="${PREFIX}: ${SUBJECT}"
 
 # 스테이징 및 커밋
 git add -A

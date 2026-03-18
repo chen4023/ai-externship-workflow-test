@@ -51,6 +51,10 @@
           {
             "type": "command",
             "command": ".claude/hooks/dev/design-sync-check.sh"
+          },
+          {
+            "type": "command",
+            "command": ".claude/hooks/dev/figma-design-review.sh"
           }
         ]
       }

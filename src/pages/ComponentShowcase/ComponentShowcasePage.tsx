@@ -330,8 +330,8 @@ export function ComponentShowcasePage() {
       <QuestionInputModal
         open={questionModalOpen}
         onClose={() => setQuestionModalOpen(false)}
-        onSubmit={(title, content) => {
-          alert(`제목: ${title}\n내용: ${content}`);
+        onSubmit={(content: string) => {
+          alert(`내용: ${content}`);
           setQuestionModalOpen(false);
         }}
       />
