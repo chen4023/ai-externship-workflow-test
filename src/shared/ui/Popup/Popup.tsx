@@ -80,7 +80,7 @@ export function Popup({
     <dialog
       ref={dialogRef}
       onClose={onClose}
-      className={`rounded-[12px] border border-black p-0 backdrop:bg-black/50 ${className}`}
+      className={`m-auto rounded-[12px] border border-black p-0 backdrop:bg-black/50 ${className}`}
     >
       <div className="flex flex-col items-center w-[396px] p-[24px]">
         <div className="flex items-center justify-end w-full h-[24px] overflow-hidden p-[6px]">

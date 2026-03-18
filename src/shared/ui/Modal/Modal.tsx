@@ -25,7 +25,7 @@ export function Modal({ open, onClose, children, className = '' }: ModalProps) {
     <dialog
       ref={dialogRef}
       onClose={onClose}
-      className={`rounded-[12px] p-0 backdrop:bg-black/50 ${className}`}
+      className={`m-auto rounded-[12px] p-0 backdrop:bg-black/50 ${className}`}
     >
       {children}
     </dialog>
