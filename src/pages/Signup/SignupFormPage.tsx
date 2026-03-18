@@ -1,5 +1,6 @@
 // Figma: https://www.figma.com/design/4rJmEFUU2HMWVy3qUcYZRs/%EC%A0%9C%EB%AA%A9-%EC%97%86%EC%9D%8C?node-id=1-2103&m=dev
 // Figma-states: signup
+
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { Header } from "../../shared/ui/Header/Header";
@@ -114,22 +115,20 @@ export function SignupFormPage() {
                 <button
                   type="button"
                   onClick={() => setGender("male")}
-                  className={`h-10.5 w-20 rounded-full text-base font-semibold tracking-tight cursor-pointer border ${
-                    gender === "male"
+                  className={`h-10.5 w-20 rounded-full text-base font-semibold tracking-tight cursor-pointer border ${gender === "male"
                       ? "bg-primary-100 border-primary text-primary"
                       : "bg-gray-200 border-gray-250 text-gray-600"
-                  }`}
+                    }`}
                 >
                   남
                 </button>
                 <button
                   type="button"
                   onClick={() => setGender("female")}
-                  className={`h-10.5 w-20 rounded-full text-base font-semibold tracking-tight cursor-pointer border ${
-                    gender === "female"
+                  className={`h-10.5 w-20 rounded-full text-base font-semibold tracking-tight cursor-pointer border ${gender === "female"
                       ? "bg-primary-100 border-primary text-primary"
                       : "bg-gray-200 border-gray-250 text-gray-600"
-                  }`}
+                    }`}
                 >
                   여
                 </button>
@@ -177,7 +176,7 @@ export function SignupFormPage() {
                 <div className="flex gap-3">
                   <div className="flex flex-1 items-center gap-1">
                     <div className="flex-1">
-                      <Input placeholder="010" value={phone1} onChange={() => {}} state="disabled" disabled />
+                      <Input placeholder="010" value={phone1} onChange={() => { }} state="disabled" disabled />
                     </div>
                     <span className="text-sm text-gray-disabled">-</span>
                     <div className="flex-1">
