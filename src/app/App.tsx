@@ -7,6 +7,7 @@ import { FindPasswordPage } from "../pages/Login/FindPasswordPage";
 import { ResetPasswordPage } from "../pages/Login/ResetPasswordPage";
 import { AccountRecoveryPage } from "../pages/Login/AccountRecoveryPage";
 import { SignupPage } from "../pages/Signup/SignupPage";
+import { SignupFormPage } from "../pages/Signup/SignupFormPage";
 import { StudentRegistrationPage } from "../pages/StudentRegistration/StudentRegistrationPage";
 import { MypagePage } from "../pages/Mypage/MypagePage";
 import { PasswordChangePage } from "../pages/Mypage/PasswordChangePage";
@@ -47,6 +48,7 @@ export function App() {
           <Route path="/login/reset-password" element={<ResetPasswordPage />} />
           <Route path="/login/account-recovery" element={<AccountRecoveryPage />} />
           <Route path="/signup" element={<SignupPage />} />
+          <Route path="/signup/form" element={<SignupFormPage />} />
 
           {/* 수강생 등록 */}
           <Route path="/register" element={<StudentRegistrationPage />} />
