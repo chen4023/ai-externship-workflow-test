@@ -116,8 +116,8 @@ export function SignupFormPage() {
                   type="button"
                   onClick={() => setGender("male")}
                   className={`h-10.5 w-20 rounded-full text-base font-semibold tracking-tight cursor-pointer border ${gender === "male"
-                      ? "bg-primary-100 border-primary text-primary"
-                      : "bg-gray-200 border-gray-250 text-gray-600"
+                    ? "bg-primary-100 border-primary text-primary"
+                    : "bg-gray-200 border-gray-250 text-gray-600"
                     }`}
                 >
                   남
@@ -126,8 +126,8 @@ export function SignupFormPage() {
                   type="button"
                   onClick={() => setGender("female")}
                   className={`h-10.5 w-20 rounded-full text-base font-semibold tracking-tight cursor-pointer border ${gender === "female"
-                      ? "bg-primary-100 border-primary text-primary"
-                      : "bg-gray-200 border-gray-250 text-gray-600"
+                    ? "bg-primary-100 border-primary text-primary"
+                    : "bg-gray-200 border-gray-250 text-gray-600"
                     }`}
                 >
                   여
@@ -174,16 +174,16 @@ export function SignupFormPage() {
               <div className="flex flex-col gap-5">
                 <FormLabel label="휴대전화" required />
                 <div className="flex gap-3">
-                  <div className="flex flex-1 items-center gap-1">
-                    <div className="flex-1">
+                  <div className="flex flex-1 items-center gap-1 min-w-0">
+                    <div className="flex-1 min-w-0">
                       <Input placeholder="010" value={phone1} onChange={() => { }} state="disabled" disabled />
                     </div>
                     <span className="text-sm text-gray-disabled">-</span>
-                    <div className="flex-1">
+                    <div className="flex-1 min-w-0">
                       <Input placeholder="" value={phone2} onChange={setPhone2} />
                     </div>
                     <span className="text-sm text-gray-disabled">-</span>
-                    <div className="flex-1">
+                    <div className="flex-1 min-w-0">
                       <Input placeholder="" value={phone3} onChange={setPhone3} />
                     </div>
                   </div>
