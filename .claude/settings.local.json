@@ -48,7 +48,11 @@
       "Bash(chmod +x ~/bin/gh)",
       "Bash(~/bin/gh --version)",
       "Bash(export PATH=\"$HOME/bin:$PATH\")",
-      "Bash(gh auth:*)"
+      "Bash(gh auth:*)",
+      "Bash(chmod:*)",
+      "Bash(bash .claude/hooks/dev/figma-design-review.sh)",
+      "Bash(echo \"{\"\"tool_input\"\":{\"\"file_path\"\":\"\"/tmp/src/pages/TestPage.tsx\"\"}}\")",
+      "Bash(bash /Users/hyeonchaeeun/Desktop/ai-workflow/.claude/hooks/dev/figma-design-review.sh)"
     ]
   }
 }

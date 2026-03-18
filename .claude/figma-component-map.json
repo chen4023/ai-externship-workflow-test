@@ -1,0 +1,140 @@
+{
+  "figmaFileKey": "4rJmEFUU2HMWVy3qUcYZRs",
+  "figmaBaseUrl": "https://www.figma.com/design/4rJmEFUU2HMWVy3qUcYZRs/%EC%A0%9C%EB%AA%A9-%EC%97%86%EC%9D%8C",
+  "componentStylePage": {
+    "nodeId": "1:2607",
+    "name": "컴포넌트/ 디자인 스타일 정리"
+  },
+  "components": {
+    "Button": {
+      "codePath": "shared/ui/Button/Button.tsx",
+      "variants": {
+        "primary": { "nodeId": "1:2639", "name": "Component 12 (Default/Hover/Active)" },
+        "ghost": { "nodeId": "1:2854", "name": "btn/Ghost" },
+        "outline": { "nodeId": "1:2765", "name": "Frame 9 (가입하기 outline)" },
+        "mypage": { "nodeId": "1:2662", "name": "btn/mypage" }
+      }
+    },
+    "SidebarButton": {
+      "codePath": "shared/ui/SidebarButton/SidebarButton.tsx",
+      "nodeId": "1:2609",
+      "name": "Component 10 (Disabled/Enabled)"
+    },
+    "Input": {
+      "codePath": "shared/ui/Input/Input.tsx",
+      "nodeId": "1:2614",
+      "name": "Placeholder (Default/Check/Focus/Danger/Disabled/Input Text)"
+    },
+    "PasswordInput": {
+      "codePath": "shared/ui/PasswordInput/PasswordInput.tsx",
+      "nodeId": "1:2683",
+      "name": "mypage/password (Default/Focus/ViewOn/ViewOff/Danger/Success)"
+    },
+    "Dropdown": {
+      "codePath": "shared/ui/Dropdown/Dropdown.tsx",
+      "variants": {
+        "dropdown": { "nodeId": "1:2776", "name": "Dropdown (Default/Hover/Focus/Active/Disabled)" },
+        "select": { "nodeId": "1:2843", "name": "Dropdown/select (select_default/hover/check)" },
+        "textBox": { "nodeId": "1:2809", "name": "Dropdown TextBox (Default/Active/Done)" }
+      }
+    },
+    "SearchInput": {
+      "codePath": "shared/ui/SearchInput/SearchInput.tsx",
+      "nodeId": "1:3154",
+      "name": "질문 검색 (Default/Focus/Input Text)"
+    },
+    "CommentInput": {
+      "codePath": "shared/ui/CommentInput/CommentInput.tsx",
+      "nodeId": "1:3199",
+      "name": "Placeholder (댓글 입력 Default/Focus/Input Text)"
+    },
+    "CommentSubmitButton": {
+      "codePath": "shared/ui/CommentSubmitButton/CommentSubmitButton.tsx",
+      "nodeId": "1:3368",
+      "name": "Component 38 (disabled/enabled)"
+    },
+    "Header": {
+      "codePath": "shared/ui/Header/Header.tsx",
+      "variants": {
+        "guest": { "nodeId": "1:3074", "name": "로그인/회원가입 전 헤더" },
+        "unregistered": { "nodeId": "1:3044", "name": "수강생 등록 전 헤더" },
+        "registered": { "nodeId": "1:3059", "name": "수강생 등록 후 헤더" }
+      }
+    },
+    "Footer": {
+      "codePath": "shared/ui/Footer/Footer.tsx",
+      "nodeId": "1:3123",
+      "name": "footer"
+    },
+    "CategoryTab": {
+      "codePath": "shared/ui/CategoryTab/CategoryTab.tsx",
+      "nodeId": "1:3037",
+      "name": "top 카테고리 바 (Active/Disabled)"
+    },
+    "SortModal": {
+      "codePath": "shared/ui/SortModal/SortModal.tsx",
+      "nodeId": "1:3185",
+      "name": "답변_댓글 정렬 버튼 모달"
+    },
+    "ProfileImage": {
+      "codePath": "shared/ui/ProfileImage/ProfileImage.tsx",
+      "nodeId": "1:2865",
+      "name": "프로필 사진"
+    },
+    "ProfileDropdown": {
+      "codePath": "shared/ui/ProfileDropdown/ProfileDropdown.tsx",
+      "variants": {
+        "unregistered": { "nodeId": "1:3093", "name": "수강생 등록 전 드롭다운" },
+        "registered": { "nodeId": "1:3109", "name": "수강생 등록 후 드롭다운" }
+      }
+    },
+    "QuestionCard": {
+      "codePath": "shared/ui/QuestionCard/QuestionCard.tsx",
+      "nodeId": "1:2875",
+      "name": "질문카드 (Default/Hover)"
+    },
+    "Pagination": {
+      "codePath": "shared/ui/Pagination/Pagination.tsx",
+      "variants": {
+        "numberButton": { "nodeId": "1:2944", "name": "btn_Pagination_number (Default/Hover/Active/Disabled)" },
+        "navigation": { "nodeId": "1:2962", "name": "page-navigation (first/prev/next/last)" }
+      }
+    },
+    "Toast": {
+      "codePath": "shared/ui/Toast/Toast.tsx",
+      "variants": {
+        "inline": { "nodeId": "1:3241", "name": "Toast inline (체크 아이콘 + 메시지)" },
+        "popup": { "nodeId": "1:3231", "name": "Toast popup (체크 아이콘 + 제목 + 설명)" }
+      }
+    },
+    "Popup": {
+      "codePath": "shared/ui/Popup/Popup.tsx",
+      "nodeId": "1:3245",
+      "name": "팝업 (x 닫기 + 아이콘 + 메시지 + 버튼)"
+    },
+    "Modal": {
+      "codePath": "shared/ui/Modal/Modal.tsx",
+      "nodeId": "1:3271",
+      "name": "ConfirmModal (삭제 확인 취소/삭제 버튼)"
+    },
+    "QuestionInputModal": {
+      "codePath": "shared/ui/Modal/QuestionInputModal.tsx",
+      "nodeId": "1:3282",
+      "name": "질문 입력 모달"
+    },
+    "Loading": {
+      "codePath": "shared/ui/Loading/Loading.tsx",
+      "nodeId": "1:3294",
+      "name": "Loading 6 (Variant 1~6 애니메이션)"
+    },
+    "NotFound": {
+      "codePath": "shared/ui/NotFound/NotFound.tsx",
+      "variants": {
+        "quiz": { "nodeId": "1:3325", "name": "쪽지시험 Not Found" },
+        "qna": { "nodeId": "1:3340", "name": "질의응답 Not Found" },
+        "community": { "nodeId": "1:3351", "name": "커뮤니티 Not Found" },
+        "404": { "nodeId": "1:3363", "name": "404 페이지" }
+      }
+    }
+  }
+}
