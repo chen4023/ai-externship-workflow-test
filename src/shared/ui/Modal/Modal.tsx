@@ -25,7 +25,7 @@ export function Modal({ open, onClose, children, className = '' }: ModalProps) {
     <dialog
       ref={dialogRef}
       onClose={onClose}
-      className={`rounded-[8px] p-0 backdrop:bg-black/50 ${className}`}
+      className={`rounded-[12px] p-0 backdrop:bg-black/50 ${className}`}
     >
       {children}
     </dialog>
@@ -50,23 +50,25 @@ export function ConfirmModal({
   onCancel,
 }: ConfirmModalProps) {
   return (
-    <Modal open={open} onClose={onCancel} className="w-[428px]">
+    <Modal open={open} onClose={onCancel} className="shadow-[0px_4px_16px_0px_rgba(160,160,160,0.25)]">
       <div className="p-[28px]">
-        <p className="text-[14px] leading-[1.4] tracking-[-0.42px] text-[var(--color-gray-primary)] py-[12px]">
-          {message}
-        </p>
+        <div className="py-[12px]">
+          <p className="text-[16px] leading-[1.4] tracking-[-0.48px] text-[var(--color-gray-700)]">
+            {message}
+          </p>
+        </div>
         <div className="flex items-center justify-end gap-[12px] mt-[40px]">
           <button
             type="button"
             onClick={onCancel}
-            className="flex items-center justify-center px-[24px] py-[15.5px] rounded-[4px] border border-[var(--color-gray-disabled)] text-[14px] text-[var(--color-gray-primary)] cursor-pointer"
+            className="flex items-center justify-center h-[42px] px-[24px] py-[16px] rounded-full bg-[var(--color-primary-100)] text-[16px] font-semibold leading-[1.4] tracking-[-0.48px] text-[var(--color-primary-600)] cursor-pointer hover:opacity-90 transition-opacity"
           >
             {cancelLabel}
           </button>
           <button
             type="button"
             onClick={onConfirm}
-            className="flex items-center justify-center px-[24px] py-[15.5px] rounded-[4px] bg-[var(--color-primary)] text-[14px] text-[var(--color-white)] cursor-pointer"
+            className="flex items-center justify-center h-[40px] px-[24px] py-[16px] rounded-full bg-[var(--color-primary)] text-[16px] font-semibold leading-[1.4] tracking-[-0.48px] text-[var(--color-gray-100)] cursor-pointer hover:bg-[var(--color-primary-600)] transition-colors"
           >
             {confirmLabel}
           </button>

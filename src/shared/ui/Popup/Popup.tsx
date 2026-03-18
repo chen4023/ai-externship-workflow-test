@@ -13,15 +13,15 @@ interface PopupProps {
 
 const CloseIcon = () => (
   <svg
-    width="24"
-    height="24"
-    viewBox="0 0 24 24"
+    width="12"
+    height="12"
+    viewBox="0 0 12 12"
     fill="none"
     xmlns="http://www.w3.org/2000/svg"
   >
     <path
-      d="M6 6L18 18M18 6L6 18"
-      stroke="var(--color-gray-500)"
+      d="M1 1L11 11M11 1L1 11"
+      stroke="var(--color-gray-400)"
       strokeWidth="1.5"
       strokeLinecap="round"
     />
@@ -30,20 +30,21 @@ const CloseIcon = () => (
 
 const DefaultIcon = () => (
   <svg
-    width="48"
-    height="48"
-    viewBox="0 0 48 48"
+    width="28"
+    height="28"
+    viewBox="0 0 28 28"
     fill="none"
     xmlns="http://www.w3.org/2000/svg"
   >
-    <circle cx="24" cy="24" r="20" fill="var(--color-primary-100)" />
+    <circle cx="14" cy="14" r="14" fill="var(--color-primary-200)" />
+    <circle cx="10" cy="12" r="1" fill="var(--color-primary)" />
+    <circle cx="18" cy="12" r="1" fill="var(--color-primary)" />
     <path
-      d="M24 16V26"
+      d="M10 18C10 18 12 16 14 16C16 16 18 18 18 18"
       stroke="var(--color-primary)"
-      strokeWidth="2"
+      strokeWidth="1.5"
       strokeLinecap="round"
     />
-    <circle cx="24" cy="31" r="1.5" fill="var(--color-primary)" />
   </svg>
 );
 
@@ -79,44 +80,47 @@ export function Popup({
     <dialog
       ref={dialogRef}
       onClose={onClose}
-      className={`rounded-[8px] p-0 backdrop:bg-black/50 ${className}`}
+      className={`rounded-[12px] border border-black p-0 backdrop:bg-black/50 ${className}`}
     >
-      <div className="relative flex flex-col items-center w-[380px] px-[28px] pt-[48px] pb-[28px]">
-        {/* Close button */}
-        <button
-          type="button"
-          onClick={onClose}
-          className="absolute top-[16px] right-[16px] cursor-pointer"
-          aria-label="닫기"
-        >
-          <CloseIcon />
-        </button>
-
-        {/* Icon */}
-        <div className="mb-[20px]">
-          {icon ?? <DefaultIcon />}
+      <div className="flex flex-col items-center w-[396px] p-[24px]">
+        <div className="flex items-center justify-end w-full h-[24px] overflow-hidden p-[6px]">
+          <button
+            type="button"
+            onClick={onClose}
+            className="cursor-pointer"
+            aria-label="닫기"
+          >
+            <CloseIcon />
+          </button>
         </div>
 
-        {/* Title */}
-        <p className="text-[18px] font-semibold leading-[1.4] tracking-[-0.54px] text-[var(--color-gray-primary)] text-center">
-          {title}
-        </p>
+        <div className="flex flex-col items-center gap-[40px] w-full">
+          <div className="flex flex-col items-center gap-[16px]">
+            <div>
+              {icon ?? <DefaultIcon />}
+            </div>
 
-        {/* Description */}
-        {description && (
-          <p className="mt-[8px] text-[14px] leading-[1.4] tracking-[-0.42px] text-[var(--color-gray-500)] text-center whitespace-pre-line">
-            {description}
-          </p>
-        )}
+            <div className="flex flex-col items-center gap-[16px]">
+              <p className="text-[20px] font-bold leading-[1.4] tracking-[-0.6px] text-[var(--color-gray-primary)] text-center">
+                {title}
+              </p>
 
-        {/* CTA */}
-        <button
-          type="button"
-          onClick={handleCtaClick}
-          className="mt-[28px] w-full flex items-center justify-center py-[16px] rounded-[4px] bg-[var(--color-primary)] text-[16px] font-semibold text-[var(--color-white)] cursor-pointer hover:bg-[var(--color-primary-600)] active:bg-[var(--color-primary-700)] transition-colors"
-        >
-          {ctaLabel}
-        </button>
+              {description && (
+                <p className="text-[14px] leading-[1.4] tracking-[-0.42px] text-[var(--color-gray-600)] text-center whitespace-pre-line">
+                  {description}
+                </p>
+              )}
+            </div>
+          </div>
+
+          <button
+            type="button"
+            onClick={handleCtaClick}
+            className="w-full flex items-center justify-center h-[52px] rounded-[4px] bg-[var(--color-primary)] text-[16px] leading-[1.4] tracking-[-0.48px] text-[var(--color-primary-100)] cursor-pointer hover:bg-[var(--color-primary-600)] active:bg-[var(--color-primary-700)] transition-colors"
+          >
+            {ctaLabel}
+          </button>
+        </div>
       </div>
     </dialog>
   );
