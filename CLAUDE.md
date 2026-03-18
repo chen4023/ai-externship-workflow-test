@@ -136,6 +136,29 @@ orchestrator 없이 개별 에이전트를 직접 호출할 수도 있다:
 ### 백그라운드 실행:
 - 리서치/분석 태스크, 결과가 블로킹하지 않음
 
+## PR Review Rules
+code-reviewer 에이전트가 PR 리뷰를 수행할 때 반드시 따라야 하는 규칙:
+
+### 인라인 코드 리뷰 필수
+- PR 전체 요약 코멘트뿐만 아니라, **변경된 코드의 특정 라인에 직접 인라인 리뷰**를 남겨야 한다
+- `gh api` 를 사용하여 PR의 diff 위에 코멘트를 등록한다:
+  ```bash
+  ~/bin/gh api repos/{owner}/{repo}/pulls/{pr_number}/comments \
+    -f body="리뷰 내용" \
+    -f commit_id="$(git rev-parse HEAD)" \
+    -f path="src/pages/Login/LoginPage.tsx" \
+    -F line=42 \
+    -f side="RIGHT"
+  ```
+- severity 접두사를 포함: `🔴 Critical:`, `🟡 Warning:`, `🟢 Suggestion:`
+
+### 리뷰 프로세스
+1. `gh pr diff {number}`로 변경 사항 확인
+2. 변경된 파일을 Read로 전체 코드 확인
+3. 이슈 발견 시 해당 라인에 `gh api`로 인라인 코멘트 등록
+4. 전체 요약을 `gh pr review {number} --comment --body`로 등록
+5. Critical/Warning이 1개 이상이면 `REQUEST_CHANGES`, 아니면 `APPROVE`
+
 ## When compacting, always preserve:
 - `.claude/workflow-state.json` 전체 내용
 - 수정된 파일 전체 목록

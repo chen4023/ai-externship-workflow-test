@@ -69,7 +69,8 @@
       "Bash(bash -x .claude/hooks/post-dev/auto-commit.sh)",
       "Bash(~/bin/gh pr:*)",
       "Bash(git checkout:*)",
-      "Bash(export PATH=\"/opt/homebrew/bin:$PATH\")"
+      "Bash(export PATH=\"/opt/homebrew/bin:$PATH\")",
+      "Bash(~/bin/gh auth:*)"
     ]
   }
 }
