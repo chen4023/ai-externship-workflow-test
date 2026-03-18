@@ -69,7 +69,10 @@
       "Bash(bash -x .claude/hooks/post-dev/auto-commit.sh)",
       "Bash(~/bin/gh pr:*)",
       "Bash(git checkout:*)",
-      "Bash(~/bin/gh api:*)"
+      "Bash(~/bin/gh api:*)",
+      "Read(//Users/hyeonchaeeun/bin/**)",
+      "Read(//opt/homebrew/Cellar/gh/2.88.1/bin/**)",
+      "Read(//usr/local/bin/**)"
     ]
   }
 }
