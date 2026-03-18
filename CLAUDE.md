@@ -28,7 +28,7 @@
 - barrel export 금지 (직접 import)
 - 컴포넌트 파일은 200줄 이하
 - 비즈니스 로직은 커스텀 훅으로 분리
-- Tailwind 클래스에서 `var()` 사용 금지 (예: `text-[var(--color-primary)]` 대신 `text-[--color-primary]` 사용)
+- Tailwind arbitrary value (`[]`) 사용 금지 — 디자인 토큰이 테마에 등록되어 있으므로 시맨틱 클래스 사용 (예: `text-[#FF0000]` 대신 `text-primary`)
 - API 호출은 TanStack Query Factory Pattern
 - React 19 `use()` API와 Server Actions 활용 가능
 
