@@ -1,10 +1,12 @@
 {
   "figmaFileKey": "4rJmEFUU2HMWVy3qUcYZRs",
   "figmaBaseUrl": "https://www.figma.com/design/4rJmEFUU2HMWVy3qUcYZRs/%EC%A0%9C%EB%AA%A9-%EC%97%86%EC%9D%8C",
+
   "componentStylePage": {
     "nodeId": "1:2607",
     "name": "컴포넌트/ 디자인 스타일 정리"
   },
+
   "components": {
     "Button": {
       "codePath": "shared/ui/Button/Button.tsx",
@@ -135,6 +137,154 @@
         "community": { "nodeId": "1:3351", "name": "커뮤니티 Not Found" },
         "404": { "nodeId": "1:3363", "name": "404 페이지" }
       }
+    }
+  },
+
+  "pages": {
+    "landing": {
+      "description": "랜딩 페이지",
+      "states": {
+        "quiz": { "nodeId": "1:12014", "name": "랜딩페이지_쪽지시험" },
+        "qna": { "nodeId": "1:11962", "name": "랜딩페이지_질의응답" },
+        "community": { "nodeId": "1:12113", "name": "랜딩페이지_커뮤니티" }
+      }
+    },
+
+    "login": {
+      "description": "로그인 플로우",
+      "base": { "nodeId": "1:1100", "name": "로그인" },
+      "states": {
+        "accountRecoveryView": { "nodeId": "1:1160", "name": "로그인 (계정복구 상태)" },
+        "findId": { "nodeId": "1:1220", "name": "로그인_아이디찾기" },
+        "findIdError": { "nodeId": "1:1300", "name": "로그인_아이디찾기_에러" },
+        "findIdConfirm": { "nodeId": "1:1382", "name": "로그인_아이디찾기_확인" },
+        "findPassword": { "nodeId": "1:1444", "name": "로그인_비밀번호 찾기" },
+        "findPasswordEmail": { "nodeId": "1:1649", "name": "로그인_비밀번호 찾기_이메일 인증 요청" },
+        "resetPassword": { "nodeId": "1:1814", "name": "로그인_비밀번호 찾기_비밀번호 재설정" },
+        "resetPasswordPopup": { "nodeId": "1:1885", "name": "로그인_비밀번호 찾기_비밀번호 재설정_팝업" },
+        "accountCheck": { "nodeId": "1:1518", "name": "로그인_계정상태 확인 (탈퇴계정)" },
+        "accountRecoveryEmail": { "nodeId": "1:1576", "name": "로그인_계정복구_이메일 인증" },
+        "accountRecoveryEmailVerify": { "nodeId": "1:1731", "name": "로그인_계정복구_이메일 인증 (인증 진행)" },
+        "accountRecoveryComplete": { "nodeId": "1:1931", "name": "로그인_계정복구_이메일 인증 (완료)" }
+      }
+    },
+
+    "signup": {
+      "description": "회원가입 플로우",
+      "base": { "nodeId": "1:1992", "name": "회원가입" },
+      "states": {
+        "form": { "nodeId": "1:2103", "name": "회원가입_일반 회원가입 (ver2)" }
+      }
+    },
+
+    "studentRegistration": {
+      "description": "수강생 등록",
+      "base": { "nodeId": "1:2311", "name": "수강생 등록" },
+      "states": {
+        "modal": { "nodeId": "1:2261", "name": "수강생 등록_모달" },
+        "dropdown": { "nodeId": "1:2343", "name": "수강생 등록_드롭다운" }
+      }
+    },
+
+    "mypage": {
+      "description": "마이페이지",
+      "base": { "nodeId": "1:5063", "name": "마이페이지" },
+      "states": {
+        "withdrawal": { "nodeId": "1:5145", "name": "마이페이지 - 회원탈퇴 메시지" },
+        "withdrawalModal": { "nodeId": "1:5475", "name": "마이페이지 - 회원탈퇴 안내모달" },
+        "edit": { "nodeId": "1:5240", "name": "마이페이지 - 수정" },
+        "passwordChange": { "nodeId": "1:5510", "name": "마이페이지 - 비밀번호 변경 탭" }
+      }
+    },
+
+    "mypageQuiz": {
+      "description": "마이페이지 쪽지시험",
+      "base": { "nodeId": "1:3499", "name": "마이페이지_쪽지시험" },
+      "states": {
+        "takeExam": { "nodeId": "1:3638", "name": "마이페이지_쪽지시험_시험보기" },
+        "codeError": { "nodeId": "1:3760", "name": "마이페이지_쪽지시험_시험보기_참가코드 불일치" }
+      }
+    },
+
+    "quiz": {
+      "description": "쪽지시험 응시",
+      "base": { "nodeId": "1:3969", "name": "쪽지시험_응시하기" },
+      "states": {
+        "warning": { "nodeId": "1:4217", "name": "쪽지시험_응시하기_경고" },
+        "adminTerminated": { "nodeId": "1:12180", "name": "쪽지시험_응시하기_관리자에_의해_종료" },
+        "submitted": { "nodeId": "1:12433", "name": "쪽지시험_응시하기_시험제출 완료" },
+        "result": { "nodeId": "1:4815", "name": "쪽지시험_결과확인" }
+      }
+    },
+
+    "qnaList": {
+      "description": "질의응답 목록 페이지",
+      "base": { "nodeId": "1:5893", "name": "질의응답 - 질문 목록페이지" },
+      "states": {
+        "sortModal": { "nodeId": "1:5960", "name": "질문 목록 페이지 - 컨텐츠 순서/정렬 모달" },
+        "categoryFilter": { "nodeId": "1:6524", "name": "질문 목록 페이지 - 카테고리 필터 모달" },
+        "searchActive": { "nodeId": "1:6033", "name": "질문 목록페이지 > 질문검색 (입력 중)" },
+        "searchResult": { "nodeId": "1:6453", "name": "질문 목록페이지 > 질문검색 (결과)" }
+      }
+    },
+
+    "qnaDetail": {
+      "description": "질의응답 상세 페이지",
+      "base": { "nodeId": "1:7081", "name": "질의응답 상세 페이지 (비회원)_댓글X" },
+      "states": {
+        "adopted": { "nodeId": "1:7744", "name": "질의응답 상세 페이지_채택완료_댓글0" },
+        "memberWithAnswers": { "nodeId": "1:8897", "name": "질의응답 상세 페이지(회원) - 채택전 (답변 있음)" },
+        "aiAnswer": { "nodeId": "1:7199", "name": "질의응답 상세 페이지 - ai 답변 O" },
+        "aiAnswerResult": { "nodeId": "1:7337", "name": "질의응답 상세 페이지 - ai 답변 결과" },
+        "aiChatbot": { "nodeId": "1:7470", "name": "질의응답 상세 페이지 - ai 챗봇 디자인" },
+        "aiChatbotExpanded": { "nodeId": "1:7603", "name": "질의응답 상세 페이지 - ai 챗봇 디자인 (확장)" },
+        "writeAnswer": { "nodeId": "1:8526", "name": "답변등록(작성)" },
+        "afterAnswer": { "nodeId": "1:8003", "name": "답변등록 후" },
+        "editAnswer": { "nodeId": "1:8280", "name": "답변등록 후 수정하기" },
+        "editQuestion": { "nodeId": "1:9246", "name": "질문 수정" }
+      }
+    },
+
+    "qnaCreate": {
+      "description": "질문 등록 페이지",
+      "base": { "nodeId": "1:9690", "name": "질문 등록페이지 (회원) - 내용X" },
+      "states": {
+        "inputPopup": { "nodeId": "1:9737", "name": "질문 등록페이지 - 내용X - 입력팝업" },
+        "withExample": { "nodeId": "1:9482", "name": "질문 등록페이지 - 예시내용O" },
+        "withContent": { "nodeId": "1:9533", "name": "질문 등록페이지 - 내용O" },
+        "categoryMajor": { "nodeId": "1:9584", "name": "질문 등록페이지 - 대분류 선택" },
+        "categoryMinor": { "nodeId": "1:9639", "name": "질문 등록페이지 - 중분류 선택" }
+      }
+    },
+
+    "communityList": {
+      "description": "커뮤니티 목록 페이지",
+      "base": { "nodeId": "1:9801", "name": "커뮤니티 - 목록 페이지" }
+    },
+
+    "communityDetail": {
+      "description": "커뮤니티 상세 페이지",
+      "base": { "nodeId": "1:10472", "name": "커뮤니티 상세 페이지 (비회원)" },
+      "states": {
+        "member": { "nodeId": "1:10585", "name": "커뮤니티 상세 페이지 (회원)" },
+        "author": { "nodeId": "1:10696", "name": "커뮤니티 상세 페이지 (회원-작성자)" },
+        "deletePopup": { "nodeId": "1:10816", "name": "커뮤니티 상세 페이지 (작성자) > 게시글 삭제 팝업" },
+        "writeComment": { "nodeId": "1:11545", "name": "커뮤니티 상세 페이지 (회원) - 댓글작성" },
+        "commentLoading": { "nodeId": "1:11753", "name": "커뮤니티 상세 페이지 (회원) - 댓글 로딩" }
+      }
+    },
+
+    "communityCreate": {
+      "description": "커뮤니티 글 작성",
+      "base": { "nodeId": "1:5561", "name": "커뮤니티_글작성하기" },
+      "states": {
+        "filled": { "nodeId": "1:5645", "name": "커뮤니티_글작성하기 (내용 입력)" }
+      }
+    },
+
+    "communityEdit": {
+      "description": "커뮤니티 게시글 수정",
+      "base": { "nodeId": "1:5757", "name": "커뮤니티_게시글 수정하기" }
     }
   }
 }

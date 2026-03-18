@@ -52,7 +52,8 @@
       "Bash(chmod:*)",
       "Bash(bash .claude/hooks/dev/figma-design-review.sh)",
       "Bash(echo \"{\"\"tool_input\"\":{\"\"file_path\"\":\"\"/tmp/src/pages/TestPage.tsx\"\"}}\")",
-      "Bash(bash /Users/hyeonchaeeun/Desktop/ai-workflow/.claude/hooks/dev/figma-design-review.sh)"
+      "Bash(bash /Users/hyeonchaeeun/Desktop/ai-workflow/.claude/hooks/dev/figma-design-review.sh)",
+      "Bash(sort -t'|' -k4,4n -k3,3n)"
     ]
   }
 }
