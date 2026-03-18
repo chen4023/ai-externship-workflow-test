@@ -37,16 +37,14 @@ fi
 BRANCH=$(git branch --show-current 2>/dev/null || echo "unknown")
 TIMESTAMP=$(date +"%Y-%m-%d %H:%M")
 
-COMMIT_MSG="${PREFIX}: auto-commit from Claude session
+COMMIT_MSG="${PREFIX}: Claude 세션 자동 커밋
 
-Branch: ${BRANCH}
-Files changed: ${FILE_COUNT}
-Timestamp: ${TIMESTAMP}
+브랜치: ${BRANCH}
+변경 파일 수: ${FILE_COUNT}
+시각: ${TIMESTAMP}
 
-Changed files:
-${CHANGED_FILES}
-
-Co-Authored-By: Claude <noreply@anthropic.com>"
+변경된 파일:
+${CHANGED_FILES}"
 
 # 스테이징 및 커밋
 git add -A
