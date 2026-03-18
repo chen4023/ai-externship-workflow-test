@@ -50,7 +50,7 @@ if [[ "$FILE_PATH" == *"/src/pages/"* ]]; then
   NODE_ID=$(echo "$FIGMA_URL" | sed -nE 's|.*node-id=([^&]+).*|\1|p')
 
   # 상단 5줄에서 Figma-states 키 추출
-  PAGE_KEY=$(head -5 "$FILE_PATH" | grep -oE 'Figma-states:\s*\S+' | sed 's/Figma-states:\s*//')
+  PAGE_KEY=$(head -5 "$FILE_PATH" | grep -oE 'Figma-states:\s*\S+' | sed 's/Figma-states:\s*//' | tr -d ' ')
 
   # pages 매핑에서 상태 정보 추출
   PAGE_STATES=""
