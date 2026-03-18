@@ -12,47 +12,46 @@ import { Pagination } from "../../shared/ui/Pagination/Pagination";
 import { Button } from "../../shared/ui/Button/Button";
 import { NotFound } from "../../shared/ui/NotFound/NotFound";
 
-const CATEGORIES = ["전체", "HTML/CSS", "JavaScript", "React", "Python", "기타"];
+const CATEGORIES = ["전체보기", "답변완료", "답변 대기중"];
 
 const SORT_OPTIONS = [
   { label: "최신순", value: "latest" },
-  { label: "답변많은순", value: "answers" },
-  { label: "오래된순", value: "oldest" },
+  { label: "횟수 순", value: "count" },
 ];
 
 const MOCK_QUESTIONS = [
   {
     id: 1,
-    title: "React useEffect 클린업 함수는 언제 실행되나요?",
+    title: "오류가 발생했다고 뜨네요.",
     content:
-      "useEffect 안에서 return 하는 함수가 언제 호출되는지 정확히 알고 싶습니다. 컴포넌트가 언마운트될 때만인가요?",
-    author: "김수강",
-    date: "2025-03-15",
-    answerCount: 3,
+      "터미널에, 실행 했을때가?발생합니다.(&node.js에서 찾아낸것을 할 수있 가 발생한다는 화면에 보이비 File 'main.py', line 2, 이건 좀 직접적이지요?",
+    author: "김멘토",
+    date: "2시간 전",
+    answerCount: 2,
   },
   {
     id: 2,
-    title: "TypeScript에서 제네릭은 어떤 경우에 사용하나요?",
+    title: "new 함수를 써야 하는 실행 에시에 대해서",
     content:
-      "제네릭의 실무 활용 사례가 궁금합니다. 간단한 예시도 부탁드립니다.",
-    author: "이학생",
-    date: "2025-03-14",
-    answerCount: 5,
+      "함수안 void를 시기이면 같이 있는 코드가 어떤것을 의미하는 것인지, 모든 일을 아는 것과 사용할때와 시사이와 다닌다. 어떤 이유로 만들어지려면?",
+    author: "이수강",
+    date: "2시간 전",
+    answerCount: 1,
   },
   {
     id: 3,
-    title: "CSS Grid와 Flexbox 중 어떤 것을 사용해야 하나요?",
+    title: "오류가 발생했다고 뜨네요.",
     content:
-      "레이아웃을 잡을 때 Grid와 Flexbox를 언제 사용하는지 기준이 궁금합니다.",
+      "터미널에, 실행 했을때가?발생합니다.(&node.js에서 찾아낸것을 할 수있 가 발생한다는 화면에 보이비 File 'main.py', line 2, 이건 좀 직접적이지요?",
     author: "박개발",
-    date: "2025-03-13",
+    date: "3시간 전",
     answerCount: 2,
   },
 ];
 
 export function QnaListPage() {
   const navigate = useNavigate();
-  const [activeCategory, setActiveCategory] = useState("전체");
+  const [activeCategory, setActiveCategory] = useState("전체보기");
   const [sortValue, setSortValue] = useState("latest");
   const [searchQuery, setSearchQuery] = useState("");
   const [currentPage, setCurrentPage] = useState(1);
@@ -67,41 +66,42 @@ export function QnaListPage() {
   return (
     <div className="min-h-screen flex flex-col">
       <Header variant="registered" />
-      <main className="flex-1 flex justify-center py-[40px]">
-        <div className="flex flex-col gap-[24px] w-[1200px]">
-          {/* Header */}
+      <main className="flex-1 flex justify-center py-10">
+        <div className="flex flex-col gap-6 w-300">
+          {/* Title row */}
+          <h1 className="text-2xl font-bold leading-[1.4] tracking-tight text-gray-primary">
+            질의응답
+          </h1>
+
+          {/* Search + Create button */}
           <div className="flex items-center justify-between">
-            <h1 className="text-[24px] font-bold leading-[1.4] tracking-[-0.72px] text-[var(--color-gray-primary)]">
-              질의응답
-            </h1>
+            <SearchInput
+              placeholder="질문 검색"
+              value={searchQuery}
+              onChange={setSearchQuery}
+              onClear={() => setSearchQuery("")}
+              className="w-80"
+            />
             <Button size="sm" onClick={() => navigate("/qna/new")}>
               질문하기
             </Button>
           </div>
 
-          {/* Category Tabs */}
-          <CategoryTabBar>
-            {CATEGORIES.map((cat) => (
-              <CategoryTab
-                key={cat}
-                label={cat}
-                active={activeCategory === cat}
-                onClick={() => {
-                  setActiveCategory(cat);
-                  setCurrentPage(1);
-                }}
-              />
-            ))}
-          </CategoryTabBar>
-
-          {/* Search + Sort */}
+          {/* Category Tabs + Sort */}
           <div className="flex items-center justify-between">
-            <SearchInput
-              value={searchQuery}
-              onChange={setSearchQuery}
-              onClear={() => setSearchQuery("")}
-              className="w-[320px]"
-            />
+            <CategoryTabBar>
+              {CATEGORIES.map((cat) => (
+                <CategoryTab
+                  key={cat}
+                  label={cat}
+                  active={activeCategory === cat}
+                  onClick={() => {
+                    setActiveCategory(cat);
+                    setCurrentPage(1);
+                  }}
+                />
+              ))}
+            </CategoryTabBar>
             <SortModal
               options={SORT_OPTIONS}
               value={sortValue}
@@ -111,11 +111,11 @@ export function QnaListPage() {
 
           {/* Question List */}
           {filteredQuestions.length === 0 ? (
-            <div className="flex items-center justify-center py-[80px]">
+            <div className="flex items-center justify-center py-20">
               <NotFound variant="qna" />
             </div>
           ) : (
-            <div className="flex flex-col gap-[12px]">
+            <div className="flex flex-col">
               {filteredQuestions.map((q) => (
                 <QuestionCard
                   key={q.id}
@@ -132,7 +132,7 @@ export function QnaListPage() {
 
           {/* Pagination */}
           {filteredQuestions.length > 0 && (
-            <div className="flex justify-center pt-[16px]">
+            <div className="flex justify-center pt-4">
               <Pagination
                 currentPage={currentPage}
                 totalPages={5}

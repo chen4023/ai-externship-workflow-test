@@ -3,9 +3,7 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { Header } from "../../shared/ui/Header/Header";
-import { Footer } from "../../shared/ui/Footer/Footer";
 import { Input } from "../../shared/ui/Input/Input";
-import { Button } from "../../shared/ui/Button/Button";
 import { PasswordInput } from "../../shared/ui/PasswordInput/PasswordInput";
 
 export function LoginPage() {
@@ -21,70 +19,98 @@ export function LoginPage() {
   };
 
   return (
-    <div className="min-h-screen flex flex-col">
+    <div className="min-h-screen bg-gray-100">
       <Header variant="guest" />
-      <main className="flex-1 flex items-center justify-center">
-        <div className="flex flex-col items-center gap-[40px] w-[348px]">
-          <h1 className="text-[24px] font-bold leading-[1.4] tracking-[-0.72px] text-[var(--color-gray-primary)]">
-            로그인
-          </h1>
-
-          <div className="flex flex-col gap-[16px] w-full">
-            <Input
-              placeholder="이메일을 입력해 주세요."
-              value={email}
-              onChange={setEmail}
-            />
-            <PasswordInput
-              placeholder="비밀번호를 입력해 주세요."
-              value={password}
-              onChange={setPassword}
-            />
-          </div>
-
-          <div className="flex flex-col gap-[16px] w-full">
-            <Button
-              disabled={!isFormValid}
-              onClick={handleLogin}
-              className="w-full"
-            >
-              로그인
-            </Button>
-
-            <div className="flex items-center justify-center gap-[12px] text-[14px] tracking-[-0.42px] text-[var(--color-gray-500)]">
+      <main className="flex items-center justify-center pt-22">
+        <div className="flex flex-col items-center gap-16 w-87">
+          {/* Logo + signup link */}
+          <div className="flex flex-col items-center gap-7 w-full">
+            <p className="font-bold text-2xl text-gray-primary">
+              OZ 오즈코딩스쿨
+            </p>
+            <div className="flex items-center justify-center gap-3">
+              <span className="text-base leading-[1.4] tracking-tight text-gray-600">
+                아직 회원이 아니신가요?
+              </span>
               <button
                 type="button"
-                onClick={() => navigate("/login/find-id")}
-                className="cursor-pointer hover:text-[var(--color-gray-700)] transition-colors"
+                onClick={() => navigate("/signup")}
+                className="text-base leading-[1.4] tracking-tight text-primary cursor-pointer"
               >
-                아이디 찾기
-              </button>
-              <span className="text-[var(--color-gray-250)]">|</span>
-              <button
-                type="button"
-                onClick={() => navigate("/login/find-password")}
-                className="cursor-pointer hover:text-[var(--color-gray-700)] transition-colors"
-              >
-                비밀번호 찾기
+                회원가입 하기
               </button>
             </div>
           </div>
 
-          <div className="flex flex-col items-center gap-[16px] w-full">
-            <p className="text-[14px] tracking-[-0.42px] text-[var(--color-gray-400)]">
-              아직 계정이 없으신가요?
-            </p>
-            <Button
-              variant="outline"
-              onClick={() => navigate("/signup")}
-              className="w-full"
-            >
-              회원가입
-            </Button>
+          {/* Social login + form */}
+          <div className="flex flex-col gap-10 w-full">
+            {/* Social buttons */}
+            <div className="flex flex-col gap-3 w-full">
+              <button
+                type="button"
+                className="flex items-center justify-center h-13 w-full rounded-sm bg-kakao-bg cursor-pointer"
+              >
+                <span className="text-base tracking-tight text-kakao-text">
+                  카카오 간편 로그인 / 가입
+                </span>
+              </button>
+              <button
+                type="button"
+                className="flex items-center justify-center h-13 w-full rounded-sm bg-naver-bg cursor-pointer"
+              >
+                <span className="text-base tracking-tight text-white">
+                  네이버 간편 로그인 / 가입
+                </span>
+              </button>
+            </div>
+
+            {/* Email/Password form */}
+            <div className="flex flex-col gap-3 w-full">
+              <div className="flex flex-col gap-3 w-full">
+                <Input
+                  placeholder="아이디 (example@gmail.com)"
+                  value={email}
+                  onChange={setEmail}
+                />
+                <div className="flex flex-col gap-2">
+                  <PasswordInput
+                    placeholder="비밀번호 (6~15자의 영문 대소문자, 숫자, 특수문자 포함)"
+                    value={password}
+                    onChange={setPassword}
+                  />
+                  <div className="flex items-center">
+                    <button
+                      type="button"
+                      onClick={() => navigate("/login/find-id")}
+                      className="text-sm leading-[1.4] tracking-tight text-gray-600 py-2 cursor-pointer"
+                    >
+                      아이디 찾기
+                    </button>
+                    <span className="text-sm leading-[1.4] tracking-tight text-gray-600 px-2">
+                      |
+                    </span>
+                    <button
+                      type="button"
+                      onClick={() => navigate("/login/find-password")}
+                      className="text-sm leading-[1.4] tracking-tight text-gray-600 py-2 cursor-pointer"
+                    >
+                      비밀번호 찾기
+                    </button>
+                  </div>
+                </div>
+              </div>
+              <button
+                type="button"
+                disabled={!isFormValid}
+                onClick={handleLogin}
+                className="flex items-center justify-center h-13 w-full rounded-sm bg-gray-200 text-base leading-[1.4] tracking-tight text-gray-disabled cursor-pointer disabled:cursor-not-allowed"
+              >
+                일반회원 로그인
+              </button>
+            </div>
           </div>
         </div>
       </main>
-      <Footer />
     </div>
   );
 }

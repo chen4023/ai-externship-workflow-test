@@ -72,7 +72,8 @@
       "Bash(~/bin/gh api:*)",
       "Read(//Users/hyeonchaeeun/bin/**)",
       "Read(//opt/homebrew/Cellar/gh/2.88.1/bin/**)",
-      "Read(//usr/local/bin/**)"
+      "Read(//usr/local/bin/**)",
+      "mcp__figma__get_screenshot"
     ]
   }
 }
