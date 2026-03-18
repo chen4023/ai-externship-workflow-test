@@ -21,10 +21,15 @@ export function Modal({ open, onClose, children, className = '' }: ModalProps) {
     }
   }, [open]);
 
+  const handleBackdropClick = (e: React.MouseEvent<HTMLDialogElement>) => {
+    if (e.target === dialogRef.current) onClose();
+  };
+
   return (
     <dialog
       ref={dialogRef}
       onClose={onClose}
+      onClick={handleBackdropClick}
       className={`m-auto rounded-[12px] p-0 backdrop:bg-black/50 ${className}`}
     >
       {children}

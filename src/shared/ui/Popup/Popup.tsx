@@ -76,10 +76,15 @@ export function Popup({
     onClose();
   };
 
+  const handleBackdropClick = (e: React.MouseEvent<HTMLDialogElement>) => {
+    if (e.target === dialogRef.current) onClose();
+  };
+
   return (
     <dialog
       ref={dialogRef}
       onClose={onClose}
+      onClick={handleBackdropClick}
       className={`m-auto rounded-[12px] border border-black p-0 backdrop:bg-black/50 ${className}`}
     >
       <div className="flex flex-col items-center w-[396px] p-[24px]">
