@@ -61,7 +61,8 @@
       "Read(//Users/hyeonchaeeun/Desktop/ai-workflow/**)",
       "Bash(for hash:*)",
       "Bash(do echo:*)",
-      "Bash(git log:*)"
+      "Bash(git log:*)",
+      "Bash(FILTER_BRANCH_SQUELCH_WARNING=1 git filter-branch -f --msg-filter '\ncase \"$GIT_COMMIT\" in\n  950392cfc4173442eb56823ec66009084eba1dbe\\)\n    echo \"chore: Figma 디자인 리뷰 훅 및 설정 업데이트\"\n    ;;\n  6111286f678ba7c09cf79ec5468ae845253146ad\\)\n    echo \"feat: 컴포넌트 쇼케이스 페이지 및 Modal/Popup UI 개선\"\n    ;;\n  e68eb4a7a6baa9fe7a44309bd69cc629fbc9ddd7\\)\n    echo \"chore: Figma 컴포넌트 맵 및 설정 업데이트\"\n    ;;\n  2725e2738f21047898955499bf314cab47cee4d9\\)\n    echo \"chore: Figma 디자인 리뷰 훅 및 컴포넌트 맵 설정\"\n    ;;\n  99daca8ab9cfbc4325d374d31c9b1b801d782e8c\\)\n    echo \"chore: Claude 설정 업데이트\"\n    ;;\n  49b17c210d0a66f4e183cd7fb2662e7b6dfb5429\\)\n    echo \"chore: Claude 설정 업데이트\"\n    ;;\n  2a9b95536e7a5d8bc1d69c4cb5f154c33d2dbb76\\)\n    echo \"feat: 컴포넌트 쇼케이스 페이지 추가\"\n    ;;\n  73b3ba4d46cbf6efb66b845e64879e8d2fe65430\\)\n    echo \"chore: Claude 설정 업데이트\"\n    ;;\n  *\\)\n    sed \"/^Co-Authored-By:/d\"\n    ;;\nesac\n' -- --all)"
     ]
   }
 }
