@@ -58,7 +58,10 @@
       "Bash(echo '{\"\"\"\"tool_input\"\"\"\":{\"\"\"\"file_path\"\"\"\":\"\"\"\"'\"$TEMP\"'\"\"\"\"}}')",
       "Bash(PAGE_KEY=\"login\")",
       "Bash(MAP_FILE=\".claude/figma-component-map.json\")",
-      "Read(//Users/hyeonchaeeun/Desktop/ai-workflow/**)"
+      "Read(//Users/hyeonchaeeun/Desktop/ai-workflow/**)",
+      "Bash(for hash:*)",
+      "Bash(do echo:*)",
+      "Bash(git log:*)"
     ]
   }
 }
