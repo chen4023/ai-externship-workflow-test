@@ -28,6 +28,7 @@
 - barrel export 금지 (직접 import)
 - 컴포넌트 파일은 200줄 이하
 - 비즈니스 로직은 커스텀 훅으로 분리
+- `var` 키워드 사용 금지 (`const` 또는 `let` 사용)
 - API 호출은 TanStack Query Factory Pattern
 - React 19 `use()` API와 Server Actions 활용 가능
 
