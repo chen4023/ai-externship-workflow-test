@@ -6,3 +6,5 @@ dist
 !.env.example
 tsconfig.tsbuildinfo
 logs/
+.claude/workflow-state.json
+.claude/settings.local.json
