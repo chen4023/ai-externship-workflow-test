@@ -79,7 +79,9 @@
       "Bash(bash .claude/hooks/gates/figma-sync.sh \"\" \"src/shared/ui/Modal/Modal.tsx\" 2>&1)",
       "Bash(bash .claude/hooks/notify-discord.sh \"테스트 알림\" \"Discord 연동 테스트입니다.\" \"info\")",
       "Bash(bash .claude/hooks/notify-discord.sh \"🚀 code-reviewer 에이전트 호출\" \"PR #1 변경 파일 10개에 대해 코드 리뷰를 시작합니다.\" \"info\")",
-      "Bash(bash .claude/hooks/notify-discord.sh \"✅ code-reviewer 완료\" \"최종 판정: APPROVE\\\\nCritical: 0 / Warning: 2 / Suggestion: 3\" \"success\")"
+      "Bash(bash .claude/hooks/notify-discord.sh \"✅ code-reviewer 완료\" \"최종 판정: APPROVE\\\\nCritical: 0 / Warning: 2 / Suggestion: 3\" \"success\")",
+      "Bash(NOTIFY=\".claude/hooks/notify-discord.sh\")",
+      "Bash(__NEW_LINE_465191afd5db759d__ bash:*)"
     ]
   }
 }

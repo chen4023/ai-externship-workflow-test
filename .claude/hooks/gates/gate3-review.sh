@@ -56,4 +56,4 @@ echo "$RESULT"
 AGENT_LIST=$(printf '%s\n' "${AGENTS[@]}" | paste -sd', ' -)
 MODE="순차"
 [ "$PARALLEL" = "true" ] && MODE="병렬"
-bash "$NOTIFY" "🔍 Gate 3: 리뷰 시작" "에이전트: ${AGENT_LIST}\n실행 모드: ${MODE}\n변경 파일: $(echo "$CHANGED_FILES" | wc -l | tr -d ' ')개" "info"
+bash "$NOTIFY" "🔍 Gate 3: 리뷰 시작" "에이전트: ${AGENT_LIST}\n실행 모드: ${MODE}\n변경 파일: $(echo "$CHANGED_FILES" | wc -l | tr -d ' ')개" "info" "gate"

@@ -11,22 +11,90 @@ model: opus
 1. 직접 판단하지 않는다. Gate 스크립트의 exit code와 JSON 출력으로 판단한다.
 2. 모든 Phase 전환과 서브에이전트 완료 시 Discord 알림을 전송한다.
 
-## Discord 알림 규칙
+## Discord 실시간 채널 규칙
 
-**알림 스크립트**: `bash .claude/hooks/notify-discord.sh "제목" "내용" "color"`
-- color: `success`(녹색), `fail`(빨강), `info`(파랑), `warn`(노랑)
+에이전트들이 Discord 채널에서 팀처럼 대화한다. 상태 알림뿐 아니라 **사고 과정, 분석 내용, 의견**도 공유한다.
 
-**반드시 알림을 전송하는 시점**:
-| 시점 | 제목 예시 | color |
-|------|----------|-------|
-| Phase 전환 | "🔄 Phase: IMPLEMENT → GATE_2" | info |
-| 서브에이전트 호출 | "🚀 code-reviewer 에이전트 호출" | info |
-| 서브에이전트 완료 | "✅ code-reviewer 완료: APPROVE" | success/fail |
-| PR 생성 | "🔗 PR #42 생성" + URL | success |
-| PR 머지 | "🎉 PR #42 머지 완료" | success |
-| 사용자 대기 | "⏸️ 사용자 확인 대기: spec 검토" | warn |
+**알림 스크립트**: `bash .claude/hooks/notify-discord.sh "제목" "내용" "color" "agent"`
 
-Gate 스크립트(gate1/2/3)는 자체적으로 알림을 전송하므로 중복 호출하지 않는다.
+**color 종류**:
+- `success`(녹색): 완료, 통과
+- `fail`(빨강): 실패, 차단
+- `info`(파랑): 시작, 진행
+- `warn`(노랑): 대기, 주의
+- `think`(보라): 분석 중, 사고 과정
+- `discuss`(금색): 의견, 제안, 토론
+
+**agent 종류**: `orchestrator`, `code-reviewer`, `security-reviewer`, `accessibility-checker`, `design-reviewer`, `test-writer`, `spec-reviewer`, `figma-builder`, `figma-token`, `gate`
+
+### Orchestrator가 보내는 메시지
+
+```bash
+# Phase 전환
+bash .claude/hooks/notify-discord.sh "IMPLEMENT → GATE_2" "구현 4 Steps 완료. 품질 검증 시작합니다." "info" "orchestrator"
+
+# 서브에이전트 호출 전
+bash .claude/hooks/notify-discord.sh "code-reviewer 호출" "PR #42의 변경 파일 10개에 대해 리뷰를 요청합니다." "info" "orchestrator"
+
+# 서브에이전트 결과 수신 후
+bash .claude/hooks/notify-discord.sh "리뷰 결과 수신" "code-reviewer: REQUEST_CHANGES (Critical 2, Warning 3)\n→ FIX Phase로 전환합니다." "think" "orchestrator"
+
+# 판단/라우팅
+bash .claude/hooks/notify-discord.sh "라우팅 결정" "gate3-review.sh 결과: 4개 에이전트 병렬 실행\ncode-reviewer, security-reviewer, accessibility-checker, design-reviewer" "think" "orchestrator"
+
+# PR
+bash .claude/hooks/notify-discord.sh "PR #42 생성" "https://github.com/..." "success" "orchestrator"
+
+# 사용자 대기
+bash .claude/hooks/notify-discord.sh "사용자 확인 대기" "spec.md 내용을 검토해주세요." "warn" "orchestrator"
+```
+
+### 서브에이전트 프롬프트에 포함할 Discord 지시
+
+서브에이전트를 호출할 때, 다음 지시를 프롬프트에 **반드시 포함**한다:
+
+```
+Discord 채널에 작업 과정을 공유하세요. 다음 시점에 메시지를 보내세요:
+
+1. 작업 시작 시 - 무엇을 분석할지 공유
+   bash .claude/hooks/notify-discord.sh "분석 시작" "Modal.tsx, Popup.tsx의 접근성을 검사합니다." "info" "{agent-name}"
+
+2. 주요 발견 시 - 발견한 이슈나 인사이트 공유
+   bash .claude/hooks/notify-discord.sh "이슈 발견" "Modal에 aria-label 누락 (Critical)\nPopup 터치 타겟 24px 미만 (Warning)" "discuss" "{agent-name}"
+
+3. 다른 에이전트에게 의견 전달 시 - 관련 에이전트를 언급
+   bash .claude/hooks/notify-discord.sh "design-reviewer에게" "Popup의 border-black이 토큰에 없는 색상입니다. 디자인 의도 확인 필요." "discuss" "{agent-name}"
+
+4. 최종 결론 시 - 판정과 요약
+   bash .claude/hooks/notify-discord.sh "리뷰 완료" "최종 판정: REQUEST_CHANGES\nCritical: 2 / Warning: 3 / Suggestion: 1" "success" "{agent-name}"
+```
+
+### 메시지 예시 (실제 채널에서 보이는 흐름)
+
+```
+🎯 Orchestrator: "GATE_3 진입. 변경 파일 분석 후 리뷰 에이전트를 결정합니다."
+🚧 Quality Gate: "Gate 3: 리뷰 시작 — code-reviewer, security-reviewer, accessibility-checker, design-reviewer (병렬)"
+🎯 Orchestrator: "4개 에이전트를 병렬로 호출합니다."
+
+🔍 Code Reviewer: "분석 시작 — SignupFormPage.tsx, Modal.tsx 등 6개 파일을 리뷰합니다."
+🛡️ Security Reviewer: "분석 시작 — 사용자 입력 검증, XSS 취약점을 확인합니다."
+♿ Accessibility Checker: "분석 시작 — 폼 접근성, ARIA 속성을 검사합니다."
+🎨 Design Reviewer: "분석 시작 — Figma 디자인과 구현의 일치 여부를 확인합니다."
+
+🔍 Code Reviewer: "이슈 발견 — FormLabel에 <label htmlFor> 미연결 (Warning)"
+♿ Accessibility Checker: "이슈 발견 — 성별 선택에 role=radiogroup 누락 (Critical)"
+🎨 Design Reviewer: "code-reviewer에게 — border-black이 tokens.css에 없습니다. 하드코딩된 색상으로 보입니다."
+🔍 Code Reviewer: "동의합니다. Warning에 추가하겠습니다."
+
+🔍 Code Reviewer: "리뷰 완료 — REQUEST_CHANGES (Critical 1, Warning 5)"
+🛡️ Security Reviewer: "리뷰 완료 — APPROVE (이슈 없음)"
+♿ Accessibility Checker: "리뷰 완료 — REQUEST_CHANGES (Critical 2, Warning 1)"
+🎨 Design Reviewer: "리뷰 완료 — NEEDS_REVISION (토큰 위반 3건)"
+
+🎯 Orchestrator: "리뷰 종합: Critical 3, Warning 6. FIX Phase로 전환합니다."
+```
+
+Gate 스크립트(gate1/2/3)는 `gate` 프로필로 자체 알림을 전송하므로 orchestrator가 중복 호출하지 않는다.
 
 ---
 
