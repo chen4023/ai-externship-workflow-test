@@ -5,11 +5,14 @@ interface DropdownOption {
   value: string;
 }
 
+type DropdownVariant = 'default' | 'compact';
+
 interface DropdownProps {
   options: DropdownOption[];
   value?: string;
   placeholder?: string;
   disabled?: boolean;
+  variant?: DropdownVariant;
   onChange?: (value: string) => void;
   className?: string;
 }
@@ -38,6 +41,7 @@ export function Dropdown({
   value,
   placeholder = '해당되는 항목을 선택해 주세요.',
   disabled = false,
+  variant = 'default',
   onChange,
   className = '',
 }: DropdownProps) {
@@ -57,21 +61,33 @@ export function Dropdown({
 
   const selectedLabel = options.find((o) => o.value === value)?.label;
 
+  const isCompact = variant === 'compact';
+
+  const defaultButtonStyles = `h-[48px] px-[16px] py-[10px] rounded-[4px] border text-[14px] tracking-[-0.42px] ${
+    disabled
+      ? 'bg-[var(--color-gray-200)] border-[var(--color-gray-disabled)] text-[var(--color-gray-disabled)] cursor-not-allowed'
+      : open
+        ? 'bg-white border-[var(--color-gray-500)] text-[var(--color-gray-primary)]'
+        : value
+          ? 'bg-white border-[var(--color-gray-disabled)] text-[var(--color-gray-primary)]'
+          : 'bg-white border-[var(--color-gray-disabled)] text-[var(--color-gray-disabled)] hover:bg-[var(--color-gray-100)]'
+  }`;
+
+  const compactButtonStyles = `h-[42px] px-2 py-3 border-0 bg-transparent text-[16px] font-normal ${
+    disabled
+      ? 'text-[var(--color-gray-disabled)] cursor-not-allowed'
+      : 'text-[var(--color-gray-500)]'
+  }`;
+
+  const buttonStyles = isCompact ? compactButtonStyles : defaultButtonStyles;
+
   return (
     <div ref={containerRef} className={`relative w-full ${className}`}>
       <button
         type="button"
         disabled={disabled}
         onClick={() => !disabled && setOpen((v) => !v)}
-        className={`flex items-center justify-between w-full h-[48px] px-[16px] py-[10px] rounded-[4px] border text-[14px] tracking-[-0.42px] cursor-pointer transition-colors ${
-          disabled
-            ? 'bg-[var(--color-gray-200)] border-[var(--color-gray-disabled)] text-[var(--color-gray-disabled)] cursor-not-allowed'
-            : open
-              ? 'bg-white border-[var(--color-gray-500)] text-[var(--color-gray-primary)]'
-              : value
-                ? 'bg-white border-[var(--color-gray-disabled)] text-[var(--color-gray-primary)]'
-                : 'bg-white border-[var(--color-gray-disabled)] text-[var(--color-gray-disabled)] hover:bg-[var(--color-gray-100)]'
-        }`}
+        className={`flex items-center justify-between w-full cursor-pointer transition-colors ${buttonStyles}`}
       >
         <span>{selectedLabel ?? placeholder}</span>
         <ChevronIcon open={open} />
