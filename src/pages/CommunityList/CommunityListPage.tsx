@@ -70,7 +70,7 @@ export function CommunityListPage() {
                 className="w-[472px]"
               />
             </div>
-            <Button size="lg" onClick={() => navigate("/community/new")} className="w-30">
+            <Button size="lg" onClick={() => navigate("/community/new")} className="w-30 gap-2">
               <PenIcon />
               글쓰기
             </Button>
