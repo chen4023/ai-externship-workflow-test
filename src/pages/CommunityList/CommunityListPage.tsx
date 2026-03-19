@@ -60,7 +60,7 @@ export function CommunityListPage() {
                 value={searchType}
                 onChange={setSearchType}
                 variant="compact"
-                className="w-28"
+                className="w-[118px]"
               />
               <SearchInput
                 placeholder="게시글 검색"

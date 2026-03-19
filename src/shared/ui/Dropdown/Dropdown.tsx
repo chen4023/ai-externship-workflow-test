@@ -73,7 +73,7 @@ export function Dropdown({
           : 'bg-white border-[var(--color-gray-disabled)] text-[var(--color-gray-disabled)] hover:bg-[var(--color-gray-100)]'
   }`;
 
-  const compactButtonStyles = `h-[42px] px-2 py-3 border-0 bg-transparent text-[16px] font-normal ${
+  const compactButtonStyles = `h-[42px] px-2 py-3 border-0 bg-transparent text-[16px] font-normal tracking-[-0.48px] leading-[1.4] ${
     disabled
       ? 'text-[var(--color-gray-disabled)] cursor-not-allowed'
       : 'text-[var(--color-gray-500)]'
