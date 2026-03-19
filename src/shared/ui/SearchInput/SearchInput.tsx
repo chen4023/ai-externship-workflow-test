@@ -29,7 +29,7 @@ export const SearchInput = forwardRef<HTMLInputElement, SearchInputProps>(
 
     return (
       <div
-        className={`flex items-center h-12 px-[10px] rounded-full border transition-colors ${
+        className={`flex items-center p-[10px] gap-[10px] rounded-full border transition-colors ${
           focused
             ? 'border-[var(--color-primary)]'
             : 'border-[var(--color-gray-disabled)]'

@@ -73,7 +73,7 @@ export function Dropdown({
           : 'bg-white border-[var(--color-gray-disabled)] text-[var(--color-gray-disabled)] hover:bg-[var(--color-gray-100)]'
   }`;
 
-  const compactButtonStyles = `h-[42px] px-2 py-3 border-0 bg-transparent text-[16px] font-normal tracking-[-0.48px] leading-[1.4] ${
+  const compactButtonStyles = `h-[42px] px-[8px] py-[12px] border-0 bg-transparent text-[16px] font-normal tracking-[-0.48px] leading-[1.4] ${
     disabled
       ? 'text-[var(--color-gray-disabled)] cursor-not-allowed'
       : 'text-[var(--color-gray-500)]'
@@ -82,7 +82,7 @@ export function Dropdown({
   const buttonStyles = isCompact ? compactButtonStyles : defaultButtonStyles;
 
   return (
-    <div ref={containerRef} className={`relative w-full ${className}`}>
+    <div ref={containerRef} className={`relative ${isCompact ? '' : 'w-full'} ${className}`}>
       <button
         type="button"
         disabled={disabled}
