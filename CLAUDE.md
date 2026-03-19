@@ -76,7 +76,7 @@ Figma 링크가 주어지면 다음 순서를 따른다:
 ## Boundaries
 - ✅ Always: 테스트 작성 후 커밋, 타입 안전성 보장
 - ⚠️ Ask first: DB 스키마 변경, 의존성 추가, API 계약 변경
-- 🚫 Never: .env 수정, node_modules 편집, CI 설정 변경
+- 🚫 Never: .env 수정, node_modules 편집, CI 설정 변경, main 브랜치에 직접 커밋
 
 ## Development Workflow
 새 기능 개발 시 `orchestrator` 에이전트가 상태 전이와 라우팅을 관리한다.
@@ -95,6 +95,15 @@ INIT → FIGMA_SYNC? → SPEC → GATE_1 → PLAN → IMPLEMENT → GATE_2 → G
 | `gates/gate2-quality.sh` | 타입/린트/테스트/토큰 검증 | exit code + JSON |
 | `gates/gate3-review.sh` | 필요한 리뷰 에이전트 결정 | 변경 파일 분석 |
 | `gates/figma-sync.sh` | Figma 싱크 필요 여부 판단 | 컴포넌트 맵 조회 |
+
+### 이슈 기반 워크플로우
+새 기능 작업 시 반드시 다음 순서를 따른다:
+1. `gh issue create`로 GitHub Issue 생성
+2. `git checkout -b feat/[기능명]-#[이슈번호]`로 피처 브랜치 생성
+3. 모든 커밋 메시지 끝에 `(#이슈번호)` 추가 (예: `feat: 로그인 폼 구현 (#7)`)
+4. PR 본문에 `Closes #이슈번호` 포함 → 머지 시 이슈 자동 닫힘
+
+auto-commit 훅이 브랜치명에서 이슈 번호를 자동 추출하여 커밋에 연결한다.
 
 ### 시작 방법
 - 전체 자동화: `"orchestrator 에이전트로 [기능명] 개발을 시작해줘"`

@@ -31,12 +31,12 @@ fi
 
 # 결과 출력 + Discord 알림
 if [ ${#ISSUES[@]} -eq 0 ]; then
-  bash "$NOTIFY" "✅ Gate 1 통과" "Spec 검증 완료 (수락 기준 ${AC_COUNT}개)" "success"
+  bash "$NOTIFY" "✅ Gate 1 통과" "Spec 검증 완료 (수락 기준 ${AC_COUNT}개)" "success" "gate"
   echo '{"pass":true,"issues":[],"agent":"spec-reviewer"}'
   exit 0
 else
   ISSUES_TEXT=$(printf '• %s\n' "${ISSUES[@]}")
-  bash "$NOTIFY" "❌ Gate 1 실패" "${ISSUES_TEXT}" "fail"
+  bash "$NOTIFY" "❌ Gate 1 실패" "${ISSUES_TEXT}" "fail" "gate"
   ISSUES_JSON=$(printf '%s\n' "${ISSUES[@]}" | jq -R . | jq -s .)
   echo "{\"pass\":false,\"issues\":${ISSUES_JSON},\"agent\":\"spec-reviewer\"}"
   exit 1

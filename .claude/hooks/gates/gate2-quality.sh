@@ -68,10 +68,10 @@ echo "$RESULT"
 
 # Discord 알림
 if [ "$PASS" = "true" ]; then
-  bash "$NOTIFY" "✅ Gate 2 통과" "TypeScript, ESLint, 테스트, 디자인 토큰 모두 통과" "success"
+  bash "$NOTIFY" "✅ Gate 2 통과" "TypeScript, ESLint, 테스트, 디자인 토큰 모두 통과" "success" "gate"
   exit 0
 else
   FAILED_LIST=$(printf '%s\n' "${FAILED[@]}" | paste -sd', ' -)
-  bash "$NOTIFY" "❌ Gate 2 실패" "실패 항목: ${FAILED_LIST}" "fail"
+  bash "$NOTIFY" "❌ Gate 2 실패" "실패 항목: ${FAILED_LIST}" "fail" "gate"
   exit 1
 fi

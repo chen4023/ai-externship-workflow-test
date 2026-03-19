@@ -8,6 +8,13 @@
 # Git 저장소가 아니면 종료
 git rev-parse --is-inside-work-tree &>/dev/null || exit 0
 
+# main/master 브랜치에서는 커밋 금지
+CURRENT_BRANCH=$(git branch --show-current 2>/dev/null)
+if [ "$CURRENT_BRANCH" = "main" ] || [ "$CURRENT_BRANCH" = "master" ]; then
+  echo "⚠️ main 브랜치에서는 자동 커밋하지 않습니다. 피처 브랜치를 생성하세요."
+  exit 0
+fi
+
 # 변경사항이 없으면 종료
 if [ -z "$(git status --porcelain 2>/dev/null)" ]; then
   exit 0
@@ -91,7 +98,21 @@ generate_subject() {
 }
 
 SUBJECT=$(generate_subject "$CHANGED_FILES")
-COMMIT_MSG="${PREFIX}: ${SUBJECT}"
+
+# ── 브랜치명에서 이슈 번호 추출 ──
+BRANCH=$(git branch --show-current 2>/dev/null || echo "")
+ISSUE_NUM=$(echo "$BRANCH" | grep -oE '#[0-9]+' | head -1)
+if [ -z "$ISSUE_NUM" ]; then
+  # feat/signup-form-3 같은 패턴에서도 추출 시도
+  ISSUE_NUM=$(echo "$BRANCH" | grep -oE '[-/][0-9]+$' | grep -oE '[0-9]+')
+  [ -n "$ISSUE_NUM" ] && ISSUE_NUM="#${ISSUE_NUM}"
+fi
+
+if [ -n "$ISSUE_NUM" ]; then
+  COMMIT_MSG="${PREFIX}: ${SUBJECT} (${ISSUE_NUM})"
+else
+  COMMIT_MSG="${PREFIX}: ${SUBJECT}"
+fi
 
 # 스테이징 및 커밋
 git add -A
