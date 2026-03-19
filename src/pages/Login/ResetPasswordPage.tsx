@@ -3,8 +3,6 @@
 // TODO: react-hook-form + zod 스키마 기반 폼 검증으로 리팩토링 예정
 import { type FormEvent, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { Header } from "../../shared/ui/Header/Header";
-import { Footer } from "../../shared/ui/Footer/Footer";
 import { PasswordInput } from "../../shared/ui/PasswordInput/PasswordInput";
 import { Button } from "../../shared/ui/Button/Button";
 import { Popup } from "../../shared/ui/Popup/Popup";
@@ -37,59 +35,55 @@ export function ResetPasswordPage() {
   };
 
   return (
-    <div className="min-h-screen flex flex-col">
-      <Header variant="guest" />
-      <main className="flex-1 flex items-center justify-center">
-        <form onSubmit={handleSubmit} className="flex flex-col items-center gap-10 w-87">
-          <h1 className="text-2xl font-bold leading-snug tracking-tight text-gray-primary">
-            비밀번호 재설정
-          </h1>
+    <>
+      <form onSubmit={handleSubmit} className="flex flex-col items-center gap-10 w-87 mx-auto">
+        <h1 className="text-2xl font-bold leading-snug tracking-tight text-gray-primary">
+          비밀번호 재설정
+        </h1>
 
-          <div className="flex flex-col gap-4 w-full">
-            <div className="flex flex-col gap-2">
-              <label htmlFor="reset-new-password" className="text-sm font-semibold leading-snug tracking-tight text-gray-700">
-                새 비밀번호
-              </label>
-              <PasswordInput
-                id="reset-new-password"
-                placeholder="새 비밀번호를 입력해 주세요."
-                value={password}
-                onChange={setPassword}
-                state={getPasswordState()}
-                helperText="* 8~15자의 영문 대/소문자, 숫자 및 특수문자 조합"
-                autoComplete="new-password"
-              />
-            </div>
-            <div className="flex flex-col gap-2">
-              <label htmlFor="reset-confirm-password" className="text-sm font-semibold leading-snug tracking-tight text-gray-700">
-                비밀번호 확인
-              </label>
-              <PasswordInput
-                id="reset-confirm-password"
-                placeholder="비밀번호를 다시 입력해 주세요."
-                value={confirmPassword}
-                onChange={setConfirmPassword}
-                state={getConfirmState()}
-                helperText={
-                  confirmPassword.length > 0 && !passwordsMatch
-                    ? "비밀번호가 일치하지 않습니다."
-                    : undefined
-                }
-                autoComplete="new-password"
-              />
-            </div>
+        <div className="flex flex-col gap-4 w-full">
+          <div className="flex flex-col gap-2">
+            <label htmlFor="reset-new-password" className="text-sm font-semibold leading-snug tracking-tight text-gray-700">
+              새 비밀번호
+            </label>
+            <PasswordInput
+              id="reset-new-password"
+              placeholder="새 비밀번호를 입력해 주세요."
+              value={password}
+              onChange={setPassword}
+              state={getPasswordState()}
+              helperText="* 8~15자의 영문 대/소문자, 숫자 및 특수문자 조합"
+              autoComplete="new-password"
+            />
           </div>
+          <div className="flex flex-col gap-2">
+            <label htmlFor="reset-confirm-password" className="text-sm font-semibold leading-snug tracking-tight text-gray-700">
+              비밀번호 확인
+            </label>
+            <PasswordInput
+              id="reset-confirm-password"
+              placeholder="비밀번호를 다시 입력해 주세요."
+              value={confirmPassword}
+              onChange={setConfirmPassword}
+              state={getConfirmState()}
+              helperText={
+                confirmPassword.length > 0 && !passwordsMatch
+                  ? "비밀번호가 일치하지 않습니다."
+                  : undefined
+              }
+              autoComplete="new-password"
+            />
+          </div>
+        </div>
 
-          <Button
-            type="submit"
-            disabled={!isFormValid}
-            className="w-full"
-          >
-            비밀번호 변경
-          </Button>
-        </form>
-      </main>
-      <Footer />
+        <Button
+          type="submit"
+          disabled={!isFormValid}
+          className="w-full"
+        >
+          비밀번호 변경
+        </Button>
+      </form>
 
       <Popup
         open={showPopup}
@@ -102,6 +96,6 @@ export function ResetPasswordPage() {
         ctaLabel="로그인하기"
         onCtaClick={() => navigate("/login")}
       />
-    </div>
+    </>
   );
 }

@@ -27,7 +27,7 @@ export function PostCard({ post, onClick }: PostCardProps) {
             {post.content}
           </p>
         )}
-        <div className="flex items-center justify-between mt-3 w-full">
+        <div className="flex items-center justify-between mt-16 w-full">
           <div className="flex items-center gap-3 text-xs leading-snug tracking-tight text-gray-500">
             <span className="flex items-center gap-1">
               <svg

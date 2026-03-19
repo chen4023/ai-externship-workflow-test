@@ -3,7 +3,6 @@
 // TODO: react-hook-form + zod 스키마 기반 폼 검증으로 리팩토링 예정
 import { type FormEvent, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { Header } from "../../shared/ui/Header/Header";
 import { Input } from "../../shared/ui/Input/Input";
 import { PasswordInput } from "../../shared/ui/PasswordInput/PasswordInput";
 import { FindIdModal } from "./ui/FindIdModal";
@@ -25,107 +24,104 @@ export function LoginPage() {
   };
 
   return (
-    <div className="min-h-screen bg-gray-100">
-      <Header variant="guest" />
-      <main className="flex items-center justify-center pt-22">
-        <div className="flex flex-col items-center gap-16 w-87">
-          {/* Logo + signup link */}
-          <div className="flex flex-col items-center gap-7 w-full">
-            <p className="font-bold text-2xl text-gray-primary">
-              OZ 오즈코딩스쿨
-            </p>
-            <div className="flex items-center justify-center gap-3">
-              <span className="text-base leading-snug tracking-tight text-gray-600">
-                아직 회원이 아니신가요?
-              </span>
-              <button
-                type="button"
-                onClick={() => navigate("/signup")}
-                className="text-base leading-snug tracking-tight text-primary cursor-pointer"
-              >
-                회원가입 하기
-              </button>
-            </div>
-          </div>
-
-          {/* Social login + form */}
-          <div className="flex flex-col gap-10 w-full">
-            {/* Social buttons */}
-            <div className="flex flex-col gap-3 w-full">
-              <button
-                type="button"
-                className="flex items-center justify-center h-13 w-full rounded-sm bg-kakao-bg cursor-pointer"
-              >
-                <span className="text-base tracking-tight text-kakao-text">
-                  카카오 간편 로그인 / 가입
-                </span>
-              </button>
-              <button
-                type="button"
-                className="flex items-center justify-center h-13 w-full rounded-sm bg-naver-bg cursor-pointer"
-              >
-                <span className="text-base tracking-tight text-white">
-                  네이버 간편 로그인 / 가입
-                </span>
-              </button>
-            </div>
-
-            {/* Email/Password form */}
-            <form onSubmit={handleLogin} className="flex flex-col gap-3 w-full">
-              <div className="flex flex-col gap-3 w-full">
-                <label htmlFor="login-email" className="sr-only">이메일</label>
-                <Input
-                  id="login-email"
-                  placeholder="아이디 (example@gmail.com)"
-                  value={email}
-                  onChange={setEmail}
-                  autoComplete="email"
-                />
-                <div className="flex flex-col gap-2">
-                  <label htmlFor="login-password" className="sr-only">비밀번호</label>
-                  <PasswordInput
-                    id="login-password"
-                    placeholder="비밀번호 (8~15자의 영문 대소문자, 숫자, 특수문자 포함)"
-                    value={password}
-                    onChange={setPassword}
-                    autoComplete="current-password"
-                  />
-                  <div className="flex items-center">
-                    <button
-                      type="button"
-                      onClick={() => setFindIdOpen(true)}
-                      className="text-sm leading-snug tracking-tight text-gray-600 py-2 cursor-pointer"
-                    >
-                      아이디 찾기
-                    </button>
-                    <span className="text-sm leading-snug tracking-tight text-gray-600 px-2">
-                      |
-                    </span>
-                    <button
-                      type="button"
-                      onClick={() => setFindPwOpen(true)}
-                      className="text-sm leading-snug tracking-tight text-gray-600 py-2 cursor-pointer"
-                    >
-                      비밀번호 찾기
-                    </button>
-                  </div>
-                </div>
-              </div>
-              <button
-                type="submit"
-                disabled={!isFormValid}
-                className={`flex items-center justify-center h-13 w-full rounded-sm text-base leading-snug tracking-tight cursor-pointer disabled:cursor-not-allowed ${
-                  isFormValid
-                    ? "bg-primary text-primary-50"
-                    : "bg-gray-200 text-gray-disabled"
-                }`}
-              >
-                일반회원 로그인
-              </button>
-            </form>
+    <>
+      <div className="flex flex-col items-center gap-16 w-87 mx-auto pt-22">
+        {/* Logo + signup link */}
+        <div className="flex flex-col items-center gap-7 w-full">
+          <p className="font-bold text-2xl text-gray-primary">
+            OZ 오즈코딩스쿨
+          </p>
+          <div className="flex items-center justify-center gap-3">
+            <span className="text-base leading-snug tracking-tight text-gray-600">
+              아직 회원이 아니신가요?
+            </span>
+            <button
+              type="button"
+              onClick={() => navigate("/signup")}
+              className="text-base leading-snug tracking-tight text-primary cursor-pointer"
+            >
+              회원가입 하기
+            </button>
           </div>
         </div>
-      </main>
+
+        {/* Social login + form */}
+        <div className="flex flex-col gap-10 w-full">
+          {/* Social buttons */}
+          <div className="flex flex-col gap-3 w-full">
+            <button
+              type="button"
+              className="flex items-center justify-center h-13 w-full rounded-sm bg-kakao-bg cursor-pointer"
+            >
+              <span className="text-base tracking-tight text-kakao-text">
+                카카오 간편 로그인 / 가입
+              </span>
+            </button>
+            <button
+              type="button"
+              className="flex items-center justify-center h-13 w-full rounded-sm bg-naver-bg cursor-pointer"
+            >
+              <span className="text-base tracking-tight text-white">
+                네이버 간편 로그인 / 가입
+              </span>
+            </button>
+          </div>
+
+          {/* Email/Password form */}
+          <form onSubmit={handleLogin} className="flex flex-col gap-3 w-full">
+            <div className="flex flex-col gap-3 w-full">
+              <label htmlFor="login-email" className="sr-only">이메일</label>
+              <Input
+                id="login-email"
+                placeholder="아이디 (example@gmail.com)"
+                value={email}
+                onChange={setEmail}
+                autoComplete="email"
+              />
+              <div className="flex flex-col gap-2">
+                <label htmlFor="login-password" className="sr-only">비밀번호</label>
+                <PasswordInput
+                  id="login-password"
+                  placeholder="비밀번호 (8~15자의 영문 대소문자, 숫자, 특수문자 포함)"
+                  value={password}
+                  onChange={setPassword}
+                  autoComplete="current-password"
+                />
+                <div className="flex items-center">
+                  <button
+                    type="button"
+                    onClick={() => setFindIdOpen(true)}
+                    className="text-sm leading-snug tracking-tight text-gray-600 py-2 cursor-pointer"
+                  >
+                    아이디 찾기
+                  </button>
+                  <span className="text-sm leading-snug tracking-tight text-gray-600 px-2">
+                    |
+                  </span>
+                  <button
+                    type="button"
+                    onClick={() => setFindPwOpen(true)}
+                    className="text-sm leading-snug tracking-tight text-gray-600 py-2 cursor-pointer"
+                  >
+                    비밀번호 찾기
+                  </button>
+                </div>
+              </div>
+            </div>
+            <button
+              type="submit"
+              disabled={!isFormValid}
+              className={`flex items-center justify-center h-13 w-full rounded-sm text-base leading-snug tracking-tight cursor-pointer disabled:cursor-not-allowed ${
+                isFormValid
+                  ? "bg-primary text-primary-50"
+                  : "bg-gray-200 text-gray-disabled"
+              }`}
+            >
+              일반회원 로그인
+            </button>
+          </form>
+        </div>
+      </div>
 
       <FindIdModal
         open={findIdOpen}
@@ -136,6 +132,6 @@ export function LoginPage() {
         open={findPwOpen}
         onClose={() => setFindPwOpen(false)}
       />
-    </div>
+    </>
   );
 }

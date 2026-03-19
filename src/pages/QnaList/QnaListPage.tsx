@@ -2,8 +2,6 @@
 // Figma-states: qnaList
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { Header } from "../../shared/ui/Header/Header";
-import { Footer } from "../../shared/ui/Footer/Footer";
 import { CategoryTab, CategoryTabBar } from "../../shared/ui/CategoryTab/CategoryTab";
 import { SearchInput } from "../../shared/ui/SearchInput/SearchInput";
 import { SortModal } from "../../shared/ui/SortModal/SortModal";
@@ -73,85 +71,79 @@ export function QnaListPage() {
   const totalPages = Math.max(1, Math.ceil(filteredQuestions.length / ITEMS_PER_PAGE));
 
   return (
-    <div className="min-h-screen flex flex-col">
-      <Header variant="registered" />
-      <main className="flex-1 flex justify-center py-10">
-        <div className="flex flex-col gap-6 w-300">
-          {/* Title row */}
-          <h1 className="text-2xl font-bold leading-snug tracking-tight text-gray-primary">
-            질의응답
-          </h1>
+    <div className="flex flex-col gap-6 w-300">
+      {/* Title row */}
+      <h1 className="text-2xl font-bold leading-snug tracking-tight text-gray-primary">
+        질의응답
+      </h1>
 
-          {/* Search + Create button */}
-          <div className="flex items-center justify-between">
-            <SearchInput
-              placeholder="질문 검색"
-              value={searchQuery}
-              onChange={setSearchQuery}
-              onClear={() => setSearchQuery("")}
-              className="w-80"
+      {/* Search + Create button */}
+      <div className="flex items-center justify-between">
+        <SearchInput
+          placeholder="질문 검색"
+          value={searchQuery}
+          onChange={setSearchQuery}
+          onClear={() => setSearchQuery("")}
+          className="w-80"
+        />
+        <Button size="sm" onClick={() => navigate("/qna/new")}>
+          질문하기
+        </Button>
+      </div>
+
+      {/* Category Tabs + Sort */}
+      <div className="flex items-center justify-between">
+        <CategoryTabBar>
+          {CATEGORIES.map((cat) => (
+            <CategoryTab
+              key={cat}
+              label={cat}
+              active={activeCategory === cat}
+              onClick={() => {
+                setActiveCategory(cat);
+                setCurrentPage(1);
+              }}
             />
-            <Button size="sm" onClick={() => navigate("/qna/new")}>
-              질문하기
-            </Button>
-          </div>
+          ))}
+        </CategoryTabBar>
+        <SortModal
+          options={SORT_OPTIONS}
+          value={sortValue}
+          onChange={setSortValue}
+        />
+      </div>
 
-          {/* Category Tabs + Sort */}
-          <div className="flex items-center justify-between">
-            <CategoryTabBar>
-              {CATEGORIES.map((cat) => (
-                <CategoryTab
-                  key={cat}
-                  label={cat}
-                  active={activeCategory === cat}
-                  onClick={() => {
-                    setActiveCategory(cat);
-                    setCurrentPage(1);
-                  }}
-                />
-              ))}
-            </CategoryTabBar>
-            <SortModal
-              options={SORT_OPTIONS}
-              value={sortValue}
-              onChange={setSortValue}
-            />
-          </div>
-
-          {/* Question List */}
-          {filteredQuestions.length === 0 ? (
-            <div className="flex items-center justify-center py-20">
-              <NotFound variant="qna" />
-            </div>
-          ) : (
-            <div className="flex flex-col">
-              {filteredQuestions.map((q) => (
-                <QuestionCard
-                  key={q.id}
-                  title={q.title}
-                  content={q.content}
-                  author={q.author}
-                  date={q.date}
-                  answerCount={q.answerCount}
-                  onClick={() => navigate(`/qna/${q.id}`)}
-                />
-              ))}
-            </div>
-          )}
-
-          {/* Pagination */}
-          {filteredQuestions.length > 0 && (
-            <div className="flex justify-center pt-4">
-              <Pagination
-                currentPage={currentPage}
-                totalPages={totalPages}
-                onPageChange={setCurrentPage}
-              />
-            </div>
-          )}
+      {/* Question List */}
+      {filteredQuestions.length === 0 ? (
+        <div className="flex items-center justify-center py-20">
+          <NotFound variant="qna" />
         </div>
-      </main>
-      <Footer />
+      ) : (
+        <div className="flex flex-col">
+          {filteredQuestions.map((q) => (
+            <QuestionCard
+              key={q.id}
+              title={q.title}
+              content={q.content}
+              author={q.author}
+              date={q.date}
+              answerCount={q.answerCount}
+              onClick={() => navigate(`/qna/${q.id}`)}
+            />
+          ))}
+        </div>
+      )}
+
+      {/* Pagination */}
+      {filteredQuestions.length > 0 && (
+        <div className="flex justify-center pt-4">
+          <Pagination
+            currentPage={currentPage}
+            totalPages={totalPages}
+            onPageChange={setCurrentPage}
+          />
+        </div>
+      )}
     </div>
   );
 }

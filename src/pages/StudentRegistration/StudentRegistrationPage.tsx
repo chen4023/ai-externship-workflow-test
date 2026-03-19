@@ -2,8 +2,6 @@
 // Figma-states: studentRegistration
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { Header } from "../../shared/ui/Header/Header";
-import { Footer } from "../../shared/ui/Footer/Footer";
 import { Dropdown } from "../../shared/ui/Dropdown/Dropdown";
 import { Input } from "../../shared/ui/Input/Input";
 import { Button } from "../../shared/ui/Button/Button";
@@ -40,66 +38,62 @@ export function StudentRegistrationPage() {
   };
 
   return (
-    <div className="min-h-screen flex flex-col">
-      <Header variant="unregistered" />
-      <main className="flex-1 flex items-center justify-center py-[60px]">
-        <div className="flex flex-col items-center gap-[40px] w-[480px]">
-          <div className="flex flex-col items-center gap-[16px]">
-            <h1 className="text-[24px] font-bold leading-[1.4] tracking-[-0.72px] text-[var(--color-gray-primary)]">
-              수강생 등록
-            </h1>
-            <p className="text-[14px] leading-[1.4] tracking-[-0.42px] text-[var(--color-gray-500)] text-center">
-              수강 중인 캠프 정보를 등록해 주세요.
-            </p>
-          </div>
-
-          <div className="flex flex-col gap-[20px] w-full">
-            <div className="flex flex-col gap-[8px]">
-              <label className="text-[14px] font-semibold leading-[1.4] tracking-[-0.42px] text-[var(--color-gray-700)]">
-                캠프
-              </label>
-              <Dropdown
-                options={CAMP_OPTIONS}
-                value={camp}
-                placeholder="캠프를 선택해 주세요."
-                onChange={setCamp}
-              />
-            </div>
-
-            <div className="flex flex-col gap-[8px]">
-              <label className="text-[14px] font-semibold leading-[1.4] tracking-[-0.42px] text-[var(--color-gray-700)]">
-                기수
-              </label>
-              <Dropdown
-                options={GENERATION_OPTIONS}
-                value={generation}
-                placeholder="기수를 선택해 주세요."
-                onChange={setGeneration}
-              />
-            </div>
-
-            <div className="flex flex-col gap-[8px]">
-              <label className="text-[14px] font-semibold leading-[1.4] tracking-[-0.42px] text-[var(--color-gray-700)]">
-                이름
-              </label>
-              <Input
-                placeholder="수강생 이름을 입력해 주세요."
-                value={studentName}
-                onChange={setStudentName}
-              />
-            </div>
-          </div>
-
-          <Button
-            disabled={!isFormValid}
-            onClick={handleSubmit}
-            className="w-full"
-          >
-            등록하기
-          </Button>
+    <>
+      <div className="flex flex-col items-center gap-[40px] w-[480px] mx-auto">
+        <div className="flex flex-col items-center gap-[16px]">
+          <h1 className="text-[24px] font-bold leading-[1.4] tracking-[-0.72px] text-[var(--color-gray-primary)]">
+            수강생 등록
+          </h1>
+          <p className="text-[14px] leading-[1.4] tracking-[-0.42px] text-[var(--color-gray-500)] text-center">
+            수강 중인 캠프 정보를 등록해 주세요.
+          </p>
         </div>
-      </main>
-      <Footer />
+
+        <div className="flex flex-col gap-[20px] w-full">
+          <div className="flex flex-col gap-[8px]">
+            <label className="text-[14px] font-semibold leading-[1.4] tracking-[-0.42px] text-[var(--color-gray-700)]">
+              캠프
+            </label>
+            <Dropdown
+              options={CAMP_OPTIONS}
+              value={camp}
+              placeholder="캠프를 선택해 주세요."
+              onChange={setCamp}
+            />
+          </div>
+
+          <div className="flex flex-col gap-[8px]">
+            <label className="text-[14px] font-semibold leading-[1.4] tracking-[-0.42px] text-[var(--color-gray-700)]">
+              기수
+            </label>
+            <Dropdown
+              options={GENERATION_OPTIONS}
+              value={generation}
+              placeholder="기수를 선택해 주세요."
+              onChange={setGeneration}
+            />
+          </div>
+
+          <div className="flex flex-col gap-[8px]">
+            <label className="text-[14px] font-semibold leading-[1.4] tracking-[-0.42px] text-[var(--color-gray-700)]">
+              이름
+            </label>
+            <Input
+              placeholder="수강생 이름을 입력해 주세요."
+              value={studentName}
+              onChange={setStudentName}
+            />
+          </div>
+        </div>
+
+        <Button
+          disabled={!isFormValid}
+          onClick={handleSubmit}
+          className="w-full"
+        >
+          등록하기
+        </Button>
+      </div>
 
       <Popup
         open={showPopup}
@@ -112,6 +106,6 @@ export function StudentRegistrationPage() {
         ctaLabel="시작하기"
         onCtaClick={() => navigate("/")}
       />
-    </div>
+    </>
   );
 }

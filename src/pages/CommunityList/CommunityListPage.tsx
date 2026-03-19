@@ -2,8 +2,6 @@
 // Figma-states: communityList
 
 import { useNavigate } from "react-router-dom";
-import { Header } from "../../shared/ui/Header/Header";
-import { Footer } from "../../shared/ui/Footer/Footer";
 import { CategoryTab, CategoryTabBar } from "../../shared/ui/CategoryTab/CategoryTab";
 import { SearchInput } from "../../shared/ui/SearchInput/SearchInput";
 import { SortModal } from "../../shared/ui/SortModal/SortModal";
@@ -39,96 +37,90 @@ export function CommunityListPage() {
   } = useCommunityList();
 
   return (
-    <div className="min-h-screen flex flex-col">
-      <Header variant="registered" />
-      <main className="flex-1 flex justify-center py-10">
-        <div className="flex flex-col gap-8 w-full max-w-[944px] px-4">
-          {/* Title */}
-          <h1 className="text-4xl font-bold leading-snug tracking-tight text-gray-primary">
-            커뮤니티
-          </h1>
+    <div className="flex flex-col gap-8 w-full max-w-[944px] px-4">
+      {/* Title */}
+      <h1 className="text-4xl font-bold leading-snug tracking-tight text-gray-primary">
+        커뮤니티
+      </h1>
 
-          {/* Search row */}
-          <div className="flex items-center gap-[7px]">
-            <Dropdown
-              options={[...SEARCH_TYPE_OPTIONS]}
-              value={searchType}
-              onChange={setSearchType}
-              variant="compact"
-              className="shrink-0 w-[118px]"
-            />
-            <div className="flex items-center flex-1 gap-4">
-              <SearchInput
-                placeholder="질문 검색"
-                value={searchQuery}
-                onChange={setSearchQuery}
-                onClear={clearSearch}
-                className="max-w-[472px] w-full"
-              />
-              <Button size="lg" onClick={() => navigate("/community/new")} className="shrink-0 w-[120px] gap-2">
-                <PencilIcon width={20} height={20} className="shrink-0" />
-                글쓰기
-              </Button>
-            </div>
-          </div>
-
-          {/* Category Tabs + Sort */}
-          <div className="flex items-center justify-between">
-            <CategoryTabBar>
-              {CATEGORIES.map((cat) => (
-                <CategoryTab
-                  key={cat}
-                  label={cat}
-                  active={activeCategory === cat}
-                  onClick={() => setActiveCategory(cat)}
-                />
-              ))}
-            </CategoryTabBar>
-            <SortModal
-              options={[...SORT_OPTIONS]}
-              value={sortValue}
-              onChange={setSortValue}
-            />
-          </div>
-
-          {/* Post List */}
-          {isLoading ? (
-            <div className="flex items-center justify-center py-20">
-              <Loading />
-            </div>
-          ) : isError ? (
-            <div className="flex items-center justify-center py-20">
-              <p className="text-gray-500">게시글을 불러오는데 실패했습니다.</p>
-            </div>
-          ) : posts.length === 0 ? (
-            <div className="flex items-center justify-center py-20">
-              <NotFound variant="community" />
-            </div>
-          ) : (
-            <div className="flex flex-col gap-4">
-              {posts.map((post) => (
-                <PostCard
-                  key={post.id}
-                  post={post}
-                  onClick={() => navigate(`/community/${post.id}`)}
-                />
-              ))}
-            </div>
-          )}
-
-          {/* Pagination */}
-          {posts.length > 0 && (
-            <div className="flex justify-center pt-4">
-              <Pagination
-                currentPage={currentPage}
-                totalPages={totalPages}
-                onPageChange={setCurrentPage}
-              />
-            </div>
-          )}
+      {/* Search row */}
+      <div className="flex items-center gap-[7px]">
+        <Dropdown
+          options={[...SEARCH_TYPE_OPTIONS]}
+          value={searchType}
+          onChange={setSearchType}
+          variant="compact"
+          className="shrink-0 w-[118px]"
+        />
+        <div className="flex items-center flex-1 gap-4">
+          <SearchInput
+            placeholder="질문 검색"
+            value={searchQuery}
+            onChange={setSearchQuery}
+            onClear={clearSearch}
+            className="max-w-[472px] w-full mr-40"
+          />
+          <Button size="lg" onClick={() => navigate("/community/new")} className="shrink-0 w-[120px] gap-2">
+            <PencilIcon width={20} height={20} className="shrink-0" />
+            글쓰기
+          </Button>
         </div>
-      </main>
-      <Footer />
+      </div>
+
+      {/* Category Tabs + Sort */}
+      <div className="flex items-center justify-between">
+        <CategoryTabBar>
+          {CATEGORIES.map((cat) => (
+            <CategoryTab
+              key={cat}
+              label={cat}
+              active={activeCategory === cat}
+              onClick={() => setActiveCategory(cat)}
+            />
+          ))}
+        </CategoryTabBar>
+        <SortModal
+          options={[...SORT_OPTIONS]}
+          value={sortValue}
+          onChange={setSortValue}
+        />
+      </div>
+
+      {/* Post List */}
+      {isLoading ? (
+        <div className="flex items-center justify-center py-20">
+          <Loading />
+        </div>
+      ) : isError ? (
+        <div className="flex items-center justify-center py-20">
+          <p className="text-gray-500">게시글을 불러오는데 실패했습니다.</p>
+        </div>
+      ) : posts.length === 0 ? (
+        <div className="flex items-center justify-center py-20">
+          <NotFound variant="community" />
+        </div>
+      ) : (
+        <div className="flex flex-col gap-4">
+          {posts.map((post) => (
+            <PostCard
+              key={post.id}
+              post={post}
+              onClick={() => navigate(`/community/${post.id}`)}
+            />
+          ))}
+        </div>
+      )}
+
+      {/* Pagination */}
+      {posts.length > 0 && (
+        <div className="flex justify-center pt-4">
+          <Pagination
+            currentPage={currentPage}
+            totalPages={totalPages}
+            onPageChange={setCurrentPage}
+          />
+        </div>
+      )}
     </div>
   );
 }
