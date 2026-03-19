@@ -5,11 +5,15 @@ import { useNavigate } from "react-router-dom";
 import { Header } from "../../shared/ui/Header/Header";
 import { Input } from "../../shared/ui/Input/Input";
 import { PasswordInput } from "../../shared/ui/PasswordInput/PasswordInput";
+import { FindIdModal } from "./FindIdModal";
+import { FindPasswordModal } from "./FindPasswordModal";
 
 export function LoginPage() {
   const navigate = useNavigate();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [findIdOpen, setFindIdOpen] = useState(false);
+  const [findPwOpen, setFindPwOpen] = useState(false);
 
   const isFormValid = email.trim().length > 0 && password.trim().length > 0;
 
@@ -88,7 +92,7 @@ export function LoginPage() {
                   <div className="flex items-center">
                     <button
                       type="button"
-                      onClick={() => navigate("/login/find-id")}
+                      onClick={() => setFindIdOpen(true)}
                       className="text-sm leading-snug tracking-tight text-gray-600 py-2 cursor-pointer"
                     >
                       아이디 찾기
@@ -98,7 +102,7 @@ export function LoginPage() {
                     </span>
                     <button
                       type="button"
-                      onClick={() => navigate("/login/find-password")}
+                      onClick={() => setFindPwOpen(true)}
                       className="text-sm leading-snug tracking-tight text-gray-600 py-2 cursor-pointer"
                     >
                       비밀번호 찾기
@@ -121,6 +125,16 @@ export function LoginPage() {
           </div>
         </div>
       </main>
+
+      <FindIdModal
+        open={findIdOpen}
+        onClose={() => setFindIdOpen(false)}
+        onOpenFindPassword={() => setFindPwOpen(true)}
+      />
+      <FindPasswordModal
+        open={findPwOpen}
+        onClose={() => setFindPwOpen(false)}
+      />
     </div>
   );
 }
