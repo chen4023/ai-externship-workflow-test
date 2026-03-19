@@ -68,6 +68,10 @@
             "prompt": "작업 완료 전 다음을 검증하세요:\n1. 모든 수정된 파일에 대응하는 테스트가 있는가\n2. npm test가 통과하는가 (테스트가 있는 경우)\n3. TypeScript 에러가 없는가\n4. docs/spec.md에 수락 기준이 있다면 모두 충족되었는가\n\n미충족 항목이 있으면 해당 항목을 수정하세요. 모든 항목이 충족되었으면 완료를 보고하세요."
           },
           {
+            "type": "prompt",
+            "prompt": "src/pages/ 하위 파일이 이번 세션에서 수정되었다면, 반드시 다음 절차를 수행하세요:\n\n1. git diff --name-only로 수정된 src/pages/ 파일 목록을 확인\n2. 각 파일 상단의 // Figma: URL과 // Figma-states: 키를 파싱\n3. .claude/figma-component-map.json에서 해당 페이지의 base nodeId와 states nodeId를 조회\n4. design-reviewer 에이전트를 호출하여 각 페이지별로:\n   a. get_design_context(fileKey, nodeId)로 Figma 스크린샷 획득\n   b. 구현된 코드의 레이아웃/스타일과 Figma 디자인 비교\n   c. 사용된 공통 컴포넌트(Header, Footer, Button 등)의 props/variant가 Figma와 일치하는지 확인\n5. 불일치 항목이 발견되면 즉시 수정\n6. 수정 후 pnpm tsc --noEmit으로 타입 체크 통과 확인\n\n이 검증을 건너뛰지 마세요. 디자인 피델리티는 필수 게이트입니다."
+          },
+          {
             "type": "command",
             "command": ".claude/hooks/post-dev/final-quality-gate.sh",
             "timeout": 120000
