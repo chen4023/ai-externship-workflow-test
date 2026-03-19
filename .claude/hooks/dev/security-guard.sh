@@ -30,6 +30,15 @@ for pattern in "${BLOCKED_PATTERNS[@]}"; do
   fi
 done
 
+# ── main/master 브랜치 커밋 차단 ──
+if echo "$COMMAND" | grep -qE 'git\s+commit'; then
+  CURRENT_BRANCH=$(git branch --show-current 2>/dev/null)
+  if [ "$CURRENT_BRANCH" = "main" ] || [ "$CURRENT_BRANCH" = "master" ]; then
+    echo "🚫 차단됨: main 브랜치에 직접 커밋할 수 없습니다. 피처 브랜치를 생성하세요."
+    exit 2
+  fi
+fi
+
 # ── 경고 패턴 (exit 0 + 컨텍스트 주입) ──
 WARN_CONTEXT=""
 
