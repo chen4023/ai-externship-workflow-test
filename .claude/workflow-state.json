@@ -1,17 +1,17 @@
 {
-  "phase": "DONE",
+  "phase": "MERGE",
   "currentStep": null,
   "totalSteps": null,
-  "specPath": "docs/SPEC.md",
-  "planPath": "docs/PLAN.md",
+  "specPath": null,
+  "planPath": null,
   "figma": { "fileKey": null, "nodeIds": [] },
-  "issue": { "number": 13, "url": "https://github.com/chen4023/ai-externship-workflow-test/issues/13", "title": "워크플로우 리팩토링 및 Discord 연동" },
-  "pr": { "number": 14, "url": "https://github.com/chen4023/ai-externship-workflow-test/pull/14", "branch": "feat/workflow-refactor-#13", "reviewAttempts": 1 },
+  "issue": { "number": null, "url": null, "title": "Discord 웹훅 가독성 개선 및 main 커밋 차단" },
+  "pr": { "number": 15, "url": "https://github.com/chen4023/ai-externship-workflow-test/pull/15", "branch": "fix/discord-webhook-format", "reviewAttempts": 1 },
   "gateResults": { "gate1": null, "gate2": null, "gate3": null },
   "retryCount": { "gate1": 0, "gate2": 0, "prReview": 0 },
   "history": [
-    { "phase": "PR_REVIEW", "timestamp": "2026-03-19T05:12:26Z", "result": "APPROVE", "details": "Critical: 0, Warning: 2, Suggestion: 3" },
-    { "phase": "MERGE", "timestamp": "2026-03-19T05:12:30Z", "result": "success" },
-    { "phase": "DONE", "timestamp": "2026-03-19T05:12:45Z", "result": "complete" }
+    { "phase": "PR_REVIEW", "timestamp": "2026-03-19T10:00:00Z", "result": "started", "details": "PR #15 코드 리뷰 시작" },
+    { "phase": "PR_REVIEW", "timestamp": "2026-03-19T05:27:00Z", "result": "APPROVE", "details": "Critical: 0, Warning: 0, Suggestion: 2" },
+    { "phase": "MERGE", "timestamp": "2026-03-19T05:27:10Z", "result": "started" }
   ]
 }

@@ -85,7 +85,11 @@
       "Bash(bash /Users/hyeonchaeeun/Desktop/ai-workflow/.claude/hooks/notify-discord.sh \"분석 시작\" \"10개 변경 파일 코드 리뷰 진행 중\\\\n- orchestrator.md \\(Discord 규칙 확장\\)\\\\n- notify-discord.sh \\(에이전트 프로필\\)\\\\n- agent-discord.sh \\(PostToolUse 훅\\)\\\\n- auto-commit.sh \\(이슈 번호 추출\\)\\\\n- gate1/2/3 스크립트 \\(agent 파라미터\\)\\\\n- settings.json \\(Agent 훅 등록\\)\\\\n- CLAUDE.md \\(이슈 기반 워크플로우\\)\" \"think\" \"code-reviewer\")",
       "Bash(bash /Users/hyeonchaeeun/Desktop/ai-workflow/.claude/hooks/notify-discord.sh \"이슈 발견\" \"notify-discord.sh에 Discord Webhook URL이 하드코딩되어 있음 \\(Warning\\)\\\\nauto-commit.sh에서 --no-verify 사용 중 \\(Warning\\)\" \"discuss\" \"code-reviewer\")",
       "Bash(bash /Users/hyeonchaeeun/Desktop/ai-workflow/.claude/hooks/notify-discord.sh \"리뷰 완료\" \"APPROVE \\(조건부\\)\\\\nCritical: 0 / Warning: 2 / Suggestion: 3\\\\n\\\\nWarning:\\\\n1. Webhook URL 하드코딩 \\(환경변수 권장\\)\\\\n2. auto-commit.sh --no-verify \\(의도적이면 OK\\)\\\\n\\\\nSuggestion:\\\\n1. agent-discord.sh의 head -c 500 대신 jq 슬라이싱\\\\n2. gate2-quality.sh의 grep -oP는 macOS 비호환\\\\n3. orchestrator.md 진행 상태 표시에 이모지 사용 가이드라인 불일치\" \"success\" \"code-reviewer\")",
-      "Bash(bash /Users/hyeonchaeeun/Desktop/ai-workflow/.claude/hooks/notify-discord.sh \"PR_REVIEW → MERGE\" \"code-reviewer: APPROVE \\(Critical 0, Warning 2, Suggestion 3\\)\\\\nMERGE 단계로 전환합니다.\" \"success\" \"orchestrator\")"
+      "Bash(bash /Users/hyeonchaeeun/Desktop/ai-workflow/.claude/hooks/notify-discord.sh \"PR_REVIEW → MERGE\" \"code-reviewer: APPROVE \\(Critical 0, Warning 2, Suggestion 3\\)\\\\nMERGE 단계로 전환합니다.\" \"success\" \"orchestrator\")",
+      "Bash(bash /Users/hyeonchaeeun/Desktop/ai-workflow/.claude/hooks/notify-discord.sh \"PR_REVIEW 시작\" \"PR #15 코드 리뷰를 수행합니다.\\\\n변경 파일 9개, +115/-8\" \"info\" \"orchestrator\")",
+      "Bash(bash /Users/hyeonchaeeun/Desktop/ai-workflow/.claude/hooks/notify-discord.sh \"코드 리뷰 진행 중\" \"PR #15 변경 파일 9개를 분석합니다.\\\\n- notify-discord.sh: 줄바꿈 처리, timestamp 추가\\\\n- agent-discord.sh: 결과 요약 제한\\\\n- security-guard.sh: main 커밋 차단\\\\n- pr-review-trigger.sh: PR 생성 시 리뷰 트리거\\\\n- gate3-review.sh, auto-commit.sh: printf 줄바꿈\" \"think\" \"code-reviewer\")",
+      "Bash(~/bin/gh api:*)",
+      "Bash(bash /Users/hyeonchaeeun/Desktop/ai-workflow/.claude/hooks/notify-discord.sh \"리뷰 결과: APPROVE\" \"Critical: 0, Warning: 0, Suggestion: 2\\\\nMERGE 단계로 진행합니다.\" \"success\" \"orchestrator\")"
     ]
   }
 }
