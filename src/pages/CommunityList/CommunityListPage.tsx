@@ -58,7 +58,7 @@ export function CommunityListPage() {
             value={searchQuery}
             onChange={setSearchQuery}
             onClear={clearSearch}
-            className="max-w-[472px] w-full mr-40"
+            className="max-w-[472px] w-full"
           />
           <Button size="lg" onClick={() => navigate("/community/new")} className="shrink-0 w-[120px] gap-2">
             <PencilIcon width={20} height={20} className="shrink-0" />

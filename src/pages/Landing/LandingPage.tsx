@@ -11,7 +11,7 @@ export function LandingPage() {
   const { activeTab, setActiveTab, tabData } = useLandingTab('quiz');
 
   return (
-    <>
+    <div className="bg-gray-100 -mx-4 px-4">
       {/* Hero + Tab */}
       <section className="flex flex-col items-center pt-32 pb-10 gap-10">
         <HeroSection tabData={tabData} />
@@ -27,6 +27,6 @@ export function LandingPage() {
       <section className="flex justify-center pb-20">
         <CtaBanner tabData={tabData} />
       </section>
-    </>
+    </div>
   );
 }
