@@ -50,6 +50,10 @@ model: opus
 
 ## 출력 형식
 
+**반드시 아래 두 블록을 모두 출력하세요.**
+
+### 1. 사람이 읽는 요약 (마크다운)
+
 ```markdown
 ## Code Review 결과
 
@@ -66,3 +70,31 @@ model: opus
 - Critical: N개 / Warning: N개 / Suggestion: N개
 - 최종 판정: APPROVE / REQUEST_CHANGES
 ```
+
+### 2. GitHub PR 인라인 코멘트용 JSON
+
+`REVIEW_JSON_START` / `REVIEW_JSON_END` 마커로 감싸서 출력하세요.
+orchestrator가 이 JSON을 파싱하여 `gh api`로 PR에 인라인 코멘트를 등록합니다.
+
+```
+REVIEW_JSON_START
+{
+  "verdict": "APPROVE | REQUEST_CHANGES",
+  "summary": "리뷰 요약 (마크다운)",
+  "comments": [
+    {
+      "path": "src/shared/ui/Modal/Modal.tsx",
+      "line": 26,
+      "severity": "critical | warning | suggestion",
+      "body": "이슈 설명 + 수정 제안 (마크다운)"
+    }
+  ]
+}
+REVIEW_JSON_END
+```
+
+**JSON 규칙:**
+- `verdict`는 Critical 또는 Warning(수정 권장 수준)이 1개 이상이면 `REQUEST_CHANGES`, 아니면 `APPROVE`
+- `comments` 배열의 각 항목에 severity 접두사를 body에 포함: `🔴 **Critical**:`, `🟡 **Warning**:`, `🟢 **Suggestion**:`
+- `line`은 PR diff 기준이 아닌 **파일 내 절대 라인 번호**
+- 코드 블록을 body에 포함할 때 이스케이프 주의 (JSON 문자열 내 `\n`, `\"` 사용)

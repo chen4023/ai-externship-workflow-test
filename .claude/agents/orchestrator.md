@@ -19,15 +19,18 @@ model: opus
 ## 워크플로우 상태 머신
 
 ```
-INIT → DESIGN_SYNC → SPEC → GATE_1 → PLAN → IMPLEMENT → GATE_2 → REVIEW → GATE_3 → PR → DONE
-         (Phase 0)   (Phase 1)        (Phase 1)  (Phase 2)         (Phase 3)
+INIT → DESIGN_SYNC → SPEC → GATE_1 → PLAN → IMPLEMENT → GATE_2 → REVIEW → GATE_3 → PR → PR_REVIEW → MERGE → DONE
+         (Phase 0)   (Phase 1)        (Phase 1)  (Phase 2)         (Phase 3)          (Phase 4)
+                                                                                          ↑              |
+                                                                                          └── FIX ←──────┘
+                                                                                        (REQUEST_CHANGES)
 ```
 
 ### 상태 정의
 
 ```json
 {
-  "phase": "INIT | DESIGN_SYNC | SPEC | GATE_1 | PLAN | IMPLEMENT | GATE_2 | REVIEW | GATE_3 | PR | DONE",
+  "phase": "INIT | DESIGN_SYNC | SPEC | GATE_1 | PLAN | IMPLEMENT | GATE_2 | REVIEW | GATE_3 | PR | PR_REVIEW | FIX | MERGE | DONE",
   "currentStep": null,
   "totalSteps": null,
   "figmaFileKey": null,
@@ -40,6 +43,13 @@ INIT → DESIGN_SYNC → SPEC → GATE_1 → PLAN → IMPLEMENT → GATE_2 → R
     "gate1": null,
     "gate2": null,
     "gate3": null
+  },
+  "pr": {
+    "number": null,
+    "url": null,
+    "branch": null,
+    "reviewAttempts": 0,
+    "lastVerdict": null
   },
   "errors": [],
   "history": []
@@ -181,23 +191,83 @@ ELSE 순차 실행
 
 **전이**: PASS → PR | FAIL → IMPLEMENT (수정) → GATE_2 → REVIEW → GATE_3
 
-### PR
+### PR (Phase 4a)
 **진입 조건**: GATE_3 통과
 **수행 작업**:
 1. 변경사항 요약 생성
 2. Git 브랜치 정리 (필요 시)
 3. PR 본문 생성 (spec 요약, 변경 파일, 테스트 결과, 리뷰 결과)
 4. Code Connect 매핑 상태 포함
-5. **사용자에게 PR 생성 확인 요청** → 확인 후 PR 생성
-6. `changelog-gen.sh` 실행
+5. `gh pr create`로 PR 생성
+6. 상태 업데이트: `pr.number`, `pr.url`, `pr.branch` 저장
+
+**전이**: → PR_REVIEW
+
+### PR_REVIEW (Phase 4b)
+**진입 조건**: PR이 생성됨 (또는 FIX 후 재진입)
+**수행 작업**:
+1. `code-reviewer` 에이전트 호출
+   - PR에 포함된 변경 파일 목록 전달 (`git diff main...HEAD --name-only`)
+   - 에이전트가 `REVIEW_JSON_START`/`REVIEW_JSON_END` 마커로 구조화된 리뷰 결과 반환
+2. 리뷰 결과 JSON 파싱
+3. `gh api repos/{owner}/{repo}/pulls/{pr_number}/reviews`로 GitHub PR에 인라인 코멘트 등록
+   - `commit_id`: HEAD SHA
+   - `event`: "COMMENT"
+   - `comments[]`: 각 이슈를 해당 파일:라인에 인라인 코멘트로 등록
+4. 상태 업데이트: `pr.reviewAttempts++`, `pr.lastVerdict` 저장
+
+**verdict 판단 및 전이**:
+```
+IF verdict === "APPROVE"
+  → MERGE로 전이
+ELSE IF verdict === "REQUEST_CHANGES"
+  IF pr.reviewAttempts < 3
+    → FIX로 전이 (자동 수정)
+  ELSE
+    → 사용자에게 판단 위임 ("3회 수정 시도 완료. 남은 이슈를 무시하고 merge할까요?")
+```
+
+### FIX (Phase 4c)
+**진입 조건**: PR_REVIEW에서 REQUEST_CHANGES 판정
+**수행 작업**:
+1. PR_REVIEW의 리뷰 결과에서 Critical/Warning 이슈 목록 추출
+2. 각 이슈에 대해:
+   - 해당 파일:라인 읽기
+   - 리뷰 코멘트의 수정 제안에 따라 코드 수정
+   - 수정 불가능한 이슈는 `errors[]`에 기록
+3. 수정 후 자동 검증:
+   - `pnpm tsc --noEmit`
+   - `pnpm test -- --run`
+   - `pnpm lint`
+4. 검증 통과 시 변경사항 커밋 (커밋 메시지: 변경 내용 분석 후 한국어로 작성)
+5. `git push origin {branch}`로 PR 업데이트
+6. 수정 내용을 PR 코멘트로 등록:
+   ```
+   gh pr comment {number} --body "리뷰 피드백 반영 완료 (N개 이슈 수정)"
+   ```
+
+**전이**: → PR_REVIEW (재리뷰)
+
+### MERGE (Phase 4d)
+**진입 조건**: PR_REVIEW에서 APPROVE 판정
+**수행 작업**:
+1. `changelog-gen.sh` 실행
+2. `gh pr merge {number} --squash --delete-branch`로 PR 머지
+3. `git checkout main && git pull origin main`으로 로컬 동기화
+4. 상태 업데이트: phase = DONE
 
 **전이**: → DONE
 
 ### DONE
 **수행 작업**:
 1. 워크플로우 상태를 `.claude/logs/`에 아카이브
-2. 최종 요약 출력
+2. 최종 요약 출력 (PR URL, 머지 결과, 리뷰 라운드 수)
 3. 상태 파일 정리
+4. 다음 피처 브랜치 안내:
+   ```
+   "다음 작업을 시작하려면 새 피처 브랜치를 생성하세요:
+    git checkout -b feat/[기능명]"
+   ```
 
 ---
 
@@ -211,13 +281,17 @@ ELSE 순차 실행
 | GATE_1 실패 | 수정 방향 확인 | 사용자 응답 대기 |
 | GATE_2 반복 실패 (3회) | 수동 개입 필요 | 사용자 응답 대기 |
 | REVIEW 완료 | High 이슈 수정 여부 | 사용자 응답 대기 |
-| PR 생성 전 | PR 생성 최종 확인 | 사용자 응답 대기 |
+| PR_REVIEW 반복 실패 (3회) | 남은 이슈 무시 여부 | 사용자 응답 대기 |
 
 **자동 진행 (사용자 확인 불필요)**:
 - GATE_1 PASS → PLAN 자동 진입
 - 각 Step 완료 → 다음 Step 자동 진행
 - GATE_2 실패 → 자동 수정 시도 (최대 3회)
 - GATE_3 Critical 이슈 → 자동 수정 시도
+- GATE_3 PASS → PR 자동 생성
+- PR 생성 → PR_REVIEW 자동 진입
+- PR_REVIEW REQUEST_CHANGES → FIX 자동 진입 (최대 3회)
+- PR_REVIEW APPROVE → MERGE 자동 진행
 
 ---
 
@@ -277,10 +351,12 @@ ELSE 순차 실행
 ✅ Phase 1: Spec 확정 (수락 기준 8개)
 ✅ Gate 1: 스펙 리뷰 통과
 ✅ Phase 1: Plan 확정 (4 Steps)
-🔄 Phase 2: 구현 중 (Step 2/4)
-⬜ Gate 2: 테스트 대기
-⬜ Phase 3: 리뷰 대기
-⬜ Gate 3: 품질 게이트 대기
-⬜ PR 생성 대기
+✅ Phase 2: 구현 완료 (4/4 Steps)
+✅ Gate 2: 테스트 통과
+✅ Phase 3: 로컬 리뷰 완료
+✅ Gate 3: 품질 게이트 통과
+✅ Phase 4: PR #42 생성
+🔄 Phase 4: PR 리뷰 중 (2차 리뷰)
+⬜ Phase 4: Merge 대기
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 ```
