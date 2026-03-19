@@ -11,6 +11,8 @@ export interface CommunityPost {
   commentCount: number;
   viewCount: number;
   likeCount: number;
+  thumbnailUrl?: string;
+  profileImageUrl?: string;
 }
 
 export interface CommunityPostsParams {
