@@ -11,22 +11,53 @@ model: opus
 1. 직접 판단하지 않는다. Gate 스크립트의 exit code와 JSON 출력으로 판단한다.
 2. 모든 Phase 전환과 서브에이전트 완료 시 Discord 알림을 전송한다.
 
-## Discord 알림 규칙
+## Discord 실시간 채널 규칙
 
-**알림 스크립트**: `bash .claude/hooks/notify-discord.sh "제목" "내용" "color"`
-- color: `success`(녹색), `fail`(빨강), `info`(파랑), `warn`(노랑)
+에이전트들이 Discord 채널에서 팀처럼 대화한다. 상태 알림뿐 아니라 **사고 과정, 분석 내용, 의견**도 공유한다.
 
-**반드시 알림을 전송하는 시점**:
-| 시점 | 제목 예시 | color |
-|------|----------|-------|
-| Phase 전환 | "🔄 Phase: IMPLEMENT → GATE_2" | info |
-| 서브에이전트 호출 | "🚀 code-reviewer 에이전트 호출" | info |
-| 서브에이전트 완료 | "✅ code-reviewer 완료: APPROVE" | success/fail |
-| PR 생성 | "🔗 PR #42 생성" + URL | success |
-| PR 머지 | "🎉 PR #42 머지 완료" | success |
-| 사용자 대기 | "⏸️ 사용자 확인 대기: spec 검토" | warn |
+**알림 스크립트**: `bash .claude/hooks/notify-discord.sh "제목" "내용" "color" "agent"`
 
-Gate 스크립트(gate1/2/3)는 자체적으로 알림을 전송하므로 중복 호출하지 않는다.
+**color**: `success`(녹색), `fail`(빨강), `info`(파랑), `warn`(노랑), `think`(보라/분석 중), `discuss`(금색/의견)
+
+**agent**: `orchestrator`, `code-reviewer`, `security-reviewer`, `accessibility-checker`, `design-reviewer`, `test-writer`, `spec-reviewer`, `figma-builder`, `figma-token`, `gate`
+
+### Orchestrator가 보내는 메시지
+
+```bash
+# Phase 전환
+bash .claude/hooks/notify-discord.sh "IMPLEMENT → GATE_2" "구현 4 Steps 완료. 품질 검증 시작합니다." "info" "orchestrator"
+
+# 서브에이전트 결과 수신 후 판단
+bash .claude/hooks/notify-discord.sh "리뷰 결과 수신" "code-reviewer: REQUEST_CHANGES (Critical 2)\n→ FIX Phase로 전환합니다." "think" "orchestrator"
+
+# PR
+bash .claude/hooks/notify-discord.sh "PR #42 생성" "https://github.com/..." "success" "orchestrator"
+
+# 사용자 대기
+bash .claude/hooks/notify-discord.sh "사용자 확인 대기" "spec.md 내용을 검토해주세요." "warn" "orchestrator"
+```
+
+### 서브에이전트 프롬프트에 포함할 Discord 지시
+
+서브에이전트를 호출할 때, 다음 지시를 프롬프트에 **반드시 포함**한다:
+
+```
+Discord 채널에 작업 과정을 공유하세요:
+
+1. 작업 시작 시 — 무엇을 분석할지
+   bash .claude/hooks/notify-discord.sh "분석 시작" "Modal.tsx, Popup.tsx 접근성 검사" "info" "{agent}"
+
+2. 주요 발견 시 — 이슈나 인사이트
+   bash .claude/hooks/notify-discord.sh "이슈 발견" "aria-label 누락 (Critical)" "discuss" "{agent}"
+
+3. 다른 에이전트에게 의견 — 관련 에이전트 언급
+   bash .claude/hooks/notify-discord.sh "design-reviewer에게" "border-black이 토큰에 없습니다." "discuss" "{agent}"
+
+4. 최종 결론 — 판정과 요약
+   bash .claude/hooks/notify-discord.sh "리뷰 완료" "REQUEST_CHANGES — Critical 2, Warning 3" "success|fail" "{agent}"
+```
+
+Gate 스크립트(gate1/2/3)는 `gate` 프로필로 자체 알림을 전송하므로 orchestrator가 중복 호출하지 않는다.
 
 ---
 
@@ -50,6 +81,7 @@ INIT → FIGMA_SYNC? → SPEC → GATE_1 → PLAN → IMPLEMENT → GATE_2 → G
   "specPath": "docs/SPEC.md",
   "planPath": "docs/PLAN.md",
   "figma": { "fileKey": null, "nodeIds": [] },
+  "issue": { "number": null, "url": null, "title": null },
   "pr": { "number": null, "url": null, "branch": null, "reviewAttempts": 0 },
   "gateResults": { "gate1": null, "gate2": null, "gate3": null },
   "retryCount": { "gate1": 0, "gate2": 0, "prReview": 0 },
@@ -63,9 +95,20 @@ INIT → FIGMA_SYNC? → SPEC → GATE_1 → PLAN → IMPLEMENT → GATE_2 → G
 
 ### INIT
 1. `.claude/workflow-state.json` 생성
-2. 사용자 요청에 Figma URL이 있으면 → FIGMA_SYNC
-3. 없으면 → SPEC
-4. "이어서 진행" → 기존 상태 파일 읽고 해당 Phase부터 재개
+2. **GitHub Issue 생성**:
+   ```bash
+   gh issue create --title "[기능명]" --body "## 목표\n[기능 설명]\n\n## 참고\n- Figma: [URL 있으면 포함]"
+   ```
+   - 반환된 이슈 번호를 `issue.number`에 저장
+3. **피처 브랜치 생성** (이슈 번호 기반):
+   ```bash
+   git checkout -b feat/[기능명]-#[이슈번호]
+   # 예: feat/signup-form-#7
+   ```
+   - 브랜치명에 이슈 번호를 포함하여 auto-commit 훅이 자동으로 커밋에 연결
+4. Discord 알림: 이슈 URL + 브랜치명 공유
+5. Figma URL이 있으면 → FIGMA_SYNC, 없으면 → SPEC
+6. "이어서 진행" → 기존 상태 파일 읽고 해당 Phase부터 재개
 
 ### FIGMA_SYNC
 Figma 링크가 있을 때만 실행. **컴포넌트 단위**로 동작한다.
@@ -118,7 +161,7 @@ plan.md의 각 Step을 순차 실행:
    ```
    결과의 `needsSync: true`이면 → `figma-component-builder` 에이전트 호출
 4. `test-writer` 에이전트 호출
-5. Step 단위 커밋 (한국어, 변경 내용 기반)
+5. Step 단위 커밋 (한국어, 변경 내용 기반, 이슈 번호 포함: `feat: 기능 구현 (#7)`)
 6. 다음 Step
 
 **전이**: 모든 Step 완료 → GATE_2
@@ -169,7 +212,10 @@ bash .claude/hooks/gates/gate3-review.sh
 | Suggestion만 | PR 코멘트에 포함, → PR |
 
 ### PR
-1. `gh pr create`로 PR 생성
+1. `gh pr create`로 PR 생성 — 본문에 `Closes #[이슈번호]`를 포함하여 머지 시 이슈 자동 닫힘
+   ```bash
+   gh pr create --title "feat: [기능명] (#이슈번호)" --body "Closes #이슈번호\n\n## 변경사항\n..."
+   ```
 2. 상태 업데이트: `pr.number`, `pr.url`, `pr.branch`
 3. **전이**: → PR_REVIEW (자동)
 
