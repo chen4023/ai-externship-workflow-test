@@ -206,10 +206,36 @@ bash .claude/hooks/gates/gate3-review.sh
 리뷰 결과 종합:
 | 이슈 레벨 | 행동 |
 |-----------|------|
-| Critical 0 + Warning 0 | → PR |
+| Critical 0 + Warning 0 | → FIGMA_VERIFY |
 | Critical > 0 | 자동 수정 시도 → GATE_2 재실행 |
 | Warning > 0 | **사용자 확인**: 수정 여부 결정 |
-| Suggestion만 | PR 코멘트에 포함, → PR |
+| Suggestion만 | PR 코멘트에 포함, → FIGMA_VERIFY |
+
+### FIGMA_VERIFY
+src/pages/ 또는 src/shared/ui/ 파일이 변경된 경우 **반드시** 실행한다.
+
+1. 변경된 페이지/컴포넌트 파일에서 `// Figma:` 주석의 URL을 파싱
+2. URL에서 fileKey와 nodeId를 추출
+3. `get_design_context(fileKey, nodeId)`로 Figma 스크린샷 획득
+4. 현재 구현의 스크린샷과 Figma 스크린샷을 pixel 단위로 비교:
+   - border-radius
+   - padding/margin/gap
+   - font-size, font-weight
+   - color (토큰 매핑 확인)
+   - 컴포넌트 크기 (width, height)
+5. 불일치 항목이 있으면 수정 후 재검증
+6. 모든 항목 일치 → PR
+
+**자동 진행**: Figma URL이 없는 파일은 스킵
+**실패 시**: 불일치 목록을 사용자에게 보고, 수정 후 재검증
+
+**전이**:
+| 결과 | 행동 |
+|------|------|
+| 모든 항목 일치 | → PR |
+| 불일치 발견 | 자동 수정 시도 → 재검증 |
+| 자동 수정 실패 | 불일치 목록을 사용자에게 보고, 수정 후 재검증 |
+| Figma URL 없음 | → PR (스킵) |
 
 ### PR
 1. `gh pr create`로 PR 생성 — 본문에 `Closes #[이슈번호]`를 포함하여 머지 시 이슈 자동 닫힘
@@ -265,6 +291,7 @@ bash .claude/hooks/gates/gate3-review.sh
 | GATE_3 | `security-reviewer` | gate3-review.sh 결과 | 병렬 |
 | GATE_3 | `accessibility-checker` | gate3-review.sh 결과 | 병렬 |
 | GATE_3 | `design-reviewer` | gate3-review.sh 결과 | 병렬 |
+| FIGMA_VERIFY | `design-reviewer` | 변경 파일에 Figma URL 존재 시 | 순차 |
 | PR_REVIEW | `code-reviewer` | 항상 | 순차 |
 
 ---
@@ -277,6 +304,7 @@ bash .claude/hooks/gates/gate3-review.sh
 | SPEC 완료 | spec.md 내용 확인 |
 | PLAN 완료 | plan.md 내용 확인 |
 | GATE_3 Warning 존재 | 수정 여부 결정 |
+| FIGMA_VERIFY 자동 수정 실패 | 불일치 목록 확인 후 수정 방향 결정 |
 | PR_REVIEW 3회 실패 | 강제 merge 여부 |
 
 **나머지는 전부 자동 진행.**
