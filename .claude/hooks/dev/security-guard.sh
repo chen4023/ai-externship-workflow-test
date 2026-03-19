@@ -59,6 +59,28 @@ if echo "$COMMAND" | grep -qE 'npm\s+publish|pnpm\s+publish'; then
   exit 2
 fi
 
+# ── gh pr merge 차단 (FIGMA_VERIFY + PR_REVIEW 필수) ──
+if echo "$COMMAND" | grep -q 'pr merge'; then
+  STATE_FILE=".claude/workflow-state.json"
+  if [ ! -f "$STATE_FILE" ]; then
+    echo "🚫 머지 차단: workflow-state.json이 없습니다. FIGMA_VERIFY + PR_REVIEW를 먼저 수행하세요."
+    exit 2
+  fi
+  BLOCK=""
+  # UI 파일 변경 시 FIGMA_VERIFY 필수
+  if git diff main...HEAD --name-only 2>/dev/null | grep -qE '^src/(pages|shared/ui)/'; then
+    FV=$(jq -r '.figmaVerified // false' "$STATE_FILE" 2>/dev/null)
+    [ "$FV" != "true" ] && BLOCK="${BLOCK}FIGMA_VERIFY 미완료. "
+  fi
+  # PR_REVIEW 필수
+  PR=$(jq -r '.prReviewCompleted // false' "$STATE_FILE" 2>/dev/null)
+  [ "$PR" != "true" ] && BLOCK="${BLOCK}PR_REVIEW(인라인 코멘트) 미완료. "
+  if [ -n "$BLOCK" ]; then
+    echo "🚫 머지 차단: ${BLOCK}workflow-state.json에 플래그를 설정하세요."
+    exit 2
+  fi
+fi
+
 # git reset --hard
 if echo "$COMMAND" | grep -qE 'git\s+reset\s+--hard'; then
   WARN_CONTEXT="⚠️ git reset --hard는 변경사항을 영구적으로 삭제합니다. 정말 필요한지 확인하세요."

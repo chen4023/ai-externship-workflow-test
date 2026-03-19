@@ -84,6 +84,8 @@ INIT → FIGMA_SYNC? → SPEC → GATE_1 → PLAN → IMPLEMENT → GATE_2 → G
   "issue": { "number": null, "url": null, "title": null },
   "pr": { "number": null, "url": null, "branch": null, "reviewAttempts": 0 },
   "gateResults": { "gate1": null, "gate2": null, "gate3": null },
+  "figmaVerified": false,
+  "prReviewCompleted": false,
   "retryCount": { "gate1": 0, "gate2": 0, "prReview": 0 },
   "history": []
 }
@@ -250,13 +252,15 @@ src/pages/ 또는 src/shared/ui/ 파일이 변경된 경우 **반드시** 실행
 **자동 진행**: Figma URL이 없는 파일은 스킵
 **실패 시**: 불일치 목록을 사용자에게 보고, 수정 후 재검증
 
+**완료 시 반드시**: `workflow-state.json`의 `figmaVerified`를 `true`로 설정. **이 플래그가 없으면 merge-guard.sh가 머지를 차단한다.**
+
 **전이**:
 | 결과 | 행동 |
 |------|------|
-| Figma + 브라우저 스크린샷 일치 | → PR |
+| Figma + 브라우저 스크린샷 일치 | `figmaVerified: true` 기록 → PR |
 | 불일치 발견 | 자동 수정 → 브라우저 리로드 → 재비교 |
 | 자동 수정 실패 | 사용자에게 보고 |
-| Figma URL 없음 | → PR (스킵) |
+| Figma URL 없음 | `figmaVerified: true` 기록 → PR (스킵) |
 
 ### PR
 1. `gh pr create`로 PR 생성 — 본문에 `Closes #[이슈번호]`를 포함하여 머지 시 이슈 자동 닫힘
@@ -269,14 +273,15 @@ src/pages/ 또는 src/shared/ui/ 파일이 변경된 경우 **반드시** 실행
 ### PR_REVIEW
 1. `code-reviewer` 에이전트 호출 (REVIEW_JSON 형식 요청)
 2. 결과 JSON 파싱
-3. `gh api`로 PR에 인라인 코멘트 등록:
+3. `gh api`로 PR에 인라인 코멘트 **반드시** 등록:
    ```bash
    cat review.json | gh api repos/{owner}/{repo}/pulls/{number}/reviews --method POST --input -
    ```
+4. **완료 후 반드시**: `workflow-state.json`의 `prReviewCompleted`를 `true`로 설정. **이 플래그가 없으면 merge-guard.sh가 머지를 차단한다.**
 
 | verdict | 행동 |
 |---------|------|
-| `APPROVE` | → MERGE |
+| `APPROVE` | `prReviewCompleted: true` 기록 → MERGE |
 | `REQUEST_CHANGES` (시도 < 3) | → FIX |
 | `REQUEST_CHANGES` (시도 >= 3) | **사용자 확인**: 강제 merge 여부 |
 
