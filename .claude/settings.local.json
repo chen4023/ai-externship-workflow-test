@@ -72,7 +72,11 @@
       "Bash(wc:*)",
       "mcp__figma__get_screenshot",
       "Bash(ls /Users/hyeonchaeeun/Desktop/ai-workflow/src/app/*.css)",
-      "Bash(ls /Users/hyeonchaeeun/Desktop/ai-workflow/src/*.css)"
+      "Bash(ls /Users/hyeonchaeeun/Desktop/ai-workflow/src/*.css)",
+      "Bash(bash .claude/hooks/gates/gate1-spec.sh docs/SPEC.md 2>&1)",
+      "Bash(bash .claude/hooks/gates/gate3-review.sh 2>&1)",
+      "Bash(bash .claude/hooks/gates/figma-sync.sh \"\" \"src/shared/ui/Button/Button.tsx\" 2>&1)",
+      "Bash(bash .claude/hooks/gates/figma-sync.sh \"\" \"src/shared/ui/Modal/Modal.tsx\" 2>&1)"
     ]
   }
 }

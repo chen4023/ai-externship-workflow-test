@@ -28,7 +28,8 @@ fi
 if [ -f ".claude/figma-component-map.json" ]; then
   HAS_FIGMA_FILES=false
   while IFS= read -r file; do
-    if grep -q "$(basename "$file" .tsx)" .claude/figma-component-map.json 2>/dev/null; then
+    COMP_NAME=$(basename "$file" .tsx)
+    if jq -e --arg n "$COMP_NAME" '.components[$n] // empty' .claude/figma-component-map.json &>/dev/null; then
       HAS_FIGMA_FILES=true
       break
     fi

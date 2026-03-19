@@ -32,9 +32,12 @@ fi
 if [ -n "$COMPONENT_PATH" ]; then
   COMPONENT_NAME=$(basename "$COMPONENT_PATH" .tsx)
 
-  # figma-component-map에서 해당 컴포넌트의 nodeId 찾기
+  # figma-component-map에서 해당 컴포넌트의 nodeId 찾기 (객체 구조, variant 지원)
   NODE_INFO=$(jq -r --arg name "$COMPONENT_NAME" '
-    .components[] | select(.name == $name) | .nodeId // empty
+    .components[$name] // empty |
+    if type == "object" then
+      (.nodeId // (.variants | to_entries[0].value.nodeId) // empty)
+    else empty end
   ' "$MAP_FILE" 2>/dev/null)
 
   if [ -n "$NODE_INFO" ]; then
@@ -52,7 +55,7 @@ COMPONENTS_NEEDING_SYNC=()
 while IFS= read -r file; do
   if [[ "$file" =~ \.tsx$ ]]; then
     COMP_NAME=$(basename "$file" .tsx)
-    HAS_MAP=$(jq -r --arg name "$COMP_NAME" '.components[] | select(.name == $name) | .name // empty' "$MAP_FILE" 2>/dev/null)
+    HAS_MAP=$(jq -r --arg name "$COMP_NAME" '.components[$name] // empty | if . != "" and . != null then $name else empty end' "$MAP_FILE" 2>/dev/null)
     if [ -n "$HAS_MAP" ]; then
       COMPONENTS_NEEDING_SYNC+=("$COMP_NAME")
     fi
