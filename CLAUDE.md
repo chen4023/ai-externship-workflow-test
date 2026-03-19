@@ -60,9 +60,22 @@
 > **HTTP 클라이언트는 Axios를 사용한다. fetch를 직접 사용하지 않는다.**
 
 ### Axios 인스턴스 규칙
-- `src/api/instance.ts`에 공통 Axios 인스턴스를 정의하고, 모든 API 호출에서 이를 import하여 사용
-- `baseURL`, 인터셉터(토큰 주입, 에러 핸들링 등)는 인스턴스에서 일괄 관리
-- 도메인별 API 함수(`src/api/community.ts` 등)는 공통 인스턴스를 사용하여 호출
+- `src/api/instance.ts`에 두 개의 인스턴스가 정의되어 있다:
+  - `publicApi` — 인증 불필요 API (로그인, 회원가입, 토큰 재발급)
+  - `authApi` — 인증 필요 API (access token 자동 첨부 + 401 토큰 재발급)
+- 모든 API 호출은 반드시 `publicApi` 또는 `authApi`를 import하여 사용한다
+- 직접 `fetch()`, `axios.get()`, `axios.create()` 등을 호출하지 않는다
+- 인증이 필요한 API -> `authApi`, 비인증 API -> `publicApi`
+- 도메인별 API 함수(`src/api/community.ts`, `src/api/auth.ts` 등)는 해당 인스턴스를 사용
+
+### API 파일 구조
+```
+src/api/
+├── instance.ts      # publicApi, authApi 인스턴스 + 인터셉터
+├── auth.ts          # 인증 API (publicApi 사용)
+├── community.ts     # 커뮤니티 API (authApi 사용)
+└── [도메인].ts      # 도메인별 API 함수
+```
 
 ### Axios + MSW 연동
 - MSW는 Axios 요청도 자동으로 인터셉트하므로 별도 설정 불필요
