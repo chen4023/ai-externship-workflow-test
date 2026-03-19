@@ -213,18 +213,39 @@ bash .claude/hooks/gates/gate3-review.sh
 
 ### FIGMA_VERIFY
 src/pages/ 또는 src/shared/ui/ 파일이 변경된 경우 **반드시** 실행한다.
+이 Gate는 **Figma MCP + Chrome DevTools MCP** 두 도구를 모두 사용하여 검증한다.
 
-1. 변경된 페이지/컴포넌트 파일에서 `// Figma:` 주석의 URL을 파싱
-2. URL에서 fileKey와 nodeId를 추출
-3. `get_design_context(fileKey, nodeId)`로 Figma 스크린샷 획득
-4. 현재 구현의 스크린샷과 Figma 스크린샷을 pixel 단위로 비교:
-   - border-radius
-   - padding/margin/gap
-   - font-size, font-weight
-   - color (토큰 매핑 확인)
-   - 컴포넌트 크기 (width, height)
-5. 불일치 항목이 있으면 수정 후 재검증
-6. 모든 항목 일치 → PR
+#### Step 1: Figma 디자인 CSS 추출
+1. 변경된 파일에서 `// Figma:` 주석의 URL을 파싱 → fileKey, nodeId 추출
+2. `get_design_context(fileKey, nodeId)`로 Figma 레퍼런스 코드 + 스크린샷 획득
+3. Figma CSS 값 기록: border-radius, padding, gap, font-size, font-weight, color, width, height
+
+#### Step 2: Chrome DevTools 브라우저 스크린샷 비교
+1. `pnpm dev`로 개발 서버 실행 (백그라운드)
+2. Chrome DevTools MCP로 해당 페이지 접속:
+   ```
+   navigate_page → 해당 라우트 URL
+   ```
+3. `take_screenshot`으로 전체 페이지 스크린샷 캡처
+4. 주요 컴포넌트별 `take_screenshot(uid=...)`으로 개별 스크린샷 캡처
+5. Figma 스크린샷과 브라우저 스크린샷을 **나란히 비교**
+
+#### Step 3: Pixel 단위 검증 체크리스트
+| 검증 항목 | 방법 |
+|-----------|------|
+| border-radius | Figma CSS vs 구현 코드 비교 |
+| padding/margin/gap | Figma CSS 값과 Tailwind 클래스 비교 |
+| font-size/weight | Figma 타이포그래피 토큰 vs 구현 |
+| color | Figma 토큰 → tokens.css 매핑 확인 |
+| 컴포넌트 크기 | `evaluate_script`로 실제 렌더링 크기 측정 |
+| 아이콘/이미지 | Figma 에셋과 구현 SVG/이미지 비교 |
+| 레이아웃 배치 | 스크린샷 전체 레이아웃 비교 |
+
+#### Step 4: 불일치 발견 시
+1. 불일치 항목을 목록으로 정리 (Figma 값 vs 구현 값)
+2. 자동 수정 시도
+3. 수정 후 브라우저 리로드 → 재스크린샷 → 재비교
+4. 일치 확인될 때까지 반복
 
 **자동 진행**: Figma URL이 없는 파일은 스킵
 **실패 시**: 불일치 목록을 사용자에게 보고, 수정 후 재검증
@@ -232,9 +253,9 @@ src/pages/ 또는 src/shared/ui/ 파일이 변경된 경우 **반드시** 실행
 **전이**:
 | 결과 | 행동 |
 |------|------|
-| 모든 항목 일치 | → PR |
-| 불일치 발견 | 자동 수정 시도 → 재검증 |
-| 자동 수정 실패 | 불일치 목록을 사용자에게 보고, 수정 후 재검증 |
+| Figma + 브라우저 스크린샷 일치 | → PR |
+| 불일치 발견 | 자동 수정 → 브라우저 리로드 → 재비교 |
+| 자동 수정 실패 | 사용자에게 보고 |
 | Figma URL 없음 | → PR (스킵) |
 
 ### PR

@@ -203,10 +203,17 @@ Figma 링크가 주어지면 다음 순서를 따른다:
 Gate 판단은 스크립트(`.claude/hooks/gates/`)가 수행한다.
 
 ```
-INIT → FIGMA_SYNC? → SPEC → GATE_1 → PLAN → IMPLEMENT → GATE_2 → GATE_3 → PR → PR_REVIEW → MERGE → DONE
-                                                                     ↑                          |
-                                                                     └───────── FIX ←───────────┘
+INIT → FIGMA_SYNC? → SPEC → GATE_1 → PLAN → IMPLEMENT → GATE_2 → GATE_3 → FIGMA_VERIFY → PR → PR_REVIEW → MERGE → DONE
+                                                                     ↑                                          |
+                                                                     └───────────────── FIX ←───────────────────┘
 ```
+
+### FIGMA_VERIFY (필수 Gate)
+src/pages/ 또는 src/shared/ui/ 변경 시 반드시 실행. **Figma MCP + Chrome DevTools MCP** 두 도구로 검증:
+1. Figma `get_design_context`로 디자인 CSS + 스크린샷 획득
+2. `pnpm dev` → Chrome DevTools `navigate_page` → `take_screenshot`으로 브라우저 스크린샷 캡처
+3. 두 스크린샷을 나란히 비교 (border-radius, padding, gap, font, color, 크기, 아이콘)
+4. 불일치 시 자동 수정 → 브라우저 리로드 → 재비교
 
 ### Gate 스크립트
 | 스크립트 | 역할 | 판단 방식 |
