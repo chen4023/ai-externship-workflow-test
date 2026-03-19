@@ -67,7 +67,8 @@
       "Bash(gh pr:*)",
       "Bash(git diff-tree:*)",
       "Bash(bash -x .claude/hooks/post-dev/auto-commit.sh)",
-      "Bash(~/bin/gh pr:*)"
+      "Bash(~/bin/gh pr:*)",
+      "Bash(git checkout:*)"
     ]
   }
 }
