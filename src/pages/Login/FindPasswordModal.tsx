@@ -1,5 +1,6 @@
 // Figma: https://www.figma.com/design/4rJmEFUU2HMWVy3qUcYZRs/%EC%A0%9C%EB%AA%A9-%EC%97%86%EC%9D%8C?node-id=1-1444&m=dev
 // Figma-states: default(1:1444), sent(1:1649)
+// TODO: react-hook-form + zod 스키마 기반 폼 검증으로 리팩토링 예정
 import { type FormEvent, useEffect, useRef, useState } from "react";
 import { Input } from "../../shared/ui/Input/Input";
 import { Toast } from "../../shared/ui/Toast/Toast";
