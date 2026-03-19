@@ -16,11 +16,7 @@ import { PostCard } from "./ui/PostCard";
 import { useCommunityList } from "./model/useCommunityList";
 import { CATEGORIES, SORT_OPTIONS, SEARCH_TYPE_OPTIONS } from "./lib/constants";
 
-const PenIcon = () => (
-  <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
-    <path d="M14.167 2.5L17.5 5.833L6.667 16.667H3.333V13.333L14.167 2.5Z" fill="currentColor" />
-  </svg>
-);
+import PencilIcon from "../../assets/icons/pencil.svg?react";
 
 export function CommunityListPage() {
   const navigate = useNavigate();
@@ -70,7 +66,7 @@ export function CommunityListPage() {
                 className="max-w-[472px] w-full"
               />
               <Button size="lg" onClick={() => navigate("/community/new")} className="shrink-0 w-[120px] gap-2">
-                <PenIcon />
+                <PencilIcon width={20} height={20} className="shrink-0" />
                 글쓰기
               </Button>
             </div>
