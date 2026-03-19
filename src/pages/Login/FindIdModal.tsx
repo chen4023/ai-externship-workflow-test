@@ -44,23 +44,26 @@ export function FindIdModal({ open, onClose, onOpenFindPassword }: FindIdModalPr
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center">
-      {/* Overlay — Figma: bg #121212 opacity 60% */}
       <div className="absolute inset-0 bg-gray-primary/60" onClick={handleClose} />
 
-      {/* Modal — Figma: bg-white rounded-[12px] p-[24px] */}
-      <div className="relative bg-white rounded-xl p-6">
-        <div className="flex flex-col gap-2.5" style={{ width: 348 }}>
-          {/* X close — Figma: 우측 상단, 12x12 */}
+      <div
+        role="dialog"
+        aria-modal="true"
+        aria-label="아이디 찾기"
+        className="relative bg-white rounded-xl p-6"
+        style={{ width: 396 }}
+      >
+        <div className="flex flex-col gap-2.5">
+          {/* X close */}
           <div className="flex justify-end h-6 items-center">
-            <button type="button" onClick={handleClose} className="cursor-pointer p-1.5">
+            <button type="button" onClick={handleClose} aria-label="닫기" className="cursor-pointer p-1.5">
               <svg width="12" height="12" viewBox="0 0 12 12" fill="none">
-                <path d="M1 1L11 11M1 11L11 1" stroke="var(--color-gray-primary)" strokeWidth="1.5" strokeLinecap="round" />
+                <path d="M1 1L11 11M1 11L11 1" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" />
               </svg>
             </button>
           </div>
 
           <div className="flex flex-col gap-10 items-center">
-            {/* Icon + Title — Figma: 세로 정렬, gap-16px */}
             <div className="flex flex-col items-center gap-4">
               <div className="flex items-center justify-center w-7 h-7 rounded-full bg-primary-200 overflow-hidden">
                 <svg width="12" height="15" viewBox="0 0 12 15" fill="none">
@@ -74,7 +77,6 @@ export function FindIdModal({ open, onClose, onOpenFindPassword }: FindIdModalPr
             </div>
 
             {step === "found" ? (
-              /* 확인 상태 — Figma: 1:1382 */
               <div className="flex flex-col gap-10 w-full">
                 <div className="flex flex-col gap-4 items-center">
                   <p className="text-sm leading-[1.4] tracking-tight text-gray-600 text-center">
@@ -88,32 +90,19 @@ export function FindIdModal({ open, onClose, onOpenFindPassword }: FindIdModalPr
                 </div>
                 <div className="flex flex-col gap-4">
                   <div className="flex gap-2">
-                    <button
-                      type="button"
-                      onClick={handleClose}
-                      className="flex-1 h-13 rounded-sm border border-gray-disabled text-base leading-[1.4] tracking-tight text-gray-primary cursor-pointer"
-                    >
+                    <button type="button" onClick={handleClose} className="flex-1 h-13 rounded-sm border border-gray-disabled text-base leading-[1.4] tracking-tight text-gray-primary cursor-pointer">
                       로그인
                     </button>
-                    <button
-                      type="button"
-                      onClick={handleGoPassword}
-                      className="flex-1 h-13 rounded-sm bg-primary text-base leading-[1.4] tracking-tight text-primary-100 cursor-pointer"
-                    >
+                    <button type="button" onClick={handleGoPassword} className="flex-1 h-13 rounded-sm bg-primary text-base leading-[1.4] tracking-tight text-primary-100 cursor-pointer">
                       비밀번호 찾기
                     </button>
                   </div>
-                  <button
-                    type="button"
-                    onClick={handleClose}
-                    className="text-base leading-[1.4] tracking-tight text-gray-600 underline text-center cursor-pointer"
-                  >
+                  <button type="button" onClick={handleClose} className="text-base leading-[1.4] tracking-tight text-gray-600 underline text-center cursor-pointer">
                     네이버 간편 로그인 / 가입
                   </button>
                 </div>
               </div>
             ) : (
-              /* 폼/에러 상태 — Figma: 1:1220, 1:1300 */
               <form onSubmit={handleSubmit} className="flex flex-col gap-10 w-full">
                 {step === "error" && (
                   <p className="text-sm leading-[1.4] tracking-tight text-danger text-center whitespace-pre-line">
@@ -121,43 +110,33 @@ export function FindIdModal({ open, onClose, onOpenFindPassword }: FindIdModalPr
                   </p>
                 )}
                 <div className="flex flex-col gap-8 w-full">
-                  {/* 이름 — Figma: gap-20px between label and input */}
                   <div className="flex flex-col gap-5">
-                    <div className="flex text-base">
+                    <label htmlFor="find-id-name" className="flex text-base">
                       <span className="leading-[1.4] tracking-tight text-gray-primary">이름</span>
                       <span className="text-danger">*</span>
-                    </div>
-                    <Input placeholder="이름을 입력해주세요" value={name} onChange={setName} />
+                    </label>
+                    <Input id="find-id-name" placeholder="이름을 입력해주세요" value={name} onChange={setName} />
                   </div>
 
-                  {/* 휴대전화 — Figma: label gap-16px, rows gap-0 */}
                   <div className="flex flex-col gap-4">
-                    <div className="flex text-base">
+                    <label htmlFor="find-id-phone" className="flex text-base">
                       <span className="leading-[1.4] tracking-tight text-gray-primary">휴대전화</span>
                       <span className="text-danger">*</span>
-                    </div>
-                    <div className="flex flex-col gap-0">
+                    </label>
+                    <div className="flex flex-col gap-2">
                       <div className="flex gap-2">
                         <div className="flex-1">
-                          <Input placeholder="숫자만 입력해주세요" value={phone} onChange={(v) => setPhone(v.replace(/\D/g, ""))} />
+                          <Input id="find-id-phone" placeholder="숫자만 입력해주세요" value={phone} onChange={(v) => setPhone(v.replace(/\D/g, ""))} />
                         </div>
-                        <button
-                          type="button"
-                          className="shrink-0 bg-gray-200 border border-gray-disabled rounded-sm text-base font-semibold leading-[1.4] tracking-tight text-gray-700 cursor-pointer"
-                          style={{ width: 112, height: 48 }}
-                        >
+                        <button type="button" className="shrink-0 w-28 h-12 bg-gray-200 border border-gray-disabled rounded-sm text-base font-semibold leading-[1.4] tracking-tight text-gray-700 cursor-pointer">
                           인증번호전송
                         </button>
                       </div>
-                      <div className="flex gap-2 mt-2">
+                      <div className="flex gap-2">
                         <div className="flex-1">
                           <Input placeholder="인증번호 6자리를 입력해주세요" value={code} onChange={(v) => setCode(v.replace(/\D/g, "").slice(0, 6))} />
                         </div>
-                        <button
-                          type="button"
-                          className="shrink-0 bg-gray-200 border border-gray-disabled rounded-sm text-base font-semibold leading-[1.4] tracking-tight text-gray-700 cursor-pointer"
-                          style={{ width: 112, height: 48 }}
-                        >
+                        <button type="button" className="shrink-0 w-28 h-12 bg-gray-200 border border-gray-disabled rounded-sm text-base font-semibold leading-[1.4] tracking-tight text-gray-700 cursor-pointer">
                           인증번호확인
                         </button>
                       </div>
@@ -165,11 +144,7 @@ export function FindIdModal({ open, onClose, onOpenFindPassword }: FindIdModalPr
                   </div>
                 </div>
 
-                {/* Submit — Figma: bg-primary h-52 rounded-[4px] */}
-                <button
-                  type="submit"
-                  className="w-full h-13 rounded-sm bg-primary text-base leading-[1.4] tracking-tight text-primary-100 cursor-pointer"
-                >
+                <button type="submit" className="w-full h-13 rounded-sm bg-primary text-base leading-[1.4] tracking-tight text-primary-100 cursor-pointer">
                   아이디 찾기
                 </button>
               </form>

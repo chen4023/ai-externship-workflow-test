@@ -63,27 +63,29 @@ export function FindPasswordModal({ open, onClose }: FindPasswordModalProps) {
     <div className="fixed inset-0 z-50 flex items-center justify-center">
       <div className="absolute inset-0 bg-gray-primary/60" onClick={handleClose} />
 
-      {/* Toast — Figma: 모달 위 중앙 상단 */}
       {showToast && (
         <div className="absolute top-20 left-1/2 -translate-x-1/2 z-60">
           <Toast message="전송 완료! 이메일을 확인해주세요." variant="inline" />
         </div>
       )}
 
-      {/* Modal — Figma: bg-white rounded-[12px] p-[24px], content w=348 */}
-      <div className="relative bg-white rounded-xl p-6">
-        <div className="flex flex-col gap-2.5" style={{ width: 348 }}>
-          {/* X close */}
+      <div
+        role="dialog"
+        aria-modal="true"
+        aria-label="비밀번호 찾기"
+        className="relative bg-white rounded-xl p-6"
+        style={{ width: 396 }}
+      >
+        <div className="flex flex-col gap-2.5">
           <div className="flex justify-end h-6 items-center">
-            <button type="button" onClick={handleClose} className="cursor-pointer p-1.5">
+            <button type="button" onClick={handleClose} aria-label="닫기" className="cursor-pointer p-1.5">
               <svg width="12" height="12" viewBox="0 0 12 12" fill="none">
-                <path d="M1 1L11 11M1 11L11 1" stroke="var(--color-gray-primary)" strokeWidth="1.5" strokeLinecap="round" />
+                <path d="M1 1L11 11M1 11L11 1" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" />
               </svg>
             </button>
           </div>
 
           <div className="flex flex-col gap-10 items-center">
-            {/* Icon + Title + Description */}
             <div className="flex flex-col items-center gap-4">
               <div className="flex items-center justify-center w-7 h-7 rounded-full bg-primary-200 overflow-hidden">
                 <svg width="14" height="16" viewBox="0 0 14 16" fill="none">
@@ -100,33 +102,29 @@ export function FindPasswordModal({ open, onClose }: FindPasswordModalProps) {
               </p>
             </div>
 
-            {/* Form */}
             <form onSubmit={handleSubmit} className="flex flex-col gap-10 w-full">
               <div className="flex flex-col gap-4">
-                {/* 이메일 — Figma: label + input row with btn */}
-                <div className="flex text-base">
+                <label htmlFor="find-pw-email" className="flex text-base">
                   <span className="leading-[1.4] tracking-tight text-gray-primary">이메일</span>
                   <span className="text-danger">*</span>
-                </div>
+                </label>
                 <div className="flex gap-2">
                   <div className="flex-1">
-                    <Input placeholder="가입한 이메일을 입력해 주세요." value={email} onChange={setEmail} />
+                    <Input id="find-pw-email" placeholder="가입한 이메일을 입력해 주세요." value={email} onChange={setEmail} />
                   </div>
                   <button
                     type="button"
                     onClick={handleSendCode}
-                    className={`shrink-0 rounded-sm border text-base font-semibold leading-[1.4] tracking-tight cursor-pointer ${
+                    className={`shrink-0 w-28 h-12 rounded-sm border text-base font-semibold leading-[1.4] tracking-tight cursor-pointer ${
                       codeSent
                         ? "bg-primary-100 border-primary text-primary"
                         : "bg-gray-200 border-gray-disabled text-gray-700"
                     }`}
-                    style={{ width: 112, height: 48 }}
                   >
                     인증코드전송
                   </button>
                 </div>
 
-                {/* 인증코드 입력 — Figma: 항상 표시, 타이머 빨간색 */}
                 <div className="flex gap-2">
                   <div className="relative flex-1">
                     <Input
@@ -140,21 +138,13 @@ export function FindPasswordModal({ open, onClose }: FindPasswordModalProps) {
                       </span>
                     )}
                   </div>
-                  <button
-                    type="button"
-                    className="shrink-0 bg-gray-200 border border-gray-disabled rounded-sm text-base font-semibold leading-[1.4] tracking-tight text-gray-700 cursor-pointer"
-                    style={{ width: 112, height: 48 }}
-                  >
+                  <button type="button" className="shrink-0 w-28 h-12 bg-gray-200 border border-gray-disabled rounded-sm text-base font-semibold leading-[1.4] tracking-tight text-gray-700 cursor-pointer">
                     인증코드확인
                   </button>
                 </div>
               </div>
 
-              {/* Submit — Figma: bg-primary h-52 w-full */}
-              <button
-                type="submit"
-                className="w-full h-13 rounded-sm bg-primary text-base leading-[1.4] tracking-tight text-primary-100 cursor-pointer"
-              >
+              <button type="submit" className="w-full h-13 rounded-sm bg-primary text-base leading-[1.4] tracking-tight text-primary-100 cursor-pointer">
                 비밀번호 찾기
               </button>
             </form>
