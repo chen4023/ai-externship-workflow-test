@@ -1,4 +1,5 @@
 import type { ReactNode } from 'react';
+import { useNavigate } from 'react-router-dom';
 
 type HeaderVariant = 'guest' | 'unregistered' | 'registered';
 
@@ -25,45 +26,53 @@ export function Header({
   profileMenu,
   className = '',
 }: HeaderProps) {
+  const navigate = useNavigate();
+  const go = (path: string) => {
+    if (onNavigate) {
+      onNavigate(path);
+    } else {
+      navigate(path);
+    }
+  };
   return (
     <header className={`flex flex-col items-start w-full ${className}`}>
       {/* Top banner */}
-      <div className="flex items-center justify-center w-full h-[48px] bg-[var(--color-gray-800)] px-[10px]">
-        <p className="text-[16px] text-[var(--color-white)] whitespace-nowrap">
+      <div className="flex items-center justify-center w-full h-12 bg-gray-800 px-2.5">
+        <p className="text-base text-white whitespace-nowrap">
           🚨 선착순 모집! 국비지원 받고 4주 완성
         </p>
       </div>
 
       {/* Navigation */}
-      <div className="flex items-center justify-center w-full h-[64px] bg-[var(--color-white)] border-b border-black/20 px-[360px]">
-        <div className="flex items-center justify-between w-[1200px]">
+      <div className="flex items-center justify-center w-full h-16 bg-white border-b border-black/20">
+        <div className="flex items-center justify-between w-300">
           {/* Logo + Nav links */}
-          <div className="flex items-center gap-[60px]">
+          <div className="flex items-center gap-15">
             {logoSrc ? (
-              <button type="button" onClick={() => onNavigate?.('/')} className="cursor-pointer">
-                <img src={logoSrc} alt="오즈코딩스쿨" className="h-[20px] w-auto" />
+              <button type="button" onClick={() => go('/')} className="cursor-pointer">
+                <img src={logoSrc} alt="오즈코딩스쿨" className="h-5 w-auto" />
               </button>
             ) : (
               <button
                 type="button"
-                onClick={() => onNavigate?.('/')}
-                className="font-bold text-[20px] text-[var(--color-gray-primary)] cursor-pointer"
+                onClick={() => go('/')}
+                className="font-bold text-xl text-gray-primary cursor-pointer"
               >
                 OZ 오즈코딩스쿨
               </button>
             )}
-            <nav className="flex items-center gap-[60px]">
+            <nav className="flex items-center gap-15">
               <button
                 type="button"
-                onClick={() => onNavigate?.('/community')}
-                className="text-[18px] leading-[1.4] tracking-[-0.54px] text-[var(--color-gray-primary)] p-[10px] cursor-pointer"
+                onClick={() => go('/community')}
+                className="text-lg leading-snug tracking-tight text-gray-primary p-2.5 cursor-pointer"
               >
                 커뮤니티
               </button>
               <button
                 type="button"
-                onClick={() => onNavigate?.('/qna')}
-                className="text-[18px] leading-[1.4] tracking-[-0.54px] text-[var(--color-gray-primary)] p-[10px] cursor-pointer"
+                onClick={() => go('/qna')}
+                className="text-lg leading-snug tracking-tight text-gray-primary p-2.5 cursor-pointer"
               >
                 질의응답
               </button>
@@ -73,12 +82,12 @@ export function Header({
           {/* Right section */}
           <div className="flex items-center">
             {variant === 'guest' ? (
-              <div className="flex items-center gap-[12px] text-[16px] tracking-[-0.32px] text-[var(--color-gray-600)] p-[8px]">
-                <button type="button" onClick={onLogin} className="cursor-pointer">
+              <div className="flex items-center gap-3 text-base tracking-tight text-gray-600 p-2">
+                <button type="button" onClick={onLogin ?? (() => go('/login'))} className="cursor-pointer">
                   로그인
                 </button>
                 <span>|</span>
-                <button type="button" onClick={onSignup} className="cursor-pointer">
+                <button type="button" onClick={onSignup ?? (() => go('/signup'))} className="cursor-pointer">
                   회원가입
                 </button>
               </div>
@@ -86,9 +95,9 @@ export function Header({
               <div className="relative">
                 <button type="button" onClick={onProfileClick} className="cursor-pointer">
                   {profileSrc ? (
-                    <img src={profileSrc} alt="프로필" className="w-[40px] h-[40px] rounded-full object-cover" />
+                    <img src={profileSrc} alt="프로필" className="w-10 h-10 rounded-full object-cover" />
                   ) : (
-                    <div className="w-[40px] h-[40px] rounded-full bg-[var(--color-gray-200)]" />
+                    <div className="w-10 h-10 rounded-full bg-gray-200" />
                   )}
                 </button>
                 {profileMenu}
