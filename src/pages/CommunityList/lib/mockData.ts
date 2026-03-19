@@ -6,7 +6,7 @@ import type { CommunityPost } from './types';
 export const MOCK_POSTS: CommunityPost[] = [
   {
     id: 1,
-    category: "구인/채용",
+    category: "구인/협업",
     title: "데이터 분석 프로젝트 구합니다",
     content: "HR 관련 프로젝트를 하고 싶은 프로젝트를 하는 분이 있으면 편하게 연락주세요~",
     author: "홍길동",
@@ -14,6 +14,7 @@ export const MOCK_POSTS: CommunityPost[] = [
     commentCount: 7,
     viewCount: 180,
     likeCount: 0,
+    thumbnailUrl: "https://placehold.co/228x163/EFE6FC/6201E0?text=Data+Analysis",
   },
   {
     id: 2,
@@ -47,6 +48,7 @@ export const MOCK_POSTS: CommunityPost[] = [
     commentCount: 12,
     viewCount: 340,
     likeCount: 5,
+    thumbnailUrl: "https://placehold.co/228x163/EFE6FC/6201E0?text=Frontend",
   },
   {
     id: 5,
@@ -72,7 +74,7 @@ export const MOCK_POSTS: CommunityPost[] = [
   },
   {
     id: 7,
-    category: "구인/채용",
+    category: "구인/협업",
     title: "React 프로젝트 팀원 모집합니다",
     content: "사이드 프로젝트로 일정 관리 앱을 만들 예정입니다. 프론트 2명 모집합니다.",
     author: "PM김",
@@ -80,6 +82,7 @@ export const MOCK_POSTS: CommunityPost[] = [
     commentCount: 15,
     viewCount: 430,
     likeCount: 7,
+    thumbnailUrl: "https://placehold.co/228x163/EFE6FC/6201E0?text=React+Project",
   },
   {
     id: 8,
@@ -116,7 +119,7 @@ export const MOCK_POSTS: CommunityPost[] = [
   },
   {
     id: 11,
-    category: "자료 >",
+    category: "자료 공유",
     title: "TypeScript 핸드북 정리",
     content: "타입스크립트 공식 문서를 한글로 정리했습니다. 필요하신 분 참고하세요.",
     author: "정리왕",
@@ -127,7 +130,7 @@ export const MOCK_POSTS: CommunityPost[] = [
   },
   {
     id: 12,
-    category: "구인/채용",
+    category: "구인/협업",
     title: "스타트업 프론트엔드 개발자 채용",
     content: "시리즈A 스타트업에서 주니어 프론트엔드 개발자를 찾고 있습니다.",
     author: "스타트업HR",

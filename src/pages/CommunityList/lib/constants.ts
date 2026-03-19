@@ -7,8 +7,8 @@ export const CATEGORIES = [
   "공지사항",
   "자유게시판",
   "고민",
-  "구인/채용",
-  "자료 >",
+  "구인/협업",
+  "자료 공유",
 ] as const;
 
 export const SORT_OPTIONS = [
