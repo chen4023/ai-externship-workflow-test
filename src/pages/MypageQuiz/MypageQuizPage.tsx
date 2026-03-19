@@ -1,10 +1,10 @@
 // Figma: https://www.figma.com/design/4rJmEFUU2HMWVy3qUcYZRs/%EC%A0%9C%EB%AA%A9-%EC%97%86%EC%9D%8C?node-id=1-3499&m=dev
 // Figma-states: mypageQuiz
-import { useState } from "react";
+import { type FormEvent, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { Header } from "../../shared/ui/Header/Header";
 import { Footer } from "../../shared/ui/Footer/Footer";
-import { SidebarButton } from "../../shared/ui/SidebarButton/SidebarButton";
+import { MypageSidebar } from "../../shared/ui/MypageSidebar/MypageSidebar";
 import { Input } from "../../shared/ui/Input/Input";
 import { Button } from "../../shared/ui/Button/Button";
 import { NotFound } from "../../shared/ui/NotFound/NotFound";
@@ -17,14 +17,29 @@ interface QuizItem {
   score?: number;
 }
 
-const MOCK_QUIZZES: QuizItem[] = [];
+const MOCK_QUIZZES: QuizItem[] = [
+  {
+    id: 1,
+    title: "React 기초 쪽지시험",
+    date: "2025-03-15",
+    status: "completed",
+    score: 80,
+  },
+  {
+    id: 2,
+    title: "TypeScript 심화 쪽지시험",
+    date: "2025-03-18",
+    status: "pending",
+  },
+];
 
 export function MypageQuizPage() {
   const navigate = useNavigate();
   const [participationCode, setParticipationCode] = useState("");
   const [codeError, setCodeError] = useState(false);
 
-  const handleJoinQuiz = () => {
+  const handleJoinQuiz = (e: FormEvent) => {
+    e.preventDefault();
     if (participationCode.trim().length === 0) return;
     setCodeError(false);
     // TODO: API 연동 - 참가코드 확인
@@ -33,33 +48,29 @@ export function MypageQuizPage() {
   return (
     <div className="min-h-screen flex flex-col">
       <Header variant="registered" />
-      <main className="flex-1 flex justify-center py-[60px]">
-        <div className="flex gap-[40px] w-[1200px]">
-          {/* Sidebar */}
-          <aside className="flex flex-col gap-[8px] w-[200px] shrink-0">
-            <SidebarButton onClick={() => navigate("/mypage")}>
-              프로필
-            </SidebarButton>
-            <SidebarButton onClick={() => navigate("/mypage/password")}>
-              비밀번호 변경
-            </SidebarButton>
-            <SidebarButton active>쪽지시험</SidebarButton>
-          </aside>
+      <main className="flex-1 flex justify-center py-15">
+        <div className="flex gap-10 w-300">
+          <MypageSidebar />
 
           {/* Content */}
-          <section className="flex-1 flex flex-col gap-[40px]">
-            <h2 className="text-[24px] font-bold leading-[1.4] tracking-[-0.72px] text-[var(--color-gray-primary)]">
+          <section className="flex-1 flex flex-col gap-10">
+            <h2 className="text-2xl font-bold leading-snug tracking-tight text-gray-primary">
               쪽지시험
             </h2>
 
             {/* Join quiz section */}
-            <div className="flex flex-col gap-[16px] p-[24px] rounded-[8px] border border-[var(--color-gray-200)] bg-[var(--color-gray-100)]">
-              <p className="text-[16px] font-semibold leading-[1.4] tracking-[-0.48px] text-[var(--color-gray-primary)]">
+            <form
+              onSubmit={handleJoinQuiz}
+              className="flex flex-col gap-4 p-6 rounded-lg border border-gray-200 bg-gray-100"
+            >
+              <p className="text-base font-semibold leading-snug tracking-tight text-gray-primary">
                 시험 보기
               </p>
-              <div className="flex items-end gap-[12px]">
+              <div className="flex items-end gap-3">
                 <div className="flex-1">
+                  <label htmlFor="quiz-code" className="sr-only">참가 코드</label>
                   <Input
+                    id="quiz-code"
                     placeholder="참가 코드를 입력해 주세요."
                     value={participationCode}
                     onChange={(v) => {
@@ -75,22 +86,22 @@ export function MypageQuizPage() {
                   />
                 </div>
                 <Button
+                  type="submit"
                   size="sm"
                   disabled={participationCode.trim().length === 0}
-                  onClick={handleJoinQuiz}
                 >
                   참여하기
                 </Button>
               </div>
-            </div>
+            </form>
 
             {/* Quiz list */}
             {MOCK_QUIZZES.length === 0 ? (
-              <div className="flex-1 flex items-center justify-center py-[80px]">
+              <div className="flex-1 flex items-center justify-center py-20">
                 <NotFound variant="quiz" />
               </div>
             ) : (
-              <div className="flex flex-col gap-[12px]">
+              <div className="flex flex-col gap-3">
                 {MOCK_QUIZZES.map((quiz) => (
                   <button
                     key={quiz.id}
@@ -102,22 +113,22 @@ export function MypageQuizPage() {
                           : `/quiz/${quiz.id}`,
                       )
                     }
-                    className="flex items-center justify-between p-[20px] rounded-[8px] border border-[var(--color-gray-200)] bg-white cursor-pointer hover:bg-[var(--color-gray-100)] transition-colors"
+                    className="flex items-center justify-between p-5 rounded-lg border border-gray-200 bg-white cursor-pointer hover:bg-gray-100 transition-colors"
                   >
-                    <div className="flex flex-col gap-[4px]">
-                      <p className="text-[16px] font-semibold leading-[1.4] tracking-[-0.48px] text-[var(--color-gray-primary)]">
+                    <div className="flex flex-col gap-1">
+                      <p className="text-base font-semibold leading-snug tracking-tight text-gray-primary">
                         {quiz.title}
                       </p>
-                      <p className="text-[14px] leading-[1.4] tracking-[-0.42px] text-[var(--color-gray-400)]">
+                      <p className="text-sm leading-snug tracking-tight text-gray-400">
                         {quiz.date}
                       </p>
                     </div>
                     {quiz.status === "completed" ? (
-                      <span className="text-[14px] font-semibold text-[var(--color-primary)]">
+                      <span className="text-sm font-semibold text-primary">
                         {quiz.score}점
                       </span>
                     ) : (
-                      <span className="text-[14px] text-[var(--color-gray-400)]">
+                      <span className="text-sm text-gray-400">
                         미응시
                       </span>
                     )}
