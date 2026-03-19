@@ -6,7 +6,7 @@ import { Header } from "../../shared/ui/Header/Header";
 import { Input } from "../../shared/ui/Input/Input";
 import { PasswordInput } from "../../shared/ui/PasswordInput/PasswordInput";
 import { Button } from "../../shared/ui/Button/Button";
-import { useSignupForm } from "./hooks/useSignupForm";
+import { useSignupForm } from "./model/useSignupForm";
 
 function FormLabel({ label, required, htmlFor }: { label: string; required?: boolean; htmlFor?: string }) {
   return (

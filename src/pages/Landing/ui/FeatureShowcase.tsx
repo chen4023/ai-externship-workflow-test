@@ -6,7 +6,7 @@
 // 사이드: x=900, y=162, 300x440 | 좌측카드: x=0, y=198
 // 오버레이: x=315, y=220, 515x72 | 일러스트: x=468, y=300, 362x226
 
-import type { LandingTab, LandingTabData, FeatureCard as FeatureCardType } from "./landingData";
+import type { LandingTab, LandingTabData, FeatureCard as FeatureCardType } from "../lib/landingData";
 
 interface FeatureShowcaseProps {
   activeTab: LandingTab;

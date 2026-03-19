@@ -2,7 +2,7 @@
 // Figma-states: default(1:1220), error(1:1300), found(1:1382)
 // TODO: react-hook-form + zod 스키마 기반 폼 검증으로 리팩토링 예정
 import { type FormEvent, useState } from "react";
-import { Input } from "../../shared/ui/Input/Input";
+import { Input } from "../../../shared/ui/Input/Input";
 
 type Step = "form" | "error" | "found";
 

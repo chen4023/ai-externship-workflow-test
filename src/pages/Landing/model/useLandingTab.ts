@@ -2,8 +2,8 @@
 // Figma-states: landing
 
 import { useState } from 'react';
-import type { LandingTab, LandingTabData } from './landingData';
-import { getTabData } from './landingData';
+import type { LandingTab, LandingTabData } from '../lib/landingData';
+import { getTabData } from '../lib/landingData';
 
 interface UseLandingTabReturn {
   activeTab: LandingTab;

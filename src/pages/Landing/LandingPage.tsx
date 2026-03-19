@@ -3,11 +3,11 @@
 
 import { Header } from '../../shared/ui/Header/Header';
 import { Footer } from '../../shared/ui/Footer/Footer';
-import { HeroSection } from './HeroSection';
-import { TabSelector } from './TabSelector';
-import { FeatureShowcase } from './FeatureShowcase';
-import { CtaBanner } from './CtaBanner';
-import { useLandingTab } from './useLandingTab';
+import { HeroSection } from './ui/HeroSection';
+import { TabSelector } from './ui/TabSelector';
+import { FeatureShowcase } from './ui/FeatureShowcase';
+import { CtaBanner } from './ui/CtaBanner';
+import { useLandingTab } from './model/useLandingTab';
 
 export function LandingPage() {
   const { activeTab, setActiveTab, tabData } = useLandingTab('quiz');
