@@ -1,6 +1,6 @@
 // Figma: https://www.figma.com/design/4rJmEFUU2HMWVy3qUcYZRs/%EC%A0%9C%EB%AA%A9-%EC%97%86%EC%9D%8C?node-id=1-1100&m=dev
 // Figma-states: login
-import { useState } from "react";
+import { type FormEvent, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { Header } from "../../shared/ui/Header/Header";
 import { Input } from "../../shared/ui/Input/Input";
@@ -13,7 +13,8 @@ export function LoginPage() {
 
   const isFormValid = email.trim().length > 0 && password.trim().length > 0;
 
-  const handleLogin = () => {
+  const handleLogin = (e: FormEvent) => {
+    e.preventDefault();
     if (!isFormValid) return;
     // TODO: API 연동
   };
@@ -29,13 +30,13 @@ export function LoginPage() {
               OZ 오즈코딩스쿨
             </p>
             <div className="flex items-center justify-center gap-3">
-              <span className="text-base leading-[1.4] tracking-tight text-gray-600">
+              <span className="text-base leading-snug tracking-tight text-gray-600">
                 아직 회원이 아니신가요?
               </span>
               <button
                 type="button"
                 onClick={() => navigate("/signup")}
-                className="text-base leading-[1.4] tracking-tight text-primary cursor-pointer"
+                className="text-base leading-snug tracking-tight text-primary cursor-pointer"
               >
                 회원가입 하기
               </button>
@@ -65,34 +66,40 @@ export function LoginPage() {
             </div>
 
             {/* Email/Password form */}
-            <div className="flex flex-col gap-3 w-full">
+            <form onSubmit={handleLogin} className="flex flex-col gap-3 w-full">
               <div className="flex flex-col gap-3 w-full">
+                <label htmlFor="login-email" className="sr-only">이메일</label>
                 <Input
+                  id="login-email"
                   placeholder="아이디 (example@gmail.com)"
                   value={email}
                   onChange={setEmail}
+                  autoComplete="email"
                 />
                 <div className="flex flex-col gap-2">
+                  <label htmlFor="login-password" className="sr-only">비밀번호</label>
                   <PasswordInput
-                    placeholder="비밀번호 (6~15자의 영문 대소문자, 숫자, 특수문자 포함)"
+                    id="login-password"
+                    placeholder="비밀번호 (8~15자의 영문 대소문자, 숫자, 특수문자 포함)"
                     value={password}
                     onChange={setPassword}
+                    autoComplete="current-password"
                   />
                   <div className="flex items-center">
                     <button
                       type="button"
                       onClick={() => navigate("/login/find-id")}
-                      className="text-sm leading-[1.4] tracking-tight text-gray-600 py-2 cursor-pointer"
+                      className="text-sm leading-snug tracking-tight text-gray-600 py-2 cursor-pointer"
                     >
                       아이디 찾기
                     </button>
-                    <span className="text-sm leading-[1.4] tracking-tight text-gray-600 px-2">
+                    <span className="text-sm leading-snug tracking-tight text-gray-600 px-2">
                       |
                     </span>
                     <button
                       type="button"
                       onClick={() => navigate("/login/find-password")}
-                      className="text-sm leading-[1.4] tracking-tight text-gray-600 py-2 cursor-pointer"
+                      className="text-sm leading-snug tracking-tight text-gray-600 py-2 cursor-pointer"
                     >
                       비밀번호 찾기
                     </button>
@@ -100,14 +107,17 @@ export function LoginPage() {
                 </div>
               </div>
               <button
-                type="button"
+                type="submit"
                 disabled={!isFormValid}
-                onClick={handleLogin}
-                className="flex items-center justify-center h-13 w-full rounded-sm bg-gray-200 text-base leading-[1.4] tracking-tight text-gray-disabled cursor-pointer disabled:cursor-not-allowed"
+                className={`flex items-center justify-center h-13 w-full rounded-sm text-base leading-snug tracking-tight cursor-pointer disabled:cursor-not-allowed ${
+                  isFormValid
+                    ? "bg-primary text-primary-50"
+                    : "bg-gray-200 text-gray-disabled"
+                }`}
               >
                 일반회원 로그인
               </button>
-            </div>
+            </form>
           </div>
         </div>
       </main>

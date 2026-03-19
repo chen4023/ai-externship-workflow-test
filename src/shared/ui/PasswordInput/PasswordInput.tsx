@@ -77,7 +77,7 @@ export const PasswordInput = forwardRef<HTMLInputElement, PasswordInputProps>(
         </div>
         {showHelper && (
           <p className={`text-[12px] leading-[1.4] tracking-[-0.36px] ${helperColor}`}>
-            {helperText ?? '* 6~15자의 영문 대/소문자, 숫자 및 특수문자 조합'}
+            {helperText ?? '* 8~15자의 영문 대/소문자, 숫자 및 특수문자 조합'}
           </p>
         )}
       </div>
