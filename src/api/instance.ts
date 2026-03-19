@@ -57,11 +57,19 @@ authApi.interceptors.request.use(
 authApi.interceptors.response.use(
   (response) => response,
   async (error: AxiosError) => {
-    const originalRequest = error.config;
+    const originalRequest = error.config as
+      | (InternalAxiosRequestConfig & { _retry?: boolean })
+      | undefined;
 
     if (!originalRequest || error.response?.status !== 401) {
       return Promise.reject(error);
     }
+
+    // 재시도 요청이 다시 401이면 무한 루프 방지
+    if (originalRequest._retry) {
+      return Promise.reject(error);
+    }
+    originalRequest._retry = true;
 
     // 이미 재발급 중이면 큐에 대기
     if (isRefreshing) {
