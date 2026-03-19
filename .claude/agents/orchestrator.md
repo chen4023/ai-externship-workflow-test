@@ -213,26 +213,34 @@ bash .claude/hooks/gates/gate3-review.sh
 | Warning > 0 | **사용자 확인**: 수정 여부 결정 |
 | Suggestion만 | PR 코멘트에 포함, → FIGMA_VERIFY |
 
-### FIGMA_VERIFY
-src/pages/ 또는 src/shared/ui/ 파일이 변경된 경우 **반드시** 실행한다.
+### FIGMA_VERIFY (절대 스킵 금지)
+
+> **🚫 이 단계는 어떤 경우에도 스킵할 수 없다. UI 파일 변경 여부와 관계없이 반드시 실행한다.**
+> **스크린샷을 찍지 않으면 PR을 생성할 수 없다.**
+
 이 Gate는 **Figma MCP + Chrome DevTools MCP** 두 도구를 모두 사용하여 검증한다.
+스크린샷 결과는 PR 본문의 `## 스크린샷` 섹션에 반드시 첨부한다.
 
-#### Step 1: Figma 디자인 CSS 추출
-1. 변경된 파일에서 `// Figma:` 주석의 URL을 파싱 → fileKey, nodeId 추출
-2. `get_design_context(fileKey, nodeId)`로 Figma 레퍼런스 코드 + 스크린샷 획득
-3. Figma CSS 값 기록: border-radius, padding, gap, font-size, font-weight, color, width, height
-
-#### Step 2: Chrome DevTools 브라우저 스크린샷 비교
+#### Step 1: 브라우저 스크린샷 캡처 (필수)
 1. `pnpm dev`로 개발 서버 실행 (백그라운드)
-2. Chrome DevTools MCP로 해당 페이지 접속:
+2. Chrome DevTools MCP로 변경된 페이지 접속:
    ```
-   navigate_page → 해당 라우트 URL
+   navigate_page(url="http://localhost:5173/해당경로")
    ```
-3. `take_screenshot`으로 전체 페이지 스크린샷 캡처
-4. 주요 컴포넌트별 `take_screenshot(uid=...)`으로 개별 스크린샷 캡처
-5. Figma 스크린샷과 브라우저 스크린샷을 **나란히 비교**
+3. `take_screenshot()`으로 전체 페이지 스크린샷 캡처
+4. `take_snapshot()`으로 a11y tree 확인
+5. 주요 컴포넌트별 `take_screenshot(uid=...)`으로 개별 스크린샷 캡처
+6. **스크린샷 파일을 저장**: `take_screenshot(filePath="screenshots/페이지명.png")`
 
-#### Step 3: Pixel 단위 검증 체크리스트
+#### Step 2: Figma 디자인 스크린샷 획득 (필수)
+1. 변경된 파일에서 `// Figma:` 주석의 URL 파싱 → fileKey, nodeId 추출
+2. `get_design_context(fileKey, nodeId)`로 Figma 레퍼런스 코드 + 스크린샷 획득
+3. `get_screenshot(fileKey, nodeId)`로 Figma 스크린샷 획득
+4. Figma CSS 값 기록: border-radius, padding, gap, font-size, font-weight, color, width, height
+
+#### Step 3: 나란히 비교 (필수)
+Figma 스크린샷과 브라우저 스크린샷을 **반드시 나란히 비교**한다.
+
 | 검증 항목 | 방법 |
 |-----------|------|
 | border-radius | Figma CSS vs 구현 코드 비교 |
@@ -243,29 +251,60 @@ src/pages/ 또는 src/shared/ui/ 파일이 변경된 경우 **반드시** 실행
 | 아이콘/이미지 | Figma 에셋과 구현 SVG/이미지 비교 |
 | 레이아웃 배치 | 스크린샷 전체 레이아웃 비교 |
 
+비교 결과를 **불일치 리포트**로 정리한다:
+```
+| 항목 | Figma | 구현 | 상태 |
+|------|-------|------|------|
+| 제목 font-size | 32px Bold | text-4xl font-bold | ✅ |
+| 검색 입력 radius | rounded-full | rounded-full | ✅ |
+| 카드 padding | 24px | p-6 | ✅ |
+```
+
 #### Step 4: 불일치 발견 시
 1. 불일치 항목을 목록으로 정리 (Figma 값 vs 구현 값)
 2. 자동 수정 시도
-3. 수정 후 브라우저 리로드 → 재스크린샷 → 재비교
-4. 일치 확인될 때까지 반복
+3. 수정 후 브라우저 리로드 → `take_screenshot()` 재캡처 → 재비교
+4. 일치 확인될 때까지 반복 (최대 3회)
 
-**자동 진행**: Figma URL이 없는 파일은 스킵
-**실패 시**: 불일치 목록을 사용자에게 보고, 수정 후 재검증
+#### Step 5: PR 본문에 스크린샷 첨부 (필수)
+PR 생성 시 `## 스크린샷` 섹션에 다음을 포함:
+- 브라우저 스크린샷 경로 또는 설명
+- Figma 스크린샷과의 비교 결과 테이블
+- 불일치가 있었다면 수정 전/후 비교
 
-**완료 시 반드시**: `workflow-state.json`의 `figmaVerified`를 `true`로 설정. **이 플래그가 없으면 merge-guard.sh가 머지를 차단한다.**
+**완료 시 반드시**: `workflow-state.json`의 `figmaVerified`를 `true`로 설정.
+**이 플래그가 없으면 merge-guard.sh가 머지를 차단한다.**
 
 **전이**:
 | 결과 | 행동 |
 |------|------|
-| Figma + 브라우저 스크린샷 일치 | `figmaVerified: true` 기록 → PR |
-| 불일치 발견 | 자동 수정 → 브라우저 리로드 → 재비교 |
-| 자동 수정 실패 | 사용자에게 보고 |
-| Figma URL 없음 | `figmaVerified: true` 기록 → PR (스킵) |
+| 비교 완료 + 일치 | `figmaVerified: true` 기록 → PR |
+| 불일치 발견 | 자동 수정 → 리로드 → 재비교 |
+| 3회 수정 실패 | 사용자에게 불일치 리포트와 함께 보고 |
 
 ### PR
-1. `gh pr create`로 PR 생성 — 본문에 `Closes #[이슈번호]`를 포함하여 머지 시 이슈 자동 닫힘
+1. `.github/pull_request_template.md` 형식을 **반드시** 사용하여 PR 생성:
    ```bash
-   gh pr create --title "feat: [기능명] (#이슈번호)" --body "Closes #이슈번호\n\n## 변경사항\n..."
+   gh pr create --title "feat: [기능명] (#이슈번호)" --body "$(cat <<'EOF'
+   ## 개요
+   [이 PR이 해결하는 문제]
+
+   ## 변경 사항
+   - [변경 내용 목록]
+
+   ## 스크린샷
+   FIGMA_VERIFY에서 캡처한 브라우저 스크린샷과 Figma 비교 결과:
+   [비교 테이블 또는 스크린샷 경로]
+
+   ## 테스트
+   - [x] 타입 체크 통과
+   - [x] 린트 통과
+   - [x] FIGMA_VERIFY 스크린샷 비교 완료
+
+   ## 관련 이슈
+   Closes #이슈번호
+   EOF
+   )"
    ```
 2. 상태 업데이트: `pr.number`, `pr.url`, `pr.branch`
 3. **전이**: → PR_REVIEW (자동)
