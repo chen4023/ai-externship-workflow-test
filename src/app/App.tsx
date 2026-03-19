@@ -5,8 +5,6 @@ import { Loading } from "../shared/ui/Loading/Loading";
 
 const LandingPage = lazy(() => import("../pages/Landing/LandingPage").then(m => ({ default: m.LandingPage })));
 const LoginPage = lazy(() => import("../pages/Login/LoginPage").then(m => ({ default: m.LoginPage })));
-const FindIdPage = lazy(() => import("../pages/Login/FindIdPage").then(m => ({ default: m.FindIdPage })));
-const FindPasswordPage = lazy(() => import("../pages/Login/FindPasswordPage").then(m => ({ default: m.FindPasswordPage })));
 const ResetPasswordPage = lazy(() => import("../pages/Login/ResetPasswordPage").then(m => ({ default: m.ResetPasswordPage })));
 const AccountRecoveryPage = lazy(() => import("../pages/Login/AccountRecoveryPage").then(m => ({ default: m.AccountRecoveryPage })));
 const SignupPage = lazy(() => import("../pages/Signup/SignupPage").then(m => ({ default: m.SignupPage })));
@@ -47,8 +45,6 @@ export function App() {
 
             {/* 인증 */}
             <Route path="/login" element={<LoginPage />} />
-            <Route path="/login/find-id" element={<FindIdPage />} />
-            <Route path="/login/find-password" element={<FindPasswordPage />} />
             <Route path="/login/reset-password" element={<ResetPasswordPage />} />
             <Route path="/login/account-recovery" element={<AccountRecoveryPage />} />
             <Route path="/signup" element={<SignupPage />} />
