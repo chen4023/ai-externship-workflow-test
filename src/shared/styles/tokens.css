@@ -26,10 +26,23 @@
   --color-white: #FFFFFF;
 
   /* ========================================
+     Primary Extended
+     ======================================== */
+  --color-primary-300: #B883FF;
+  --color-primary-900: #14002D;
+
+  /* ========================================
      Semantic Colors
      ======================================== */
   --color-success: #14C786;
   --color-danger: #EC0037;
+
+  /* ========================================
+     Social Brand Colors
+     ======================================== */
+  --color-kakao-bg: #FEE500;
+  --color-kakao-text: #391C1A;
+  --color-naver-bg: #03C75A;
 
   /* ========================================
      Main Accent Colors

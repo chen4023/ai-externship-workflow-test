@@ -28,9 +28,18 @@
   --color-success: #14C786;
   --color-danger: #EC0037;
 
+  /* Primary Extended */
+  --color-primary-300: #B883FF;
+  --color-primary-900: #14002D;
+
   /* Main Accent */
   --color-main-5: #986BE9;
   --color-main-6: #7C35D9;
+
+  /* Social Brand */
+  --color-kakao-bg: #FEE500;
+  --color-kakao-text: #391C1A;
+  --color-naver-bg: #03C75A;
 
   /* Font Family */
   --font-pretendard: "Pretendard", -apple-system, BlinkMacSystemFont, system-ui, sans-serif;
