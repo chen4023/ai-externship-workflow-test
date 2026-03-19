@@ -29,13 +29,13 @@ export const SearchInput = forwardRef<HTMLInputElement, SearchInputProps>(
 
     return (
       <div
-        className={`flex items-center h-[42px] px-[12px] rounded-[4px] border transition-colors ${
+        className={`flex items-center h-12 px-[10px] rounded-full border transition-colors ${
           focused
             ? 'border-[var(--color-primary)]'
             : 'border-[var(--color-gray-disabled)]'
-        } bg-white ${className}`}
+        } bg-[var(--color-gray-100)] ${className}`}
       >
-        <div className="flex items-center gap-[8px] flex-1">
+        <div className="flex items-center gap-[10px] flex-1">
           <SearchIcon />
           <input
             ref={ref}

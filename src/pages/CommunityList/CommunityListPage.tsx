@@ -16,6 +16,12 @@ import { PostCard } from "./ui/PostCard";
 import { useCommunityList } from "./model/useCommunityList";
 import { CATEGORIES, SORT_OPTIONS, SEARCH_TYPE_OPTIONS } from "./lib/constants";
 
+const PenIcon = () => (
+  <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <path d="M14.167 2.5L17.5 5.833L6.667 16.667H3.333V13.333L14.167 2.5Z" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+  </svg>
+);
+
 export function CommunityListPage() {
   const navigate = useNavigate();
   const {
@@ -48,11 +54,12 @@ export function CommunityListPage() {
 
           {/* Search row */}
           <div className="flex items-center justify-between">
-            <div className="flex items-center gap-3">
+            <div className="flex items-center gap-[7px]">
               <Dropdown
                 options={[...SEARCH_TYPE_OPTIONS]}
                 value={searchType}
                 onChange={setSearchType}
+                variant="compact"
                 className="w-28"
               />
               <SearchInput
@@ -60,10 +67,11 @@ export function CommunityListPage() {
                 value={searchQuery}
                 onChange={setSearchQuery}
                 onClear={clearSearch}
-                className="w-80"
+                className="w-[472px]"
               />
             </div>
-            <Button size="sm" onClick={() => navigate("/community/new")}>
+            <Button size="lg" onClick={() => navigate("/community/new")} className="w-30 gap-2">
+              <PenIcon />
               글쓰기
             </Button>
           </div>
