@@ -1,5 +1,6 @@
 import { http, passthrough } from 'msw';
 import { communityHandlers } from './communityHandlers';
+import { communityDetailHandlers } from './communityDetailHandlers';
 import { deployedApiPatterns } from './passthrough';
 
 /**
@@ -13,4 +14,5 @@ const passthroughHandlers = deployedApiPatterns.map((pattern) =>
 export const handlers = [
   ...passthroughHandlers,
   ...communityHandlers,
+  ...communityDetailHandlers,
 ];
