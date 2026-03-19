@@ -69,7 +69,10 @@
       "Bash(bash -x .claude/hooks/post-dev/auto-commit.sh)",
       "Bash(~/bin/gh pr:*)",
       "Bash(git checkout:*)",
-      "Bash(wc:*)"
+      "Bash(wc:*)",
+      "mcp__figma__get_screenshot",
+      "Bash(ls /Users/hyeonchaeeun/Desktop/ai-workflow/src/app/*.css)",
+      "Bash(ls /Users/hyeonchaeeun/Desktop/ai-workflow/src/*.css)"
     ]
   }
 }
