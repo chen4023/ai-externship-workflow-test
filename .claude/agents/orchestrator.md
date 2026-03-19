@@ -136,10 +136,12 @@ bash .claude/hooks/gates/figma-sync.sh "FIGMA_URL"
 ### GATE_1 (절대 스킵 금지)
 
 > **🚫 이 Gate는 어떤 경우에도 스킵할 수 없다. merge-guard.sh가 gateResults.gate1을 검증한다.**
+> **🚫 스크립트를 실행하지 않고 자체 판단으로 "pass"를 기록하면 안 된다.**
 
-**스크립트 실행**:
+**반드시 스크립트를 실행하고 stdout 결과를 파싱한다**:
 ```bash
-bash .claude/hooks/gates/gate1-spec.sh docs/SPEC.md
+GATE1_RESULT=$(bash .claude/hooks/gates/gate1-spec.sh docs/SPEC.md 2>&1)
+echo "$GATE1_RESULT"
 ```
 
 **결과 처리**:
@@ -148,6 +150,11 @@ bash .claude/hooks/gates/gate1-spec.sh docs/SPEC.md
 | `pass: true` | `gateResults.gate1: "pass"` 기록 → PLAN |
 | `pass: false` | `spec-reviewer` 에이전트 호출 → 수정 → 재실행 (최대 3회) |
 | 3회 실패 | 사용자에게 판단 위임 |
+
+**완료 후 반드시 Discord 알림**:
+```bash
+bash .claude/hooks/notify-discord.sh "GATE_1 완료" "결과: pass/fail" "success|fail" "gate"
+```
 
 **완료 시 반드시**: `workflow-state.json`의 `gateResults.gate1`을 `"pass"` 또는 `"fail"`로 기록.
 
@@ -176,10 +183,12 @@ plan.md의 각 Step을 순차 실행:
 ### GATE_2 (절대 스킵 금지)
 
 > **🚫 이 Gate는 어떤 경우에도 스킵할 수 없다. merge-guard.sh가 gateResults.gate2를 검증한다.**
+> **🚫 스크립트를 실행하지 않고 자체 판단으로 "pass"를 기록하면 안 된다.**
 
-**스크립트 실행**:
+**반드시 스크립트를 실행하고 stdout 결과를 파싱한다**:
 ```bash
-bash .claude/hooks/gates/gate2-quality.sh
+GATE2_RESULT=$(bash .claude/hooks/gates/gate2-quality.sh 2>&1)
+echo "$GATE2_RESULT"
 ```
 
 **결과 처리**:
@@ -192,15 +201,22 @@ bash .claude/hooks/gates/gate2-quality.sh
 | `failedChecks: ["design-tokens"]` | 하드코딩 색상을 토큰으로 교체 → 재검증 |
 | 3회 실패 | 사용자에게 보고 |
 
+**완료 후 반드시 Discord 알림**:
+```bash
+bash .claude/hooks/notify-discord.sh "GATE_2 완료" "TypeScript/ESLint/테스트 결과: pass/fail" "success|fail" "gate"
+```
+
 **완료 시 반드시**: `workflow-state.json`의 `gateResults.gate2`를 `"pass"` 또는 `"fail"`로 기록.
 
 ### GATE_3 (절대 스킵 금지)
 
 > **🚫 이 Gate는 어떤 경우에도 스킵할 수 없다. merge-guard.sh가 gateResults.gate3를 검증한다.**
+> **🚫 스크립트를 실행하지 않고 자체 판단으로 "pass"를 기록하면 안 된다.**
 
-**스크립트 실행**:
+**반드시 스크립트를 실행하고 stdout 결과를 파싱한다**:
 ```bash
-bash .claude/hooks/gates/gate3-review.sh
+GATE3_RESULT=$(bash .claude/hooks/gates/gate3-review.sh 2>&1)
+echo "$GATE3_RESULT"
 ```
 
 스크립트가 필요한 에이전트 목록을 반환한다. **직접 판단하지 않는다.**
@@ -225,6 +241,11 @@ bash .claude/hooks/gates/gate3-review.sh
 | Critical > 0 | 자동 수정 시도 → GATE_2 재실행 |
 | Warning > 0 | **사용자 확인**: 수정 여부 결정 |
 | Suggestion만 | `gateResults.gate3: "pass"` 기록, PR 코멘트에 포함 → FIGMA_VERIFY |
+
+**완료 후 반드시 Discord 알림**:
+```bash
+bash .claude/hooks/notify-discord.sh "GATE_3 완료" "리뷰 에이전트 결과: pass/fail\n에이전트: [목록]" "success|fail" "gate"
+```
 
 **완료 시 반드시**: `workflow-state.json`의 `gateResults.gate3`를 `"pass"` 또는 `"fail"`로 기록.
 
