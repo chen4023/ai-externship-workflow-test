@@ -5,6 +5,9 @@
 # 출력: JSON { "pass": bool, "agents": [...], "summary": {...} }
 # ============================================================
 
+SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
+NOTIFY="${SCRIPT_DIR}/../notify-discord.sh"
+
 # 변경된 파일 목록
 CHANGED_FILES=$(git diff main...HEAD --name-only 2>/dev/null || git diff HEAD~1 --name-only 2>/dev/null)
 
@@ -46,4 +49,11 @@ AGENTS_JSON=$(printf '%s\n' "${AGENTS[@]}" | jq -R . | jq -s .)
 PARALLEL=false
 if [ ${#AGENTS[@]} -ge 3 ]; then PARALLEL=true; fi
 
-echo "{\"agents\":${AGENTS_JSON},\"parallel\":${PARALLEL},\"changedFiles\":$(echo "$CHANGED_FILES" | jq -R . | jq -s .)}" | jq .
+RESULT=$(echo "{\"agents\":${AGENTS_JSON},\"parallel\":${PARALLEL},\"changedFiles\":$(echo "$CHANGED_FILES" | jq -R . | jq -s .)}" | jq .)
+echo "$RESULT"
+
+# Discord 알림
+AGENT_LIST=$(printf '%s\n' "${AGENTS[@]}" | paste -sd', ' -)
+MODE="순차"
+[ "$PARALLEL" = "true" ] && MODE="병렬"
+bash "$NOTIFY" "🔍 Gate 3: 리뷰 시작" "에이전트: ${AGENT_LIST}\n실행 모드: ${MODE}\n변경 파일: $(echo "$CHANGED_FILES" | wc -l | tr -d ' ')개" "info"

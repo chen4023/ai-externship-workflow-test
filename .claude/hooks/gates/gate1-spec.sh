@@ -5,6 +5,8 @@
 # 출력: JSON { "pass": bool, "issues": [...], "agent": "spec-reviewer" }
 # ============================================================
 
+SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
+NOTIFY="${SCRIPT_DIR}/../notify-discord.sh"
 SPEC_PATH="${1:-docs/SPEC.md}"
 
 if [ ! -f "$SPEC_PATH" ]; then
@@ -27,11 +29,14 @@ if [ "$AC_COUNT" -lt 3 ]; then
   ISSUES+=("수락 기준이 ${AC_COUNT}개 (최소 3개 필요)")
 fi
 
-# 결과 출력
+# 결과 출력 + Discord 알림
 if [ ${#ISSUES[@]} -eq 0 ]; then
+  bash "$NOTIFY" "✅ Gate 1 통과" "Spec 검증 완료 (수락 기준 ${AC_COUNT}개)" "success"
   echo '{"pass":true,"issues":[],"agent":"spec-reviewer"}'
   exit 0
 else
+  ISSUES_TEXT=$(printf '• %s\n' "${ISSUES[@]}")
+  bash "$NOTIFY" "❌ Gate 1 실패" "${ISSUES_TEXT}" "fail"
   ISSUES_JSON=$(printf '%s\n' "${ISSUES[@]}" | jq -R . | jq -s .)
   echo "{\"pass\":false,\"issues\":${ISSUES_JSON},\"agent\":\"spec-reviewer\"}"
   exit 1

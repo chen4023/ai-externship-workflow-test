@@ -5,6 +5,8 @@
 # 출력: JSON { "pass": bool, "checks": {...}, "failedChecks": [...] }
 # ============================================================
 
+SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
+NOTIFY="${SCRIPT_DIR}/../notify-discord.sh"
 CHECKS='{}'
 FAILED=()
 
@@ -61,5 +63,15 @@ FAILED_JSON=$(printf '%s\n' "${FAILED[@]}" | jq -R . | jq -s .)
 PASS=true
 if [ ${#FAILED[@]} -gt 0 ]; then PASS=false; fi
 
-echo "{\"pass\":${PASS},\"checks\":${CHECKS},\"failedChecks\":${FAILED_JSON}}" | jq .
-[ "$PASS" = "true" ] && exit 0 || exit 1
+RESULT=$(echo "{\"pass\":${PASS},\"checks\":${CHECKS},\"failedChecks\":${FAILED_JSON}}" | jq .)
+echo "$RESULT"
+
+# Discord 알림
+if [ "$PASS" = "true" ]; then
+  bash "$NOTIFY" "✅ Gate 2 통과" "TypeScript, ESLint, 테스트, 디자인 토큰 모두 통과" "success"
+  exit 0
+else
+  FAILED_LIST=$(printf '%s\n' "${FAILED[@]}" | paste -sd', ' -)
+  bash "$NOTIFY" "❌ Gate 2 실패" "실패 항목: ${FAILED_LIST}" "fail"
+  exit 1
+fi
