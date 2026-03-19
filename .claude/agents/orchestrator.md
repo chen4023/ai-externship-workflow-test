@@ -311,6 +311,17 @@ PR 생성 시 `## 스크린샷` 섹션에 다음을 포함:
    FIGMA_VERIFY에서 캡처한 브라우저 스크린샷과 Figma 비교 결과:
    [비교 테이블 또는 스크린샷 경로]
 
+   ## Gate 충족 여부
+   workflow-state.json에서 읽어서 아래 테이블을 채운다:
+
+   | Gate | 검증 항목 | 상태 |
+   |------|----------|------|
+   | GATE1 | gateResults.gate1 | ✅ pass / ❌ 미실행 |
+   | GATE2 | gateResults.gate2 | ✅ pass / ❌ 미실행 |
+   | GATE3 | gateResults.gate3 | ✅ pass / ❌ 미실행 |
+   | FIGMA_VERIFY | figmaVerified | ✅ 완료 / ❌ 미완료 |
+   | PR_REVIEW | prReviewCompleted | ✅ 완료 / ❌ 미완료 |
+
    ## 테스트
    - [x] 타입 체크 통과
    - [x] 린트 통과
