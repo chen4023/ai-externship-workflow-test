@@ -23,6 +23,27 @@
 - Lint: pnpm lint --fix
 - Type Check: pnpm tsc --noEmit
 
+## Pages 슬라이스 구조
+페이지 폴더 내부는 파일 수에 따라 구조를 결정한다:
+- **파일 1~2개** → 서브폴더 없이 플랫하게 유지
+- **파일 3개 이상** → `ui/`, `model/`, `lib/` 서브폴더로 분류
+  - `ui/` — 페이지 전용 컴포넌트 (모달, 섹션 등)
+  - `model/` — 페이지 전용 훅/상태
+  - `lib/` — 페이지 전용 유틸/데이터/상수
+- 라우터에 직접 연결되는 페이지 컴포넌트(`*Page.tsx`)는 폴더 루트에 유지
+- 예시:
+  ```
+  pages/Landing/
+  ├── LandingPage.tsx          # 진입점 (라우터 연결)
+  ├── ui/                      # 페이지 전용 컴포넌트
+  │   ├── HeroSection.tsx
+  │   └── TabSelector.tsx
+  ├── model/                   # 페이지 전용 훅
+  │   └── useLandingTab.ts
+  └── lib/                     # 페이지 전용 데이터
+      └── landingData.ts
+  ```
+
 ## Coding Rules
 - 함수형 컴포넌트 + 훅 패턴
 - barrel export 금지 (직접 import)
