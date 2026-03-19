@@ -40,9 +40,9 @@ export function CommunityListPage() {
     <div className="min-h-screen flex flex-col">
       <Header variant="registered" />
       <main className="flex-1 flex justify-center py-10">
-        <div className="flex flex-col gap-6 w-300">
+        <div className="flex flex-col gap-8 w-300">
           {/* Title */}
-          <h1 className="text-2xl font-bold leading-snug tracking-tight text-gray-primary">
+          <h1 className="text-4xl font-bold leading-snug tracking-tight text-gray-primary">
             커뮤니티
           </h1>
 
@@ -101,7 +101,7 @@ export function CommunityListPage() {
               <NotFound variant="community" />
             </div>
           ) : (
-            <div className="flex flex-col">
+            <div className="flex flex-col gap-4">
               {posts.map((post) => (
                 <PostCard
                   key={post.id}
