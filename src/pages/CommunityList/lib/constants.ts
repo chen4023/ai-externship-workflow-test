@@ -17,7 +17,7 @@ export const SORT_OPTIONS = [
 ] as const;
 
 export const SEARCH_TYPE_OPTIONS = [
-  { label: "검색 설정", value: "all" },
+  { label: "검색 유형", value: "all" },
   { label: "제목", value: "title" },
   { label: "내용", value: "content" },
 ] as const;

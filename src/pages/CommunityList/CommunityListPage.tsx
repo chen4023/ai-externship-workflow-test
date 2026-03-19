@@ -16,11 +16,7 @@ import { PostCard } from "./ui/PostCard";
 import { useCommunityList } from "./model/useCommunityList";
 import { CATEGORIES, SORT_OPTIONS, SEARCH_TYPE_OPTIONS } from "./lib/constants";
 
-const PenIcon = () => (
-  <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
-    <path d="M14.167 2.5L17.5 5.833L6.667 16.667H3.333V13.333L14.167 2.5Z" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
-  </svg>
-);
+import PencilIcon from "../../assets/icons/pencil.svg?react";
 
 export function CommunityListPage() {
   const navigate = useNavigate();
@@ -46,34 +42,34 @@ export function CommunityListPage() {
     <div className="min-h-screen flex flex-col">
       <Header variant="registered" />
       <main className="flex-1 flex justify-center py-10">
-        <div className="flex flex-col gap-8 w-300">
+        <div className="flex flex-col gap-8 w-full max-w-[944px] px-4">
           {/* Title */}
           <h1 className="text-4xl font-bold leading-snug tracking-tight text-gray-primary">
             커뮤니티
           </h1>
 
           {/* Search row */}
-          <div className="flex items-center justify-between">
-            <div className="flex items-center gap-[7px]">
-              <Dropdown
-                options={[...SEARCH_TYPE_OPTIONS]}
-                value={searchType}
-                onChange={setSearchType}
-                variant="compact"
-                className="w-28"
-              />
+          <div className="flex items-center gap-[7px]">
+            <Dropdown
+              options={[...SEARCH_TYPE_OPTIONS]}
+              value={searchType}
+              onChange={setSearchType}
+              variant="compact"
+              className="shrink-0 w-[118px]"
+            />
+            <div className="flex items-center flex-1 gap-4">
               <SearchInput
-                placeholder="게시글 검색"
+                placeholder="질문 검색"
                 value={searchQuery}
                 onChange={setSearchQuery}
                 onClear={clearSearch}
-                className="w-[472px]"
+                className="max-w-[472px] w-full"
               />
+              <Button size="lg" onClick={() => navigate("/community/new")} className="shrink-0 w-[120px] gap-2">
+                <PencilIcon width={20} height={20} className="shrink-0" />
+                글쓰기
+              </Button>
             </div>
-            <Button size="lg" onClick={() => navigate("/community/new")} className="w-30 gap-2">
-              <PenIcon />
-              글쓰기
-            </Button>
           </div>
 
           {/* Category Tabs + Sort */}
