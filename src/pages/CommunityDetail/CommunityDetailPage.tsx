@@ -2,8 +2,6 @@
 // Figma-states: communityDetail
 import { useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
-import { Header } from '../../shared/ui/Header/Header';
-import { Footer } from '../../shared/ui/Footer/Footer';
 import { ConfirmModal } from '../../shared/ui/Modal/Modal';
 import { Loading } from '../../shared/ui/Loading/Loading';
 import { PostHeader } from './ui/PostHeader';
@@ -76,77 +74,65 @@ export function CommunityDetailPage() {
 
   if (isPostLoading) {
     return (
-      <div className="min-h-screen flex flex-col">
-        <Header variant={isLoggedIn ? 'registered' : 'guest'} />
-        <main className="flex-1 flex items-center justify-center">
-          <Loading />
-        </main>
-        <Footer />
+      <div className="flex items-center justify-center py-20">
+        <Loading />
       </div>
     );
   }
 
   if (!post) {
     return (
-      <div className="min-h-screen flex flex-col">
-        <Header variant={isLoggedIn ? 'registered' : 'guest'} />
-        <main className="flex-1 flex items-center justify-center">
-          <p className="text-gray-500">게시글을 찾을 수 없습니다.</p>
-        </main>
-        <Footer />
+      <div className="flex items-center justify-center py-20">
+        <p className="text-gray-500">게시글을 찾을 수 없습니다.</p>
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen flex flex-col">
-      <Header variant={isLoggedIn ? 'registered' : 'guest'} />
-      <main className="flex-1 flex justify-center py-10">
-        <div className="flex flex-col gap-8 w-300">
-          <PostHeader
-            post={post}
-            isAuthor={isAuthor}
-            onEdit={() => navigate(`/community/${postId}/edit`)}
-            onDelete={() => setShowDeleteModal(true)}
-          />
+    <>
+      <div className="flex flex-col gap-8 w-300">
+        <PostHeader
+          post={post}
+          isAuthor={isAuthor}
+          onEdit={() => navigate(`/community/${postId}/edit`)}
+          onDelete={() => setShowDeleteModal(true)}
+        />
 
-          <div className="w-full h-px bg-gray-200" />
+        <div className="w-full h-px bg-gray-200" />
 
-          <PostContent
-            content={post.content}
-            likeCount={post.like_count}
-            viewCount={post.view_count}
-            isLoggedIn={isLoggedIn}
-            onLikeToggle={handleLikeToggle}
-            isLikeLoading={
-              likePostMutation.isPending || unlikePostMutation.isPending
-            }
-          />
+        <PostContent
+          content={post.content}
+          likeCount={post.like_count}
+          viewCount={post.view_count}
+          isLoggedIn={isLoggedIn}
+          onLikeToggle={handleLikeToggle}
+          isLikeLoading={
+            likePostMutation.isPending || unlikePostMutation.isPending
+          }
+        />
 
-          <div className="w-full h-px bg-gray-200" />
+        <div className="w-full h-px bg-gray-200" />
 
-          <CommentSection
-            comments={commentsData?.results ?? []}
-            totalCount={commentsData?.count ?? 0}
-            isLoading={isCommentsLoading}
-            isLoggedIn={isLoggedIn}
-            currentUserId={currentUserId}
-            onCreateComment={(content) =>
-              createCommentMutation.mutate(content)
-            }
-            onUpdateComment={(commentId, content) =>
-              updateCommentMutation.mutate({ commentId, content })
-            }
-            onDeleteComment={(commentId) =>
-              deleteCommentMutation.mutate(commentId)
-            }
-            isCreating={createCommentMutation.isPending}
-            isUpdating={updateCommentMutation.isPending}
-            isDeleting={deleteCommentMutation.isPending}
-          />
-        </div>
-      </main>
-      <Footer />
+        <CommentSection
+          comments={commentsData?.results ?? []}
+          totalCount={commentsData?.count ?? 0}
+          isLoading={isCommentsLoading}
+          isLoggedIn={isLoggedIn}
+          currentUserId={currentUserId}
+          onCreateComment={(content) =>
+            createCommentMutation.mutate(content)
+          }
+          onUpdateComment={(commentId, content) =>
+            updateCommentMutation.mutate({ commentId, content })
+          }
+          onDeleteComment={(commentId) =>
+            deleteCommentMutation.mutate(commentId)
+          }
+          isCreating={createCommentMutation.isPending}
+          isUpdating={updateCommentMutation.isPending}
+          isDeleting={deleteCommentMutation.isPending}
+        />
+      </div>
 
       <ConfirmModal
         open={showDeleteModal}
@@ -156,6 +142,6 @@ export function CommunityDetailPage() {
         onConfirm={handleDeletePost}
         onCancel={() => setShowDeleteModal(false)}
       />
-    </div>
+    </>
   );
 }

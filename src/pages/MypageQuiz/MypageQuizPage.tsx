@@ -2,8 +2,6 @@
 // Figma-states: mypageQuiz
 import { type FormEvent, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { Header } from "../../shared/ui/Header/Header";
-import { Footer } from "../../shared/ui/Footer/Footer";
 import { MypageSidebar } from "../../shared/ui/MypageSidebar/MypageSidebar";
 import { Input } from "../../shared/ui/Input/Input";
 import { Button } from "../../shared/ui/Button/Button";
@@ -46,100 +44,94 @@ export function MypageQuizPage() {
   };
 
   return (
-    <div className="min-h-screen flex flex-col">
-      <Header variant="registered" />
-      <main className="flex-1 flex justify-center py-15">
-        <div className="flex gap-10 w-300">
-          <MypageSidebar />
+    <div className="flex gap-10 w-300">
+      <MypageSidebar />
 
-          {/* Content */}
-          <section className="flex-1 flex flex-col gap-10">
-            <h2 className="text-2xl font-bold leading-snug tracking-tight text-gray-primary">
-              쪽지시험
-            </h2>
+      {/* Content */}
+      <section className="flex-1 flex flex-col gap-10">
+        <h2 className="text-2xl font-bold leading-snug tracking-tight text-gray-primary">
+          쪽지시험
+        </h2>
 
-            {/* Join quiz section */}
-            <form
-              onSubmit={handleJoinQuiz}
-              className="flex flex-col gap-4 p-6 rounded-lg border border-gray-200 bg-gray-100"
+        {/* Join quiz section */}
+        <form
+          onSubmit={handleJoinQuiz}
+          className="flex flex-col gap-4 p-6 rounded-lg border border-gray-200 bg-gray-100"
+        >
+          <p className="text-base font-semibold leading-snug tracking-tight text-gray-primary">
+            시험 보기
+          </p>
+          <div className="flex items-end gap-3">
+            <div className="flex-1">
+              <label htmlFor="quiz-code" className="sr-only">참가 코드</label>
+              <Input
+                id="quiz-code"
+                placeholder="참가 코드를 입력해 주세요."
+                value={participationCode}
+                onChange={(v) => {
+                  setParticipationCode(v);
+                  setCodeError(false);
+                }}
+                state={codeError ? "danger" : undefined}
+                dangerText={
+                  codeError
+                    ? "참가 코드가 일치하지 않습니다."
+                    : undefined
+                }
+              />
+            </div>
+            <Button
+              type="submit"
+              size="sm"
+              disabled={participationCode.trim().length === 0}
             >
-              <p className="text-base font-semibold leading-snug tracking-tight text-gray-primary">
-                시험 보기
-              </p>
-              <div className="flex items-end gap-3">
-                <div className="flex-1">
-                  <label htmlFor="quiz-code" className="sr-only">참가 코드</label>
-                  <Input
-                    id="quiz-code"
-                    placeholder="참가 코드를 입력해 주세요."
-                    value={participationCode}
-                    onChange={(v) => {
-                      setParticipationCode(v);
-                      setCodeError(false);
-                    }}
-                    state={codeError ? "danger" : undefined}
-                    dangerText={
-                      codeError
-                        ? "참가 코드가 일치하지 않습니다."
-                        : undefined
-                    }
-                  />
-                </div>
-                <Button
-                  type="submit"
-                  size="sm"
-                  disabled={participationCode.trim().length === 0}
-                >
-                  참여하기
-                </Button>
-              </div>
-            </form>
+              참여하기
+            </Button>
+          </div>
+        </form>
 
-            {/* Quiz list */}
-            {MOCK_QUIZZES.length === 0 ? (
-              <div className="flex-1 flex items-center justify-center py-20">
-                <NotFound variant="quiz" />
-              </div>
-            ) : (
-              <div className="flex flex-col gap-3">
-                {MOCK_QUIZZES.map((quiz) => (
-                  <button
-                    key={quiz.id}
-                    type="button"
-                    onClick={() =>
-                      navigate(
-                        quiz.status === "completed"
-                          ? `/quiz/${quiz.id}/result`
-                          : `/quiz/${quiz.id}`,
-                      )
-                    }
-                    className="flex items-center justify-between p-5 rounded-lg border border-gray-200 bg-white cursor-pointer hover:bg-gray-100 transition-colors"
-                  >
-                    <div className="flex flex-col gap-1">
-                      <p className="text-base font-semibold leading-snug tracking-tight text-gray-primary">
-                        {quiz.title}
-                      </p>
-                      <p className="text-sm leading-snug tracking-tight text-gray-400">
-                        {quiz.date}
-                      </p>
-                    </div>
-                    {quiz.status === "completed" ? (
-                      <span className="text-sm font-semibold text-primary">
-                        {quiz.score}점
-                      </span>
-                    ) : (
-                      <span className="text-sm text-gray-400">
-                        미응시
-                      </span>
-                    )}
-                  </button>
-                ))}
-              </div>
-            )}
-          </section>
-        </div>
-      </main>
-      <Footer />
+        {/* Quiz list */}
+        {MOCK_QUIZZES.length === 0 ? (
+          <div className="flex-1 flex items-center justify-center py-20">
+            <NotFound variant="quiz" />
+          </div>
+        ) : (
+          <div className="flex flex-col gap-3">
+            {MOCK_QUIZZES.map((quiz) => (
+              <button
+                key={quiz.id}
+                type="button"
+                onClick={() =>
+                  navigate(
+                    quiz.status === "completed"
+                      ? `/quiz/${quiz.id}/result`
+                      : `/quiz/${quiz.id}`,
+                  )
+                }
+                className="flex items-center justify-between p-5 rounded-lg border border-gray-200 bg-white cursor-pointer hover:bg-gray-100 transition-colors"
+              >
+                <div className="flex flex-col gap-1">
+                  <p className="text-base font-semibold leading-snug tracking-tight text-gray-primary">
+                    {quiz.title}
+                  </p>
+                  <p className="text-sm leading-snug tracking-tight text-gray-400">
+                    {quiz.date}
+                  </p>
+                </div>
+                {quiz.status === "completed" ? (
+                  <span className="text-sm font-semibold text-primary">
+                    {quiz.score}점
+                  </span>
+                ) : (
+                  <span className="text-sm text-gray-400">
+                    미응시
+                  </span>
+                )}
+              </button>
+            ))}
+          </div>
+        )}
+      </section>
     </div>
   );
 }

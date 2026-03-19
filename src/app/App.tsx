@@ -2,6 +2,7 @@ import { lazy, Suspense } from "react";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { Loading } from "../shared/ui/Loading/Loading";
+import { Layout } from "./layouts/Layout";
 
 const LandingPage = lazy(() => import("../pages/Landing/LandingPage").then(m => ({ default: m.LandingPage })));
 const LoginPage = lazy(() => import("../pages/Login/LoginPage").then(m => ({ default: m.LoginPage })));
@@ -40,44 +41,38 @@ export function App() {
       <BrowserRouter>
         <Suspense fallback={<Loading />}>
           <Routes>
-            {/* 랜딩 */}
-            <Route path="/" element={<LandingPage />} />
+            {/* Guest 레이아웃 (비인증) */}
+            <Route element={<Layout headerVariant="guest" />}>
+              <Route path="/" element={<LandingPage />} />
+              <Route path="/login" element={<LoginPage />} />
+              <Route path="/login/reset-password" element={<ResetPasswordPage />} />
+              <Route path="/login/account-recovery" element={<AccountRecoveryPage />} />
+              <Route path="/signup" element={<SignupPage />} />
+              <Route path="/signup/form" element={<SignupFormPage />} />
+              <Route path="*" element={<NotFoundPage />} />
+            </Route>
 
-            {/* 인증 */}
-            <Route path="/login" element={<LoginPage />} />
-            <Route path="/login/reset-password" element={<ResetPasswordPage />} />
-            <Route path="/login/account-recovery" element={<AccountRecoveryPage />} />
-            <Route path="/signup" element={<SignupPage />} />
-            <Route path="/signup/form" element={<SignupFormPage />} />
+            {/* Unregistered 레이아웃 (수강생 등록 전) */}
+            <Route element={<Layout headerVariant="unregistered" />}>
+              <Route path="/register" element={<StudentRegistrationPage />} />
+            </Route>
 
-            {/* 수강생 등록 */}
-            <Route path="/register" element={<StudentRegistrationPage />} />
-
-            {/* 마이페이지 */}
-            <Route path="/mypage" element={<MypagePage />} />
-            <Route path="/mypage/password" element={<PasswordChangePage />} />
-            <Route path="/mypage/quiz" element={<MypageQuizPage />} />
-
-            {/* 쪽지시험 */}
-            <Route path="/quiz/:quizId" element={<QuizPage />} />
-            <Route path="/quiz/:quizId/result" element={<QuizResultPage />} />
-
-            {/* 질의응답 */}
-            <Route path="/qna" element={<QnaListPage />} />
-            <Route path="/qna/new" element={<QnaCreatePage />} />
-            <Route path="/qna/:questionId" element={<QnaDetailPage />} />
-
-            {/* 커뮤니티 */}
-            <Route path="/community" element={<CommunityListPage />} />
-            <Route path="/community/new" element={<CommunityCreatePage />} />
-            <Route path="/community/:postId" element={<CommunityDetailPage />} />
-            <Route path="/community/:postId/edit" element={<CommunityEditPage />} />
-
-            {/* 개발용 */}
-            <Route path="/showcase" element={<ComponentShowcasePage />} />
-
-            {/* 404 */}
-            <Route path="*" element={<NotFoundPage />} />
+            {/* Registered 레이아웃 (인증 완료) */}
+            <Route element={<Layout headerVariant="registered" />}>
+              <Route path="/mypage" element={<MypagePage />} />
+              <Route path="/mypage/password" element={<PasswordChangePage />} />
+              <Route path="/mypage/quiz" element={<MypageQuizPage />} />
+              <Route path="/quiz/:quizId" element={<QuizPage />} />
+              <Route path="/quiz/:quizId/result" element={<QuizResultPage />} />
+              <Route path="/qna" element={<QnaListPage />} />
+              <Route path="/qna/new" element={<QnaCreatePage />} />
+              <Route path="/qna/:questionId" element={<QnaDetailPage />} />
+              <Route path="/community" element={<CommunityListPage />} />
+              <Route path="/community/new" element={<CommunityCreatePage />} />
+              <Route path="/community/:postId" element={<CommunityDetailPage />} />
+              <Route path="/community/:postId/edit" element={<CommunityEditPage />} />
+              <Route path="/showcase" element={<ComponentShowcasePage />} />
+            </Route>
           </Routes>
         </Suspense>
       </BrowserRouter>
