@@ -79,11 +79,22 @@ Figma 링크가 주어지면 다음 순서를 따른다:
 - 🚫 Never: .env 수정, node_modules 편집, CI 설정 변경
 
 ## Development Workflow
-새 기능 개발 시 `orchestrator` 에이전트가 전체 플로우를 자동 관리한다:
+새 기능 개발 시 `orchestrator` 에이전트가 상태 전이와 라우팅을 관리한다.
+Gate 판단은 스크립트(`.claude/hooks/gates/`)가 수행한다.
 
 ```
-INIT → DESIGN_SYNC → SPEC → GATE_1 → PLAN → IMPLEMENT → GATE_2 → REVIEW → GATE_3 → PR → DONE
+INIT → FIGMA_SYNC? → SPEC → GATE_1 → PLAN → IMPLEMENT → GATE_2 → GATE_3 → PR → PR_REVIEW → MERGE → DONE
+                                                                     ↑                          |
+                                                                     └───────── FIX ←───────────┘
 ```
+
+### Gate 스크립트
+| 스크립트 | 역할 | 판단 방식 |
+|---------|------|----------|
+| `gates/gate1-spec.sh` | spec 완전성 검증 | 필수 섹션/수락 기준 개수 |
+| `gates/gate2-quality.sh` | 타입/린트/테스트/토큰 검증 | exit code + JSON |
+| `gates/gate3-review.sh` | 필요한 리뷰 에이전트 결정 | 변경 파일 분석 |
+| `gates/figma-sync.sh` | Figma 싱크 필요 여부 판단 | 컴포넌트 맵 조회 |
 
 ### 시작 방법
 - 전체 자동화: `"orchestrator 에이전트로 [기능명] 개발을 시작해줘"`

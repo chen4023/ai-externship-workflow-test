@@ -68,7 +68,18 @@
       "Bash(git diff-tree:*)",
       "Bash(bash -x .claude/hooks/post-dev/auto-commit.sh)",
       "Bash(~/bin/gh pr:*)",
-      "Bash(git checkout:*)"
+      "Bash(git checkout:*)",
+      "Bash(wc:*)",
+      "mcp__figma__get_screenshot",
+      "Bash(ls /Users/hyeonchaeeun/Desktop/ai-workflow/src/app/*.css)",
+      "Bash(ls /Users/hyeonchaeeun/Desktop/ai-workflow/src/*.css)",
+      "Bash(bash .claude/hooks/gates/gate1-spec.sh docs/SPEC.md 2>&1)",
+      "Bash(bash .claude/hooks/gates/gate3-review.sh 2>&1)",
+      "Bash(bash .claude/hooks/gates/figma-sync.sh \"\" \"src/shared/ui/Button/Button.tsx\" 2>&1)",
+      "Bash(bash .claude/hooks/gates/figma-sync.sh \"\" \"src/shared/ui/Modal/Modal.tsx\" 2>&1)",
+      "Bash(bash .claude/hooks/notify-discord.sh \"테스트 알림\" \"Discord 연동 테스트입니다.\" \"info\")",
+      "Bash(bash .claude/hooks/notify-discord.sh \"🚀 code-reviewer 에이전트 호출\" \"PR #1 변경 파일 10개에 대해 코드 리뷰를 시작합니다.\" \"info\")",
+      "Bash(bash .claude/hooks/notify-discord.sh \"✅ code-reviewer 완료\" \"최종 판정: APPROVE\\\\nCritical: 0 / Warning: 2 / Suggestion: 3\" \"success\")"
     ]
   }
 }
