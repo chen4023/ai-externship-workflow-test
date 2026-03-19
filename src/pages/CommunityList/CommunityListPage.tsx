@@ -48,11 +48,12 @@ export function CommunityListPage() {
 
           {/* Search row */}
           <div className="flex items-center justify-between">
-            <div className="flex items-center gap-3">
+            <div className="flex items-center gap-[7px]">
               <Dropdown
                 options={[...SEARCH_TYPE_OPTIONS]}
                 value={searchType}
                 onChange={setSearchType}
+                variant="compact"
                 className="w-28"
               />
               <SearchInput
@@ -60,10 +61,11 @@ export function CommunityListPage() {
                 value={searchQuery}
                 onChange={setSearchQuery}
                 onClear={clearSearch}
-                className="w-80"
+                className="w-[472px]"
               />
             </div>
-            <Button size="sm" onClick={() => navigate("/community/new")}>
+            <Button size="lg" onClick={() => navigate("/community/new")} className="w-30">
+              <PenIcon />
               글쓰기
             </Button>
           </div>

@@ -3,6 +3,7 @@
 ## Tech Stack
 - React 19 + TypeScript + Vite
 - TanStack Query v5 (Factory Pattern)
+- Axios (HTTP 클라이언트)
 - Zustand (상태 관리)
 - Tailwind CSS + 커스텀 디자인 토큰
 - Vitest + React Testing Library + MSW + Playwright
@@ -51,8 +52,106 @@
 - 비즈니스 로직은 커스텀 훅으로 분리
 - Tailwind arbitrary value (`[]`) 사용 금지 — 디자인 토큰이 테마에 등록되어 있으므로 시맨틱 클래스 사용 (예: `text-[#FF0000]` 대신 `text-primary`)
 - 디자인 토큰(`shared/styles/tokens.css`)에 정의된 컬러만 사용 — 팔레트에 없는 색상값 사용 금지
-- API 호출은 TanStack Query Factory Pattern
+- API 호출은 TanStack Query Factory Pattern + Axios (fetch 직접 사용 금지)
 - React 19 `use()` API와 Server Actions 활용 가능
+
+## ⚠️ API 통신은 Axios 사용
+
+> **HTTP 클라이언트는 Axios를 사용한다. fetch를 직접 사용하지 않는다.**
+
+### Axios 인스턴스 규칙
+- `src/api/instance.ts`에 공통 Axios 인스턴스를 정의하고, 모든 API 호출에서 이를 import하여 사용
+- `baseURL`, 인터셉터(토큰 주입, 에러 핸들링 등)는 인스턴스에서 일괄 관리
+- 도메인별 API 함수(`src/api/community.ts` 등)는 공통 인스턴스를 사용하여 호출
+
+### Axios + MSW 연동
+- MSW는 Axios 요청도 자동으로 인터셉트하므로 별도 설정 불필요
+- 단, Axios 인스턴스의 `baseURL`과 MSW 핸들러의 경로가 일치해야 한다
+- MSW 핸들러 경로에 와일드카드(`*`)를 붙여 baseURL에 무관하게 매칭 (예: `http.get('*/api/v1/posts', ...)`)
+
+## ⚠️ MSW 핸들러는 반드시 API 스펙 기반으로 작성
+
+> **`docs/api-specs/`가 MSW 핸들러와 타입 정의의 단일 진실 공급원(Single Source of Truth)이다.**
+
+### 핵심 원칙
+- MSW 핸들러의 **엔드포인트 경로, 쿼리 파라미터, 요청/응답 스키마**는 `docs/api-specs/` 명세와 **100% 일치**해야 한다
+- 프론트엔드 편의를 위해 API 경로나 응답 구조를 임의로 변경하지 않는다
+- 타입 정의(`types.ts`)도 API 스펙의 응답 스키마에서 파생한다
+
+### MSW 핸들러 작성/수정 시 필수 절차
+1. **스펙 확인**: 해당 도메인의 `docs/api-specs/XX-도메인.md` 파일을 먼저 읽는다
+2. **엔드포인트 일치**: 스펙에 정의된 경로를 그대로 사용 (예: `api/v1/posts`, NOT `/api/community/posts`)
+3. **파라미터 일치**: 쿼리 파라미터명을 스펙과 동일하게 사용 (예: `search_filter`, `category_id`, `page_size`)
+4. **응답 구조 일치**: 스펙의 응답 JSON 구조를 그대로 반환 (예: `{ count, next, previous, results }` 페이지네이션 형식)
+5. **에러 응답 포함**: 스펙에 정의된 에러 응답(400, 401, 403, 404)도 MSW 핸들러에 구현
+6. **타입 동기화**: 응답 타입은 스펙의 필드명/타입과 일치시킨다
+
+### 파일 구조
+```
+src/mocks/
+├── handlers.ts              # 모든 핸들러 통합
+├── communityHandlers.ts     # docs/api-specs/04-community.md 기반
+├── authHandlers.ts          # docs/api-specs/01-auth.md 기반
+├── ...                      # 도메인별 1:1 매핑
+```
+
+### 스펙 ↔ MSW 매핑 예시
+```
+docs/api-specs/04-community.md  →  src/mocks/communityHandlers.ts
+  GET api/v1/posts               →  http.get('*/api/v1/posts', ...)
+  GET api/v1/posts/:post_id      →  http.get('*/api/v1/posts/:post_id', ...)
+  POST api/v1/posts              →  http.post('*/api/v1/posts', ...)
+```
+
+### 🚫 금지 사항
+- API 스펙에 없는 커스텀 엔드포인트를 MSW에 만들지 않는다
+- 응답 필드명을 프론트엔드 컨벤션으로 임의 변환하지 않는다 (예: `comment_count` → `commentCount` ❌)
+- Mock 데이터의 필드가 스펙에 정의되지 않은 필드를 포함하지 않는다
+
+## ⚠️ 페이지 작업 시 MSW 의무 사용 (Mock-First 개발)
+
+> **새 페이지를 구현할 때 반드시 MSW 핸들러를 먼저 작성한 뒤 UI를 개발한다. 실서버 API 없이도 UI가 동작해야 한다.**
+
+### 필수 절차
+1. `docs/api-specs/`에서 해당 페이지가 사용하는 API 목록을 파악
+2. `src/mocks/[도메인]Handlers.ts`에 MSW 핸들러 작성 (스펙 기반)
+3. `src/mocks/handlers.ts`에 핸들러 등록
+4. MSW 핸들러로 UI 개발 및 인터랙션 검증
+5. 이후 실서버 API가 배포되면 passthrough로 전환
+
+### MSW Passthrough (배포된 API 실서버 연결)
+
+배포 완료된 API는 MSW를 우회하여 실서버로 직접 요청을 보낸다.
+
+**전환 방법**: `src/mocks/passthrough.ts`의 `deployedApiPatterns` 배열에 패턴 추가
+```typescript
+// src/mocks/passthrough.ts
+export const deployedApiPatterns: RegExp[] = [
+  /\/api\/v1\/posts\/categories$/,   // 카테고리 목록 — 배포 완료
+  /\/api\/v1\/posts(\?.*)?$/,        // 게시글 목록 — 배포 완료
+];
+```
+
+**동작 원리**:
+- `passthrough.ts`에 등록된 패턴 → MSW 우회 → 실서버 응답
+- 등록되지 않은 API → MSW 핸들러가 mock 응답 반환
+- MSW 핸들러도 없는 `/api/` 요청 → 콘솔 경고 출력
+
+**전환 시 체크리스트**:
+1. `src/mocks/passthrough.ts`에 배포된 엔드포인트 패턴 추가
+2. 실서버 응답이 스펙과 일치하는지 확인
+3. MSW 핸들러는 제거하지 않는다 (테스트에서 계속 사용)
+
+### 파일 구조
+```
+src/mocks/
+├── browser.ts               # MSW worker 설정 + passthrough 로직
+├── handlers.ts              # passthrough + 도메인 핸들러 통합
+├── passthrough.ts           # 배포 완료 API 패턴 목록
+├── communityHandlers.ts     # docs/api-specs/04-community.md 기반
+├── authHandlers.ts          # docs/api-specs/01-auth.md 기반
+└── ...                      # 도메인별 1:1 매핑
+```
 
 ## Design System
 - 디자인 토큰: shared/styles/tokens.css
