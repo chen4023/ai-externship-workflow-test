@@ -59,20 +59,27 @@ if echo "$COMMAND" | grep -qE 'npm\s+publish|pnpm\s+publish'; then
   exit 2
 fi
 
-# ── gh pr merge 차단 (FIGMA_VERIFY + PR_REVIEW 필수) ──
+# ── gh pr merge 차단 (모든 Gate 필수) ──
 if echo "$COMMAND" | grep -q 'pr merge'; then
   STATE_FILE=".claude/workflow-state.json"
   if [ ! -f "$STATE_FILE" ]; then
-    echo "🚫 머지 차단: workflow-state.json이 없습니다. FIGMA_VERIFY + PR_REVIEW를 먼저 수행하세요."
+    echo "🚫 머지 차단: workflow-state.json이 없습니다. 전체 워크플로우를 먼저 수행하세요."
     exit 2
   fi
   BLOCK=""
-  # UI 파일 변경 시 FIGMA_VERIFY 필수
-  if git diff main...HEAD --name-only 2>/dev/null | grep -qE '^src/(pages|shared/ui)/'; then
-    FV=$(jq -r '.figmaVerified // false' "$STATE_FILE" 2>/dev/null)
-    [ "$FV" != "true" ] && BLOCK="${BLOCK}FIGMA_VERIFY 미완료. "
-  fi
-  # PR_REVIEW 필수
+  # GATE1: spec 검증 필수
+  G1=$(jq -r '.gateResults.gate1 // "null"' "$STATE_FILE" 2>/dev/null)
+  [ "$G1" = "null" ] && BLOCK="${BLOCK}GATE1(spec 검증) 미실행. "
+  # GATE2: 타입/린트/테스트 검증
+  G2=$(jq -r '.gateResults.gate2 // "null"' "$STATE_FILE" 2>/dev/null)
+  [ "$G2" = "null" ] && BLOCK="${BLOCK}GATE2(품질 검증) 미실행. "
+  # GATE3: 코드 리뷰 에이전트 실행
+  G3=$(jq -r '.gateResults.gate3 // "null"' "$STATE_FILE" 2>/dev/null)
+  [ "$G3" = "null" ] && BLOCK="${BLOCK}GATE3(리뷰 에이전트) 미실행. "
+  # FIGMA_VERIFY: 스크린샷 비교 필수
+  FV=$(jq -r '.figmaVerified // false' "$STATE_FILE" 2>/dev/null)
+  [ "$FV" != "true" ] && BLOCK="${BLOCK}FIGMA_VERIFY(스크린샷 비교) 미완료. "
+  # PR_REVIEW: 인라인 코멘트 필수
   PR=$(jq -r '.prReviewCompleted // false' "$STATE_FILE" 2>/dev/null)
   [ "$PR" != "true" ] && BLOCK="${BLOCK}PR_REVIEW(인라인 코멘트) 미완료. "
   if [ -n "$BLOCK" ]; then

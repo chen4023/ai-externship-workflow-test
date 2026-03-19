@@ -133,7 +133,10 @@ bash .claude/hooks/gates/figma-sync.sh "FIGMA_URL"
 3. **사용자 확인**: spec 내용 확인 대기
 4. **전이**: → GATE_1
 
-### GATE_1
+### GATE_1 (절대 스킵 금지)
+
+> **🚫 이 Gate는 어떤 경우에도 스킵할 수 없다. merge-guard.sh가 gateResults.gate1을 검증한다.**
+
 **스크립트 실행**:
 ```bash
 bash .claude/hooks/gates/gate1-spec.sh docs/SPEC.md
@@ -142,9 +145,11 @@ bash .claude/hooks/gates/gate1-spec.sh docs/SPEC.md
 **결과 처리**:
 | 결과 | 행동 |
 |------|------|
-| `pass: true` | → PLAN |
+| `pass: true` | `gateResults.gate1: "pass"` 기록 → PLAN |
 | `pass: false` | `spec-reviewer` 에이전트 호출 → 수정 → 재실행 (최대 3회) |
 | 3회 실패 | 사용자에게 판단 위임 |
+
+**완료 시 반드시**: `workflow-state.json`의 `gateResults.gate1`을 `"pass"` 또는 `"fail"`로 기록.
 
 ### PLAN
 1. `docs/plan.template.md` 기반으로 구현 계획 생성
@@ -168,7 +173,10 @@ plan.md의 각 Step을 순차 실행:
 
 **전이**: 모든 Step 완료 → GATE_2
 
-### GATE_2
+### GATE_2 (절대 스킵 금지)
+
+> **🚫 이 Gate는 어떤 경우에도 스킵할 수 없다. merge-guard.sh가 gateResults.gate2를 검증한다.**
+
 **스크립트 실행**:
 ```bash
 bash .claude/hooks/gates/gate2-quality.sh
@@ -177,14 +185,19 @@ bash .claude/hooks/gates/gate2-quality.sh
 **결과 처리**:
 | 결과 | 행동 |
 |------|------|
-| `pass: true` | → GATE_3 |
+| `pass: true` | `gateResults.gate2: "pass"` 기록 → GATE_3 |
 | `failedChecks: ["lint"]` | `pnpm lint --fix` 자동 실행 → 재검증 |
 | `failedChecks: ["typescript"]` | 타입 에러 수정 → 재검증 |
 | `failedChecks: ["test"]` | 실패 테스트 분석 → 구현 수정 → 재검증 |
 | `failedChecks: ["design-tokens"]` | 하드코딩 색상을 토큰으로 교체 → 재검증 |
 | 3회 실패 | 사용자에게 보고 |
 
-### GATE_3
+**완료 시 반드시**: `workflow-state.json`의 `gateResults.gate2`를 `"pass"` 또는 `"fail"`로 기록.
+
+### GATE_3 (절대 스킵 금지)
+
+> **🚫 이 Gate는 어떤 경우에도 스킵할 수 없다. merge-guard.sh가 gateResults.gate3를 검증한다.**
+
 **스크립트 실행**:
 ```bash
 bash .claude/hooks/gates/gate3-review.sh
@@ -208,10 +221,12 @@ bash .claude/hooks/gates/gate3-review.sh
 리뷰 결과 종합:
 | 이슈 레벨 | 행동 |
 |-----------|------|
-| Critical 0 + Warning 0 | → FIGMA_VERIFY |
+| Critical 0 + Warning 0 | `gateResults.gate3: "pass"` 기록 → FIGMA_VERIFY |
 | Critical > 0 | 자동 수정 시도 → GATE_2 재실행 |
 | Warning > 0 | **사용자 확인**: 수정 여부 결정 |
-| Suggestion만 | PR 코멘트에 포함, → FIGMA_VERIFY |
+| Suggestion만 | `gateResults.gate3: "pass"` 기록, PR 코멘트에 포함 → FIGMA_VERIFY |
+
+**완료 시 반드시**: `workflow-state.json`의 `gateResults.gate3`를 `"pass"` 또는 `"fail"`로 기록.
 
 ### FIGMA_VERIFY (절대 스킵 금지)
 
