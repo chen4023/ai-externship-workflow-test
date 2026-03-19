@@ -1,6 +1,7 @@
 import { http, passthrough } from 'msw';
 import { communityHandlers } from './communityHandlers';
 import { communityDetailHandlers } from './communityDetailHandlers';
+import { qnaHandlers } from './qnaHandlers';
 import { deployedApiPatterns } from './passthrough';
 
 /**
@@ -15,4 +16,5 @@ export const handlers = [
   ...passthroughHandlers,
   ...communityHandlers,
   ...communityDetailHandlers,
+  ...qnaHandlers,
 ];
