@@ -78,6 +78,10 @@ case "$AGENT" in
 esac
 
 BRANCH=$(git branch --show-current 2>/dev/null || echo "unknown")
+TIMESTAMP=$(date -u +"%Y-%m-%dT%H:%M:%SZ")
+
+# \n 리터럴을 실제 줄바꿈으로 변환
+BODY=$(printf '%b' "$BODY")
 
 PAYLOAD=$(jq -n \
   --arg username "$USERNAME" \
@@ -86,6 +90,7 @@ PAYLOAD=$(jq -n \
   --arg desc "$BODY" \
   --argjson color "$COLOR" \
   --arg branch "$BRANCH" \
+  --arg ts "$TIMESTAMP" \
   '{
     "username": $username,
     "avatar_url": $avatar,
@@ -93,7 +98,8 @@ PAYLOAD=$(jq -n \
       "title": $title,
       "description": $desc,
       "color": $color,
-      "footer": {"text": $branch}
+      "footer": {"text": $branch},
+      "timestamp": $ts
     }]
   }')
 

@@ -29,8 +29,8 @@ esac
 TOOL_RESULT=$(echo "$HOOK_INPUT" | jq -r '.tool_result // empty')
 
 if [ -n "$TOOL_RESULT" ]; then
-  # 완료 — 결과 요약
-  RESULT_SUMMARY=$(echo "$TOOL_RESULT" | head -c 500)
+  # 완료 — 결과 요약 (줄바꿈 보존, 500자 제한)
+  RESULT_SUMMARY=$(echo "$TOOL_RESULT" | head -30 | head -c 500)
 
   if echo "$TOOL_RESULT" | grep -qi "APPROVE\|통과\|pass"; then
     COLOR="success"
@@ -40,11 +40,11 @@ if [ -n "$TOOL_RESULT" ]; then
     COLOR="success"
   fi
 
-  bash "$NOTIFY" "작업 완료: ${DESCRIPTION}" "${RESULT_SUMMARY}" "$COLOR" "$DISCORD_AGENT" &
+  bash "$NOTIFY" "작업 완료: ${DESCRIPTION}" "$RESULT_SUMMARY" "$COLOR" "$DISCORD_AGENT" &
 else
   # 시작
   PROMPT_PREVIEW=$(echo "$HOOK_INPUT" | jq -r '.tool_input.prompt // ""' | head -c 200)
-  bash "$NOTIFY" "작업 시작: ${DESCRIPTION}" "${PROMPT_PREVIEW}..." "info" "$DISCORD_AGENT" &
+  bash "$NOTIFY" "작업 시작: ${DESCRIPTION}" "$PROMPT_PREVIEW" "info" "$DISCORD_AGENT" &
 fi
 
 exit 0

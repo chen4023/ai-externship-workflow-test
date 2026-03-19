@@ -121,7 +121,8 @@ git commit -m "$COMMIT_MSG" --no-verify 2>/dev/null
 if [ $? -eq 0 ]; then
   echo "✅ 자동 커밋 완료 (${FILE_COUNT}개 파일)"
   NOTIFY="$(cd "$(dirname "$0")" && pwd)/../notify-discord.sh"
-  bash "$NOTIFY" "📝 자동 커밋" "${COMMIT_MSG}\n(${FILE_COUNT}개 파일)" "info" 2>/dev/null &
+  NOTIFY_BODY=$(printf "%s\n(%s개 파일)" "$COMMIT_MSG" "$FILE_COUNT")
+  bash "$NOTIFY" "📝 자동 커밋" "$NOTIFY_BODY" "info" 2>/dev/null &
 else
   echo "⚠️ 자동 커밋 실패"
 fi
