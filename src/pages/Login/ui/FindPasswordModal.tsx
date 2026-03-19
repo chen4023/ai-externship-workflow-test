@@ -2,8 +2,8 @@
 // Figma-states: default(1:1444), sent(1:1649)
 // TODO: react-hook-form + zod 스키마 기반 폼 검증으로 리팩토링 예정
 import { type FormEvent, useEffect, useRef, useState } from "react";
-import { Input } from "../../shared/ui/Input/Input";
-import { Toast } from "../../shared/ui/Toast/Toast";
+import { Input } from "../../../shared/ui/Input/Input";
+import { Toast } from "../../../shared/ui/Toast/Toast";
 
 interface FindPasswordModalProps {
   open: boolean;

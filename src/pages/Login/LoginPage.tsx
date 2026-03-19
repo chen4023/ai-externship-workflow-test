@@ -6,8 +6,8 @@ import { useNavigate } from "react-router-dom";
 import { Header } from "../../shared/ui/Header/Header";
 import { Input } from "../../shared/ui/Input/Input";
 import { PasswordInput } from "../../shared/ui/PasswordInput/PasswordInput";
-import { FindIdModal } from "./FindIdModal";
-import { FindPasswordModal } from "./FindPasswordModal";
+import { FindIdModal } from "./ui/FindIdModal";
+import { FindPasswordModal } from "./ui/FindPasswordModal";
 
 export function LoginPage() {
   const navigate = useNavigate();
