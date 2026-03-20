@@ -37,7 +37,7 @@ export function CommunityListPage() {
   } = useCommunityList();
 
   return (
-    <div className="flex flex-col gap-8 w-full max-w-[944px] px-4">
+    <div className="flex flex-col gap-8 w-full px-4">
       {/* Title */}
       <h1 className="text-4xl font-bold leading-snug tracking-tight text-gray-primary">
         커뮤니티
@@ -60,11 +60,11 @@ export function CommunityListPage() {
             onClear={clearSearch}
             className="max-w-[472px] w-full"
           />
-          <Button size="lg" onClick={() => navigate("/community/new")} className="shrink-0 w-[120px] gap-2">
-            <PencilIcon width={20} height={20} className="shrink-0" />
-            글쓰기
-          </Button>
         </div>
+        <Button size="lg" onClick={() => navigate("/community/new")} className="shrink-0 w-[120px] gap-2">
+          <PencilIcon width={20} height={20} className="shrink-0" />
+          글쓰기
+        </Button>
       </div>
 
       {/* Category Tabs + Sort */}

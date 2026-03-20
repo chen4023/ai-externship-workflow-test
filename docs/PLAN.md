@@ -1,45 +1,55 @@
-# Implementation Plan: API 레이어 axios 기반 리팩토링
+# Implementation Plan: CommunityDetail 페이지 Figma 디자인 100% 일치 리팩토링
 
 > spec.md 확정 기반. 각 Step은 독립적으로 구현/테스트 가능.
 
 ## 선행 조건
 - [x] SPEC.md 확정 (Gate 1 통과)
-- [x] axios 이미 설치됨 (package.json 확인)
+- [x] Figma 디자인 확인 (node-id=1-10472)
+- [x] API 명세 확인 (docs/api-specs/04-community.md)
+- [x] 기존 코드 분석 완료
 
-## Step 1: axios 인스턴스 + 인터셉터 구현
-- **파일**: `src/api/instance.ts`
+## Step 1: Figma 디자인 분석 + PostHeader 리팩토링
+- **파일**: `src/pages/CommunityDetail/ui/PostHeader.tsx`
 - **작업 내용**:
-  - publicApi 인스턴스 생성 (baseURL, timeout, headers)
-  - authApi 인스턴스 생성 (동일 기본 설정)
-  - authApi Request 인터셉터: localStorage에서 access token 꺼내 Bearer 헤더 첨부
-  - authApi Response 인터셉터: 401 시 refresh token 재발급 + 큐 패턴
-  - 토큰 재발급 실패 시 로그아웃 처리
+  - Figma get_design_context로 정확한 디자인 값 확인
+  - 제목 타이포그래피 Figma 일치 (font-size, weight, line-height, color)
+  - 작성자 프로필 영역: 아바타(40px), 닉네임, 날짜, 카테고리 배지
+  - 수정/삭제 버튼 스타일 Figma 일치
+  - CSS 변수 기반 색상으로 교체
 - **검증**: pnpm tsc --noEmit
 
-## Step 2: auth.ts 인증 API 함수 구현
-- **파일**: `src/api/auth.ts`
+## Step 2: PostContent + 좋아요/조회수 리팩토링
+- **파일**: `src/pages/CommunityDetail/ui/PostContent.tsx`
 - **작업 내용**:
-  - login 함수 (publicApi)
-  - signup 함수 (publicApi)
-  - refreshToken 함수 (publicApi)
-  - 응답 타입 정의
+  - 본문 텍스트 스타일 Figma 일치
+  - 좋아요/조회수 아이콘 SVG를 Figma 에셋 기반으로 교체
+  - 아이콘 + 텍스트 간격, 색상 Figma 일치
+  - CSS 변수 사용
 - **검증**: pnpm tsc --noEmit
 
-## Step 3: community.ts fetch -> axios 리팩토링
-- **파일**: `src/api/community.ts`
+## Step 3: CommentSection + CommentCard 리팩토링
+- **파일**: `src/pages/CommunityDetail/ui/CommentSection.tsx`, `CommentCard.tsx`
 - **작업 내용**:
-  - fetch 호출을 authApi 인스턴스로 교체
-  - 수동 에러 핸들링 제거 (인터셉터에서 처리)
-  - TanStack Query queryFn에서 .data 반환
+  - 댓글 섹션 헤더 (댓글 수 + 정렬) Figma 일치
+  - 댓글 카드: border, padding, gap, 프로필, 날짜 Figma 일치
+  - 댓글 입력 폼 레이아웃 Figma 일치
+  - 빈 상태 메시지 스타일
 - **검증**: pnpm tsc --noEmit
 
-## Step 4: CLAUDE.md API 규칙 추가
-- **파일**: `CLAUDE.md`
+## Step 4: CommunityDetailPage 통합 + 전체 레이아웃 조정
+- **파일**: `src/pages/CommunityDetail/CommunityDetailPage.tsx`
 - **작업 내용**:
-  - API 호출 규칙 섹션 추가
-  - publicApi / authApi 사용 가이드라인
-  - 직접 fetch() / axios.get() 호출 금지 규칙
-- **검증**: 문서 확인
+  - 전체 페이지 레이아웃 (gap, divider, width) Figma 일치
+  - Divider 스타일 확인
+  - 로딩/에러 상태 스타일 통일
+  - 전체 타입 체크 + 린트 수정
+- **검증**: pnpm tsc --noEmit + pnpm lint
+
+## 서브에이전트 활용 계획
+| Step | 서브에이전트 | 실행 방식 |
+|------|-------------|----------|
+| 1-3  | test-writer | Step 완료 후 순차 |
+| 4    | accessibility-checker | 순차 |
 
 ## 롤백 계획
 - 각 Step은 별도 커밋으로 관리
