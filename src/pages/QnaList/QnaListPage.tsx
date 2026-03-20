@@ -4,14 +4,15 @@ import { useNavigate } from "react-router-dom";
 import { CategoryTab, CategoryTabBar } from "../../shared/ui/CategoryTab/CategoryTab";
 import { SearchInput } from "../../shared/ui/SearchInput/SearchInput";
 import { SortModal } from "../../shared/ui/SortModal/SortModal";
-import { QuestionCard } from "../../shared/ui/QuestionCard/QuestionCard";
 import { Pagination } from "../../shared/ui/Pagination/Pagination";
 import { Button } from "../../shared/ui/Button/Button";
 import { NotFound } from "../../shared/ui/NotFound/NotFound";
 import { Loading } from "../../shared/ui/Loading/Loading";
+import { QuestionListCard } from "./ui/QuestionListCard";
 import { useQnaList } from "./model/useQnaList";
 import { ANSWER_STATUS_TABS, SORT_OPTIONS } from "./lib/constants";
-import { formatRelativeTime } from "./lib/formatRelativeTime";
+
+import PencilIcon from "../../assets/icons/pencil.svg?react";
 
 export function QnaListPage() {
   const navigate = useNavigate();
@@ -33,21 +34,24 @@ export function QnaListPage() {
 
   return (
     <div className="flex flex-col gap-8 w-full px-4">
-      {/* Title */}
-      <h1 className="text-4xl font-bold leading-snug tracking-tight text-gray-primary">
+      {/* Title — Figma: 32px Bold #121212 */}
+      <h1 className="text-3xl font-bold leading-snug tracking-tight text-gray-primary">
         질의응답
       </h1>
 
-      {/* Search + Create button */}
-      <div className="flex items-center justify-between">
-        <SearchInput
-          placeholder="질문 검색"
-          value={searchKeyword}
-          onChange={setSearchKeyword}
-          onClear={clearSearch}
-          className="max-w-[472px] w-full"
-        />
-        <Button size="sm" onClick={() => navigate("/qna/new")}>
+      {/* Search + Create button — CommunityList 동일 패턴 */}
+      <div className="flex items-center gap-4">
+        <div className="flex items-center flex-1">
+          <SearchInput
+            placeholder="질문 검색"
+            value={searchKeyword}
+            onChange={setSearchKeyword}
+            onClear={clearSearch}
+            className="max-w-[472px] w-full"
+          />
+        </div>
+        <Button size="lg" onClick={() => navigate("/qna/new")} className="shrink-0 w-[120px] gap-2">
+          <PencilIcon width={20} height={20} className="shrink-0" />
           질문하기
         </Button>
       </div>
@@ -87,14 +91,9 @@ export function QnaListPage() {
       ) : (
         <div className="flex flex-col gap-4">
           {questions.map((q) => (
-            <QuestionCard
+            <QuestionListCard
               key={q.id}
-              title={q.title}
-              content={q.content_preview}
-              author={q.author.nickname}
-              date={formatRelativeTime(q.created_at)}
-              answerCount={q.answer_count}
-              profileSrc={q.author.profile_image_url ?? undefined}
+              question={q}
               onClick={() => navigate(`/qna/${q.id}`)}
             />
           ))}
