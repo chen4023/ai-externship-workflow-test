@@ -56,11 +56,15 @@ export function CommentSection({
   });
 
   return (
-    <div className="flex flex-col gap-5">
+    <div className="flex flex-col gap-6">
+      {/* 댓글 헤더: 💬 댓글 N개 + 최신순 */}
       <div className="flex items-center justify-between">
-        <p className="text-base font-semibold leading-snug tracking-tight text-gray-primary">
-          댓글 {totalCount}
-        </p>
+        <div className="flex items-end gap-3">
+          <MessageCircleIcon />
+          <span className="text-xl font-bold leading-tight text-gray-primary">
+            댓글 {totalCount}개
+          </span>
+        </div>
         <SortModal
           options={[...SORT_OPTIONS]}
           value={commentSort}
@@ -68,6 +72,7 @@ export function CommentSection({
         />
       </div>
 
+      {/* 댓글 작성 (로그인 시) */}
       {isLoggedIn && (
         <form
           onSubmit={handleCommentSubmit}
@@ -85,11 +90,12 @@ export function CommentSection({
         </form>
       )}
 
+      {/* 댓글 목록 */}
       {isLoading ? (
         <Loading className="py-10" />
       ) : (
-        <div className="flex flex-col gap-4">
-          {sortedComments.map((comment) => (
+        <div className="flex flex-col gap-6">
+          {sortedComments.map((comment, i) => (
             <CommentCard
               key={comment.id}
               comment={comment}
@@ -98,6 +104,7 @@ export function CommentSection({
               onDelete={onDeleteComment}
               isUpdating={isUpdating}
               isDeleting={isDeleting}
+              showDivider={i < sortedComments.length - 1}
             />
           ))}
           {sortedComments.length === 0 && (
@@ -108,5 +115,13 @@ export function CommentSection({
         </div>
       )}
     </div>
+  );
+}
+
+function MessageCircleIcon() {
+  return (
+    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+      <path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+    </svg>
   );
 }

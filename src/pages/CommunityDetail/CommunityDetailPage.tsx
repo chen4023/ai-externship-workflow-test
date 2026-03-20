@@ -90,29 +90,29 @@ export function CommunityDetailPage() {
 
   return (
     <>
-      <div className="flex flex-col gap-8 w-300">
-        <PostHeader
-          post={post}
-          isAuthor={isAuthor}
-          onEdit={() => navigate(`/community/${postId}/edit`)}
-          onDelete={() => setShowDeleteModal(true)}
-        />
+      <div className="flex flex-col w-full max-w-[var(--max-width-content)]">
+        {/* 상단 + 본문 (gap-10 = 40px) */}
+        <div className="flex flex-col gap-10">
+          <PostHeader
+            post={post}
+            isAuthor={isAuthor}
+            onEdit={() => navigate(`/community/${postId}/edit`)}
+            onDelete={() => setShowDeleteModal(true)}
+          />
 
-        <div className="w-full h-px bg-gray-200" />
+          <PostContent
+            content={post.content}
+            likeCount={post.like_count}
+            isLoggedIn={isLoggedIn}
+            onLikeToggle={handleLikeToggle}
+            isLikeLoading={
+              likePostMutation.isPending || unlikePostMutation.isPending
+            }
+          />
+        </div>
 
-        <PostContent
-          content={post.content}
-          likeCount={post.like_count}
-          viewCount={post.view_count}
-          isLoggedIn={isLoggedIn}
-          onLikeToggle={handleLikeToggle}
-          isLikeLoading={
-            likePostMutation.isPending || unlikePostMutation.isPending
-          }
-        />
-
-        <div className="w-full h-px bg-gray-200" />
-
+        {/* 댓글 영역 (본문과 100px 간격) */}
+        <div className="mt-25">
         <CommentSection
           comments={commentsData?.results ?? []}
           totalCount={commentsData?.count ?? 0}
@@ -132,6 +132,7 @@ export function CommunityDetailPage() {
           isUpdating={updateCommentMutation.isPending}
           isDeleting={deleteCommentMutation.isPending}
         />
+        </div>
       </div>
 
       <ConfirmModal
