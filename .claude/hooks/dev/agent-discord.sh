@@ -40,11 +40,11 @@ if [ -n "$TOOL_RESULT" ]; then
     COLOR="success"
   fi
 
-  bash "$NOTIFY" "작업 완료: ${DESCRIPTION}" "$RESULT_SUMMARY" "$COLOR" "$DISCORD_AGENT" &
+  bash "$NOTIFY" "작업 완료: ${DESCRIPTION}" "$RESULT_SUMMARY" "$COLOR" "$DISCORD_AGENT"
 else
   # 시작
   PROMPT_PREVIEW=$(echo "$HOOK_INPUT" | jq -r '.tool_input.prompt // ""' | head -c 200)
-  bash "$NOTIFY" "작업 시작: ${DESCRIPTION}" "$PROMPT_PREVIEW" "info" "$DISCORD_AGENT" &
+  bash "$NOTIFY" "작업 시작: ${DESCRIPTION}" "$PROMPT_PREVIEW" "info" "$DISCORD_AGENT"
 fi
 
 exit 0

@@ -57,7 +57,11 @@ Discord 채널에 작업 과정을 공유하세요:
    bash .claude/hooks/notify-discord.sh "리뷰 완료" "REQUEST_CHANGES — Critical 2, Warning 3" "success|fail" "{agent}"
 ```
 
-Gate 스크립트(gate1/2/3)는 `gate` 프로필로 자체 알림을 전송하므로 orchestrator가 중복 호출하지 않는다.
+### Discord 알림 순서 규칙
+1. Gate 스크립트(gate1/2/3)는 `gate` 프로필로 자체 알림을 전송 → **orchestrator가 중복 호출하지 않는다**
+2. Phase 전환 알림만 orchestrator가 전송 (예: "IMPLEMENT → GATE_2", "PR #42 생성")
+3. 모든 알림은 **동기적**으로 전송한다 (백그라운드 `&` 사용 금지) → 순서 보장
+4. 하나의 Phase가 완전히 끝난 뒤에만 다음 Phase 알림을 전송
 
 ---
 
@@ -151,10 +155,7 @@ echo "$GATE1_RESULT"
 | `pass: false` | `spec-reviewer` 에이전트 호출 → 수정 → 재실행 (최대 3회) |
 | 3회 실패 | 사용자에게 판단 위임 |
 
-**완료 후 반드시 Discord 알림**:
-```bash
-bash .claude/hooks/notify-discord.sh "GATE_1 완료" "결과: pass/fail" "success|fail" "gate"
-```
+**Discord 알림**: Gate 스크립트가 자체적으로 Discord 알림을 전송한다. **orchestrator가 중복 전송하지 않는다.**
 
 **완료 시 반드시**: `workflow-state.json`의 `gateResults.gate1`을 `"pass"` 또는 `"fail"`로 기록.
 
@@ -201,10 +202,7 @@ echo "$GATE2_RESULT"
 | `failedChecks: ["design-tokens"]` | 하드코딩 색상을 토큰으로 교체 → 재검증 |
 | 3회 실패 | 사용자에게 보고 |
 
-**완료 후 반드시 Discord 알림**:
-```bash
-bash .claude/hooks/notify-discord.sh "GATE_2 완료" "TypeScript/ESLint/테스트 결과: pass/fail" "success|fail" "gate"
-```
+**Discord 알림**: Gate 스크립트가 자체적으로 Discord 알림을 전송한다. **orchestrator가 중복 전송하지 않는다.**
 
 **완료 시 반드시**: `workflow-state.json`의 `gateResults.gate2`를 `"pass"` 또는 `"fail"`로 기록.
 
@@ -242,10 +240,7 @@ echo "$GATE3_RESULT"
 | Warning > 0 | **사용자 확인**: 수정 여부 결정 |
 | Suggestion만 | `gateResults.gate3: "pass"` 기록, PR 코멘트에 포함 → FIGMA_VERIFY |
 
-**완료 후 반드시 Discord 알림**:
-```bash
-bash .claude/hooks/notify-discord.sh "GATE_3 완료" "리뷰 에이전트 결과: pass/fail\n에이전트: [목록]" "success|fail" "gate"
-```
+**Discord 알림**: Gate 스크립트가 자체적으로 Discord 알림을 전송한다. **orchestrator가 중복 전송하지 않는다.**
 
 **완료 시 반드시**: `workflow-state.json`의 `gateResults.gate3`를 `"pass"` 또는 `"fail"`로 기록.
 
