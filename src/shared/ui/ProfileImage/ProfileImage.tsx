@@ -1,7 +1,7 @@
 interface ProfileImageProps {
   src?: string;
   alt?: string;
-  size?: 'sm' | 'md' | 'lg';
+  size?: 'sm' | 'md' | 'lg' | 'xl';
   className?: string;
 }
 
@@ -9,12 +9,19 @@ const SIZE_MAP = {
   sm: 'w-[32px] h-[32px]',
   md: 'w-[40px] h-[40px]',
   lg: 'w-[64px] h-[64px]',
+  xl: 'w-[48px] h-[48px]',
 } as const;
 
-const DefaultProfileIcon = ({ size }: { size: 'sm' | 'md' | 'lg' }) => {
-  const dim = { sm: 32, md: 40, lg: 64 }[size];
-  const headR = { sm: 5, md: 6, lg: 10 }[size];
-  const headY = { sm: 12, md: 15, lg: 24 }[size];
+type ProfileSize = 'sm' | 'md' | 'lg' | 'xl';
+
+const DIMS: Record<ProfileSize, number> = { sm: 32, md: 40, lg: 64, xl: 48 };
+const HEAD_R: Record<ProfileSize, number> = { sm: 5, md: 6, lg: 10, xl: 8 };
+const HEAD_Y: Record<ProfileSize, number> = { sm: 12, md: 15, lg: 24, xl: 18 };
+
+const DefaultProfileIcon = ({ size }: { size: ProfileSize }) => {
+  const dim = DIMS[size];
+  const headR = HEAD_R[size];
+  const headY = HEAD_Y[size];
   const half = dim / 2;
 
   return (
