@@ -29,12 +29,13 @@ export function PostContent({
           type="button"
           onClick={onLikeToggle}
           disabled={!isLoggedIn || isLikeLoading}
-          className="inline-flex items-center gap-1 text-sm text-gray-500 hover:text-primary transition-colors cursor-pointer disabled:cursor-not-allowed disabled:opacity-50"
+          aria-label={`좋아요 ${likeCount}개`}
+          className="inline-flex items-center gap-1.5 text-sm text-gray-400 hover:text-primary transition-colors cursor-pointer disabled:cursor-not-allowed disabled:opacity-50"
         >
           <HeartIcon />
           <span>좋아요 {likeCount}</span>
         </button>
-        <span className="inline-flex items-center gap-1 text-sm text-gray-500">
+        <span className="inline-flex items-center gap-1.5 text-sm text-gray-400">
           <EyeIcon />
           <span>조회 {viewCount}</span>
         </span>
@@ -46,14 +47,15 @@ export function PostContent({
 function HeartIcon() {
   return (
     <svg
-      width="16"
-      height="16"
-      viewBox="0 0 16 16"
+      width="18"
+      height="18"
+      viewBox="0 0 18 18"
       fill="none"
       xmlns="http://www.w3.org/2000/svg"
+      aria-hidden="true"
     >
       <path
-        d="M8 14s-5.5-3.5-5.5-7A3.5 3.5 0 0 1 8 4.5 3.5 3.5 0 0 1 13.5 7C13.5 10.5 8 14 8 14z"
+        d="M9 15.75s-6.188-3.938-6.188-7.875a3.938 3.938 0 0 1 7.875-1.406h.626a3.938 3.938 0 0 1 7.874 1.406c0 3.938-6.187 7.875-6.187 7.875z"
         stroke="currentColor"
         strokeWidth="1.2"
         strokeLinecap="round"
@@ -66,23 +68,24 @@ function HeartIcon() {
 function EyeIcon() {
   return (
     <svg
-      width="16"
-      height="16"
-      viewBox="0 0 16 16"
+      width="18"
+      height="18"
+      viewBox="0 0 18 18"
       fill="none"
       xmlns="http://www.w3.org/2000/svg"
+      aria-hidden="true"
     >
       <path
-        d="M1 8s2.5-5 7-5 7 5 7 5-2.5 5-7 5-7-5-7-5z"
+        d="M1.125 9s2.813-5.625 7.875-5.625S16.875 9 16.875 9s-2.813 5.625-7.875 5.625S1.125 9 1.125 9z"
         stroke="currentColor"
         strokeWidth="1.2"
         strokeLinecap="round"
         strokeLinejoin="round"
       />
       <circle
-        cx="8"
-        cy="8"
-        r="2"
+        cx="9"
+        cy="9"
+        r="2.25"
         stroke="currentColor"
         strokeWidth="1.2"
       />

@@ -71,7 +71,7 @@ export function CommentSection({
       {isLoggedIn && (
         <form
           onSubmit={handleCommentSubmit}
-          className="flex flex-col gap-2 items-end"
+          className="flex flex-col gap-3 items-end"
         >
           <CommentInput value={newComment} onChange={setNewComment} />
           <CommentSubmitButton

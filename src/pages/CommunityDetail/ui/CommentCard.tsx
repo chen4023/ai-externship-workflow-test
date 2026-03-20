@@ -49,20 +49,22 @@ export function CommentCard({
   };
 
   return (
-    <div className="flex flex-col gap-2 p-4 rounded-sm border border-gray-200">
+    <div className="flex flex-col gap-3 p-5 rounded-lg border border-gray-200 bg-white">
       <div className="flex items-center justify-between">
-        <div className="flex items-center gap-2">
+        <div className="flex items-center gap-3">
           <ProfileImage
             src={comment.author.profile_img_url}
             alt={`${comment.author.nickname} 프로필`}
             size="sm"
           />
-          <span className="text-sm font-semibold leading-snug tracking-tight text-gray-primary">
-            {comment.author.nickname}
-          </span>
-          <span className="text-xs leading-snug tracking-tight text-gray-400">
-            {formattedDate}
-          </span>
+          <div className="flex items-center gap-2">
+            <span className="text-sm font-semibold leading-snug tracking-tight text-gray-primary">
+              {comment.author.nickname}
+            </span>
+            <span className="text-xs leading-snug tracking-tight text-gray-400">
+              {formattedDate}
+            </span>
+          </div>
         </div>
         {isAuthor && !isEditing && (
           <div className="flex items-center gap-2">
@@ -73,6 +75,7 @@ export function CommentCard({
             >
               수정
             </button>
+            <span className="text-gray-250">|</span>
             <button
               type="button"
               onClick={() => onDelete(comment.id)}
@@ -86,7 +89,7 @@ export function CommentCard({
       </div>
 
       {isEditing ? (
-        <form onSubmit={handleEditSubmit} className="flex flex-col gap-2 items-end">
+        <form onSubmit={handleEditSubmit} className="flex flex-col gap-3 items-end">
           <CommentInput value={editContent} onChange={setEditContent} />
           <div className="flex items-center gap-2">
             <button
@@ -108,7 +111,7 @@ export function CommentCard({
           </div>
         </form>
       ) : (
-        <p className="text-sm leading-relaxed tracking-tight text-gray-700">
+        <p className="text-sm leading-relaxed tracking-tight text-gray-700 pl-11">
           {comment.content}
         </p>
       )}

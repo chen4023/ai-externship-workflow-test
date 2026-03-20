@@ -2,7 +2,6 @@
 // Figma-states: communityDetail
 
 import { ProfileImage } from '../../../shared/ui/ProfileImage/ProfileImage';
-import { Button } from '../../../shared/ui/Button/Button';
 import type { PostDetail } from '../lib/types';
 
 interface PostHeaderProps {
@@ -26,9 +25,16 @@ export function PostHeader({
 
   return (
     <div className="flex flex-col gap-4">
+      <div className="flex items-center gap-2">
+        <span className="text-sm font-medium leading-snug tracking-tight text-primary">
+          {post.category.name}
+        </span>
+      </div>
+
       <h1 className="text-2xl font-bold leading-snug tracking-tight text-gray-primary">
         {post.title}
       </h1>
+
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-3">
           <ProfileImage
@@ -36,7 +42,7 @@ export function PostHeader({
             alt={`${post.author.nickname} 프로필`}
             size="md"
           />
-          <div className="flex flex-col">
+          <div className="flex flex-col gap-0.5">
             <span className="text-sm font-semibold leading-snug tracking-tight text-gray-primary">
               {post.author.nickname}
             </span>
@@ -47,12 +53,21 @@ export function PostHeader({
         </div>
         {isAuthor && (
           <div className="flex items-center gap-2">
-            <Button variant="ghost" size="sm" onClick={onEdit}>
+            <button
+              type="button"
+              onClick={onEdit}
+              className="text-sm leading-snug tracking-tight text-gray-400 hover:text-gray-600 cursor-pointer transition-colors"
+            >
               수정
-            </Button>
-            <Button variant="ghost" size="sm" onClick={onDelete}>
+            </button>
+            <span className="text-gray-250">|</span>
+            <button
+              type="button"
+              onClick={onDelete}
+              className="text-sm leading-snug tracking-tight text-gray-400 hover:text-danger cursor-pointer transition-colors"
+            >
               삭제
-            </Button>
+            </button>
           </div>
         )}
       </div>
