@@ -34,7 +34,7 @@ export function QnaListPage() {
 
   return (
     <div className="flex flex-col gap-8 w-full px-4">
-      {/* Title — Figma: 32px Bold #121212 */}
+      {/* Title — Figma: 32px Bold gray-primary */}
       <h1 className="text-3xl font-bold leading-snug tracking-tight text-gray-primary">
         질의응답
       </h1>
