@@ -54,9 +54,7 @@ export function QuestionListCard({ question, onClick }: QuestionListCardProps) {
               </svg>
               {question.answer_count}
             </span>
-            <span>
-              {question.view_count}
-            </span>
+            <span>조회수 {question.view_count}</span>
           </div>
           <div className="flex items-center gap-2">
             <div className="w-6 h-6 rounded-full bg-gray-disabled overflow-hidden shrink-0">
