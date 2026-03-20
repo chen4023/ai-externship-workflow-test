@@ -37,7 +37,7 @@ export function CommunityListPage() {
   } = useCommunityList();
 
   return (
-    <div className="flex flex-col gap-8 w-full max-w-[944px] px-4">
+    <div className="flex flex-col gap-8 w-full px-4">
       {/* Title */}
       <h1 className="text-4xl font-bold leading-snug tracking-tight text-gray-primary">
         커뮤니티

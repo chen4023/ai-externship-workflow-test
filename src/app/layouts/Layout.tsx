@@ -13,7 +13,7 @@ export function Layout({ headerVariant }: LayoutProps) {
     <div className="min-h-screen flex flex-col">
       <Header variant={headerVariant} />
       <main className="flex-1 flex justify-center py-10">
-        <div className="w-full max-w-[var(--max-width-layout)] mx-auto px-4">
+        <div className="w-full max-w-(--max-width-layout) mx-auto px-4">
           <Outlet />
         </div>
       </main>
