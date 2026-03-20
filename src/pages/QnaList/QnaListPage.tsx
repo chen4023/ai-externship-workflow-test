@@ -32,9 +32,9 @@ export function QnaListPage() {
   } = useQnaList();
 
   return (
-    <div className="flex flex-col gap-6 w-full max-w-content">
+    <div className="flex flex-col gap-8 w-full px-4">
       {/* Title */}
-      <h1 className="text-2xl font-bold leading-snug tracking-tight text-gray-primary">
+      <h1 className="text-4xl font-bold leading-snug tracking-tight text-gray-primary">
         질의응답
       </h1>
 
@@ -45,7 +45,7 @@ export function QnaListPage() {
           value={searchKeyword}
           onChange={setSearchKeyword}
           onClear={clearSearch}
-          className="w-80"
+          className="max-w-[472px] w-full"
         />
         <Button size="sm" onClick={() => navigate("/qna/new")}>
           질문하기
@@ -85,7 +85,7 @@ export function QnaListPage() {
           <NotFound variant="qna" />
         </div>
       ) : (
-        <div className="flex flex-col">
+        <div className="flex flex-col gap-4">
           {questions.map((q) => (
             <QuestionCard
               key={q.id}
