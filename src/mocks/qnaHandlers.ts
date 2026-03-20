@@ -3,7 +3,7 @@ import { MOCK_QNA_QUESTIONS } from '../pages/QnaList/lib/mockData';
 import type { QnaListResponse } from '../pages/QnaList/lib/types';
 
 export const qnaHandlers = [
-  http.get('/api/v1/qna/questions', ({ request }) => {
+  http.get('*/api/v1/qna/questions', ({ request }) => {
     const url = new URL(request.url);
     const page = Number(url.searchParams.get('page') ?? '1');
     const size = Number(url.searchParams.get('size') ?? '10');

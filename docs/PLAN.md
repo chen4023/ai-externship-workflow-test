@@ -1,55 +1,53 @@
-# Implementation Plan: CommunityDetail 페이지 Figma 디자인 100% 일치 리팩토링
+# Implementation Plan: QnaList 페이지 Figma 디자인 100% 일치 구현
 
-> spec.md 확정 기반. 각 Step은 독립적으로 구현/테스트 가능.
+> spec.md 확정 후 작성. 기존 구현이 있으므로 Figma 디자인 일치 수정 + 품질 보완 중심.
+> Iterative Chunking: "Step 1 구현" -> 테스트 -> "Step 2로 진행" 방식
 
 ## 선행 조건
-- [x] SPEC.md 확정 (Gate 1 통과)
-- [x] Figma 디자인 확인 (node-id=1-10472)
-- [x] API 명세 확인 (docs/api-specs/04-community.md)
-- [x] 기존 코드 분석 완료
+- [x] spec.md 확정 (Gate 1 통과)
+- [x] 디자인 확인 (Figma fileKey=4rJmEFUU2HMWVy3qUcYZRs, nodeId=1:5893)
+- [x] API 명세 확인 (docs/api-specs/05-qna.md)
 
-## Step 1: Figma 디자인 분석 + PostHeader 리팩토링
-- **파일**: `src/pages/CommunityDetail/ui/PostHeader.tsx`
-- **작업 내용**:
-  - Figma get_design_context로 정확한 디자인 값 확인
-  - 제목 타이포그래피 Figma 일치 (font-size, weight, line-height, color)
-  - 작성자 프로필 영역: 아바타(40px), 닉네임, 날짜, 카테고리 배지
-  - 수정/삭제 버튼 스타일 Figma 일치
-  - CSS 변수 기반 색상으로 교체
-- **검증**: pnpm tsc --noEmit
+## 현재 상태 분석
+기존 구현이 FSD 구조(model/, lib/) + TanStack Query + MSW로 완성되어 있다.
+주요 보완 포인트:
+1. MSW 핸들러가 와일드카드 패턴(`*/api/v1/...`) 미사용 - baseURL과 무관하게 매칭되도록 수정
+2. QnaListPage의 레이아웃/간격이 Figma 디자인과 정확히 일치하는지 검증 필요
+3. 테스트 파일 미작성 - 통합 테스트 추가 필요
 
-## Step 2: PostContent + 좋아요/조회수 리팩토링
-- **파일**: `src/pages/CommunityDetail/ui/PostContent.tsx`
+## Step 1: MSW 핸들러 스펙 일치 + 와일드카드 패턴 적용
+- **파일**: `src/mocks/qnaHandlers.ts`
 - **작업 내용**:
-  - 본문 텍스트 스타일 Figma 일치
-  - 좋아요/조회수 아이콘 SVG를 Figma 에셋 기반으로 교체
-  - 아이콘 + 텍스트 간격, 색상 Figma 일치
-  - CSS 변수 사용
-- **검증**: pnpm tsc --noEmit
+  - MSW 핸들러 경로에 와일드카드(`*`) 추가: `http.get('*/api/v1/qna/questions', ...)`
+  - API 스펙(05-qna.md)과 파라미터명/응답 구조 재확인
+- **검증**: MSW 핸들러가 Axios baseURL과 무관하게 매칭
+- **예상 소요**: ~10분
 
-## Step 3: CommentSection + CommentCard 리팩토링
-- **파일**: `src/pages/CommunityDetail/ui/CommentSection.tsx`, `CommentCard.tsx`
+## Step 2: QnaListPage Figma 디자인 일치 수정
+- **파일**: `src/pages/QnaList/QnaListPage.tsx`
 - **작업 내용**:
-  - 댓글 섹션 헤더 (댓글 수 + 정렬) Figma 일치
-  - 댓글 카드: border, padding, gap, 프로필, 날짜 Figma 일치
-  - 댓글 입력 폼 레이아웃 Figma 일치
-  - 빈 상태 메시지 스타일
-- **검증**: pnpm tsc --noEmit
+  - Figma `get_design_context`로 정확한 레이아웃 값 확인
+  - 페이지 제목, 검색/버튼 영역, 탭/정렬 영역, 카드 목록, 페이지네이션 간격 수정
+  - Tailwind arbitrary value 대신 CSS 변수 토큰 사용 확인
+  - max-w-(--max-width-content) 적용
+- **검증**: `pnpm tsc --noEmit` 통과, 브라우저에서 Figma 스크린샷과 비교
+- **예상 소요**: ~30분
 
-## Step 4: CommunityDetailPage 통합 + 전체 레이아웃 조정
-- **파일**: `src/pages/CommunityDetail/CommunityDetailPage.tsx`
+## Step 3: 테스트 작성
+- **파일**: `src/pages/QnaList/__tests__/QnaListPage.test.tsx`, `src/pages/QnaList/lib/__tests__/formatRelativeTime.test.ts`
 - **작업 내용**:
-  - 전체 페이지 레이아웃 (gap, divider, width) Figma 일치
-  - Divider 스타일 확인
-  - 로딩/에러 상태 스타일 통일
-  - 전체 타입 체크 + 린트 수정
-- **검증**: pnpm tsc --noEmit + pnpm lint
+  - formatRelativeTime 유닛 테스트
+  - QnaListPage 통합 테스트 (렌더링, 검색, 필터, 정렬, 페이지네이션)
+  - MSW 핸들러 연동 테스트
+- **검증**: `pnpm test` 통과
+- **예상 소요**: ~30분
 
 ## 서브에이전트 활용 계획
 | Step | 서브에이전트 | 실행 방식 |
 |------|-------------|----------|
-| 1-3  | test-writer | Step 완료 후 순차 |
-| 4    | accessibility-checker | 순차 |
+| 1    | - | 직접 수정 |
+| 2    | - | Figma MCP 참조하여 직접 수정 |
+| 3    | test-writer | Step 완료 후 순차 |
 
 ## 롤백 계획
 - 각 Step은 별도 커밋으로 관리
